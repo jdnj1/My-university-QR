@@ -1,22 +1,5 @@
 const mysql = require('mysql');
 
-// Prueba de coneción con base de datos
-const conect = mysql.createConnection({
-    host: 'localhost',
-    database: 'prueba_tfg',
-    user: 'root',
-    password: ''
-});
-
-try{
-    conect.connect();
-    console.log("Conexión exitosa");
-}
-catch(err){
-    console.error( err );
-
-}
-
 const dbConnection = async() => {
     try {
         const connection = mysql.createConnection({
