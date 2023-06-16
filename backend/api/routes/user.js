@@ -21,7 +21,7 @@ router.get('/',
 
 
 router.post('/', [
-    check('email', 'El campi email es obligatorio').notEmpty(),
+    check('email', 'El campo email es obligatorio').notEmpty(),
     check('password', 'El campo password es obligatorio').notEmpty(),
     validateFields
 ], createUsers);    

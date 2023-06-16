@@ -13,8 +13,8 @@ const getUsers = async( req , res ) => {
     // const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
     // const registropp = Number( process.env.DOCPAG );
     const query = 'SELECT * FROM user';
-    let users = await dbConsult(query);
-    console.log(users)
+    const users = await dbConsult(query);
+    console.log(users.length)
     
     res.json({
         ok: true,
@@ -35,14 +35,15 @@ const createUsers = async( req , res ) => {
     // const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
     // const registropp = Number( process.env.DOCPAG );
 
-    connection.query('SELECT * FROM user', function (error, results, fields) {
-        if (error) throw error;
-        console.log('The solution is: ', results);
-      });
+    const {email, password} = req.body;
+    const query = `INSERT INTO user (email, password) VALUES ('${ email }', ${ password })`;
+    console.log(query)
+    const user = await dbConsult(query);
     
     res.json({
         ok: true,
-        msg: 'getUsuarios'
+        msg: 'postUsuarios',
+        user
     });
 
 }

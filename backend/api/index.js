@@ -13,6 +13,7 @@ const app = express();
 //dbConnection();
 
 app.use(cors()); 
+app.use( express.json() );// Soporte para cuerpos codificados en JSON
 
 // === Rutas
 // Usuarios
