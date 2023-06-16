@@ -6,14 +6,11 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-// Importa el modulo para la conexion con la base de datos
-const {dbConnection} = require('./database/configdb')
-
 // Crear una aplicación de express
 const app = express();
 
 // Nos conectamos a la base de datos
-dbConnection();
+//dbConnection();
 
 app.use(cors()); 
 
