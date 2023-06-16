@@ -9,7 +9,7 @@ const dbConnection = async() => {
             password: process.env.PASSWORD
         });
 
-        await connection.connect();
+        connection.connect();
 
         console.log( `== BD online ==` );
 

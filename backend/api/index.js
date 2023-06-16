@@ -17,16 +17,9 @@ dbConnection();
 
 app.use(cors()); 
 
-// conect.query('SELECT * FROM user', function (error, results, fields) {
-//     if (error) throw error;
-
-//     // connected!
-//     results.forEach(result => {
-//         console.log(result);
-//     });
-//   });
-
-//conect.end();
+// === Rutas
+// Usuarios
+app.use('/api/users', require('./routes/user'));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ', process.env.PORT);
