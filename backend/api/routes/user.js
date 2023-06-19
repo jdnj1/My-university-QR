@@ -11,13 +11,14 @@ const { check } = require('express-validator'); // check de Express Validator
 const {getUsers, createUsers, updateUsers, deleteUser} = require('../controllers/user')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
+const {validateJWT} = require('../middleware/validate-jwt')
 
 
 const router = Router();
 
 //Llamadas
 router.get('/',
-    //check('name', '').optional().not().isEmpty().trim(),
+    validateJWT,
     getUsers);
 
 
@@ -30,12 +31,14 @@ router.post('/', [
 
 router.put('/:id', [
     check('id', 'El identificador no es válido').isInt(),
+    validateJWT,
     validateFields,
     validateRole
 ], updateUsers);    
 
 router.delete('/:id', [
     check('id', 'El identificador no es válido').isInt(),
+    validateJWT,
     validateFields
 ], deleteUser); 
 

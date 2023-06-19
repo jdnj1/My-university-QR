@@ -18,6 +18,8 @@ app.use( express.json() );// Soporte para cuerpos codificados en JSON
 // === Rutas
 // Usuarios
 app.use('/api/users', require('./routes/user'));
+// Login
+app.use('/api/login', require('./routes/auth'));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ', process.env.PORT);

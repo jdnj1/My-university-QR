@@ -1,3 +1,7 @@
+/**
+ * CONTROLLER: USERS
+ */
+
 // === Importar
 // Propio
 const {dbConsult} = require('../database/db');
@@ -49,12 +53,11 @@ const createUsers = async( req , res = response ) => {
 
     let {email, password} = req.body;
 
-    // Comprueba si el email ya esta en uso
-    const qEmail = `SELECT * FROM user WHERE email='${email}'`;
-    const existeEmail = await dbConsult(qEmail);
-
     try {
-        if(existeEmail.length != 0){
+        // Comprueba si el email ya esta en uso
+        const qEmail = `SELECT * FROM user WHERE email='${email}'`;
+        const existeEmail = await dbConsult(qEmail);
+        if(existeEmail.length !== 0){
             res.status(400).json({
                 msg: 'El email ya existe'
             });
