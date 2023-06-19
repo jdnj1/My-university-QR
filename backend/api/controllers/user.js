@@ -1,6 +1,7 @@
 // === Importar
 // Propio
 const {dbConsult} = require('../database/db');
+const bcrypt = require('bcryptjs'); // BcryptJS
 
 /**
  * Devuelve todos los usuarios de la BD.
@@ -35,8 +36,15 @@ const createUsers = async( req , res ) => {
     // const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
     // const registropp = Number( process.env.DOCPAG );
 
-    const {email, password} = req.body;
-    const query = `INSERT INTO user (email, password) VALUES ('${ email }', ${ password })`;
+    let {email, password} = req.body;
+
+    // Genera una cadena aleatoria.
+    const salt = bcrypt.genSaltSync();
+
+    // Cifra la contrasena con la cadena.
+    password = bcrypt.hashSync(password, salt);
+
+    const query = `INSERT INTO user (email, password) VALUES ('${ email }', '${ password }')`;
     console.log(query)
     const user = await dbConsult(query);
     
