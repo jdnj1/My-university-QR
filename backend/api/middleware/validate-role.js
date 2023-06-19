@@ -14,7 +14,7 @@ const validateRole = (req, res = response, next) => {
     const role = req.body.role;
 
     if( role && !rolesAccepted.includes( role ) ){
-        res.status( HTTP.error_client.unauthorized ).json({
+        res.status( 401 ).json({
             msg: 'Rol no permitido'
         });
         return;

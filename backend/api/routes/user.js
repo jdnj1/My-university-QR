@@ -8,7 +8,7 @@ const { Router } = require('express'); // Router de Express
 const { check } = require('express-validator'); // check de Express Validator
 
 // Propio
-const {getUsers, createUsers} = require('../controllers/user')
+const {getUsers, createUsers, updateUsers, deleteUser} = require('../controllers/user')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
 
@@ -27,5 +27,16 @@ router.post('/', [
     validateFields,
     validateRole
 ], createUsers);    
+
+router.put('/:id', [
+    check('id', 'El identificador no es válido').isInt(),
+    validateFields,
+    validateRole
+], updateUsers);    
+
+router.delete('/:id', [
+    check('id', 'El identificador no es válido').isInt(),
+    validateFields
+], deleteUser); 
 
 module.exports = router;

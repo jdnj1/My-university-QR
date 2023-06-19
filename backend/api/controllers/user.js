@@ -20,7 +20,7 @@ const getUsers = async( req , res ) => {
         const users = await dbConsult(query);
         console.log(users.length)
         
-        res.json({
+        res.status(200).json({
             ok: true,
             msg: 'getUsuarios',
             users
@@ -28,7 +28,7 @@ const getUsers = async( req , res ) => {
     } catch (error) {
         console.error(error);
 
-        res.status(400).json({
+        res.status(500).json({
             msg: 'Error al listar usuarios'
         });
     }
@@ -71,7 +71,7 @@ const createUsers = async( req , res = response ) => {
         console.log(query)
         const user = await dbConsult(query);
 
-        res.json({
+        res.status(200).json({
             ok: true,
             msg: 'postUsuarios',
             user
@@ -80,11 +80,91 @@ const createUsers = async( req , res = response ) => {
     } catch (error) {
         console.error(error);
         
-        res.status(400).json({
+        res.status(500).json({
             msg: 'Error al crear el usuario'
         });
     }
-
 }
 
-module.exports = {getUsers, createUsers};
+/**
+ * Actualiza un usuario.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const updateUsers = async( req , res = response ) => {
+    const uid = req.params.id;
+    
+    try{
+        // Comprueba que haya un usuario con ese ID.
+        let userQuery = `SELECT * FROM user WHERE idUser=${uid}`;
+        let user = await dbConsult(userQuery);
+
+        if( user.length === 0 ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Extrae los campos que no cabe especificar a la hora de crear y el objeto por separado.
+        let { email, password, role } = req.body;
+
+        //CON JWT COMPRIBAR SI PUEDE CAMBIAR EL ROL
+
+
+        // Se actualiza. 
+        let updateQuery = `UPDATE user SET email='${email}' WHERE idUser=${uid}`;
+        user = await dbConsult(updateQuery);
+
+        // Responde con el recurso modificado tal como esta en el servidor.
+        res.status( 200 ).json( user );
+
+    } catch(error){
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'ERROR al actualizar usuario'
+        });
+    }
+}
+
+/**
+ * Elimina un usuario.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const deleteUser = async(req, res) => {
+    const uid = req.params.id;
+    
+    try{
+        // Se comprueba que haya un usuario con ese ID.
+        let userQuery = `SELECT * FROM user WHERE idUser=${uid}`;
+        let user = await dbConsult(userQuery);
+        if( user.length === 0 ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Se elimina usuario.
+        let deleteQuery = `DELETE FROM user WHERE idUser=${uid}`;
+        user = await dbConsult(deleteQuery);
+
+        //if( req.role !== 'admin' ) delete user[ 'ip' ];
+
+        res.status(200).json({
+            msg:'Usuario eliminado',
+            user
+        });
+    } catch(error){
+        console.error(error);
+        res.status(500).json({
+            msg: 'Error al borrar usuario'
+        });
+    }
+}
+
+module.exports = {getUsers, createUsers, updateUsers, deleteUser};
