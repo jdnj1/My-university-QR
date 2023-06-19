@@ -10,6 +10,7 @@ const { check } = require('express-validator'); // check de Express Validator
 // Propio
 const {getUsers, createUsers} = require('../controllers/user')
 const {validateFields} = require('../middleware/validate-fields')
+const {validateRole} = require('../middleware/validate-role')
 
 
 const router = Router();
@@ -23,7 +24,8 @@ router.get('/',
 router.post('/', [
     check('email', 'El campo email es obligatorio').notEmpty(),
     check('password', 'El campo password es obligatorio').notEmpty(),
-    validateFields
+    validateFields,
+    validateRole
 ], createUsers);    
 
 module.exports = router;
