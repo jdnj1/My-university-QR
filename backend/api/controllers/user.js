@@ -221,8 +221,6 @@ const deleteUser = async(req, res) => {
         let deleteQuery = `DELETE FROM user WHERE idUser=${uid}`;
         user = await dbConsult(deleteQuery);
 
-        //if( req.role !== 'admin' ) delete user[ 'ip' ];
-
         res.status(200).json({
             msg:'Usuario eliminado',
             user
