@@ -39,9 +39,44 @@ const getUsers = async( req , res ) => {
             msg: 'Error al listar usuarios'
         });
     }
-        
-
 }
+
+/**
+ * Devuelve un usuario de la BD por ID.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const getUserById = async( req , res ) => {
+    // Se extrae el id del usuario desde el path
+    const uid = req.params.id;
+    try {
+        const query = `SELECT * FROM user WHERE idUser = ${uid}`;
+        const user = await dbConsult(query);
+
+        if(user.length !== 0){
+            res.status(200).json({
+                msg: 'getUsuario',
+                user: user[0]
+            });
+            return;
+        }
+        // Si no se encuentra
+        else{
+            res.status(404).json({
+                msg: 'No se ha encontrado al usuario'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'Error devolver usuario'
+        });
+    }
+}
+
+
 
 /**
  * Crea un nuevo usuario.
@@ -200,4 +235,4 @@ const deleteUser = async(req, res) => {
     }
 }
 
-module.exports = {getUsers, createUsers, updateUsers, deleteUser};
+module.exports = {getUsers, getUserById, createUsers, updateUsers, deleteUser};
