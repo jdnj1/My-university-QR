@@ -111,16 +111,43 @@ const updateUsers = async( req , res = response ) => {
         }
 
         // Extrae los campos que no cabe especificar a la hora de crear y el objeto por separado.
-        let { email, password, role } = req.body;
+        let { email, password, role, lim_consult } = req.body;
+        let updateQuery = `UPDATE user SET`;
+        
+        // Dependiendo de los campos que se envien la query es de una forma u otra.
+        if(email){
+            // Se comprueba si el email ya esta en uso
+            const qEmail = `SELECT * FROM user WHERE email='${email}'`;
+            const existeEmail = await dbConsult(qEmail);
 
-        //CON JWT COMPRIBAR SI PUEDE CAMBIAR EL ROL
+            if(existeEmail.length !== 0){
+                // Se comprueba que sea el email del propio usuario
+                if(existeEmail[0].idUser !== uid){
+                    res.status(400).json({
+                        msg: 'El email ya existe'
+                    });
+                    return;
+                }
+            }
+            updateQuery += ` email = '${email}'`;
+        }
 
+        // Los siguientes campos solo se pueden modificar por un administrador
+        if(req.role === 1){
+            if(role !== undefined){
+                updateQuery += `, role = ${role}`;
+            }
 
+            if(lim_consult !== undefined){
+                updateQuery += `, lim_consult = ${lim_consult}`;
+            }
+        }
+
+        updateQuery += ` WHERE idUser=${uid}`;
+        
         // Se actualiza. 
-        let updateQuery = `UPDATE user SET email='${email}' WHERE idUser=${uid}`;
-        user = await dbConsult(updateQuery);
-
-        // Responde con el recurso modificado tal como esta en el servidor.
+        //user = await dbConsult(updateQuery);
+        
         res.status( 200 ).json( user );
 
     } catch(error){

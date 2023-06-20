@@ -20,11 +20,11 @@ const validateJWT = (req, res, next) => {
         });
     }
     try {
-        const { uid, rol, ...object } = jwt.verify(token, process.env.JWTSECRET);
+        const { uid, role, ...object } = jwt.verify(token, process.env.JWTSECRET);
         
         // Se guarda el UID en el objeto peticion, "req". "req" es accesible desde cualquier parte.
         req.uid = uid;
-        req.rol = rol;
+        req.role = role;
         next();
     } catch (err) {
         return res.status(400).json({
