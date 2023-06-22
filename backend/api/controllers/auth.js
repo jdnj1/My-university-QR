@@ -53,7 +53,7 @@ const login = async( req , res = response ) => {
 
 
         res.status( 200 ).json( {
-            user ,
+            user: user[0] ,
             token
             //expires: JWTExpire
         } );

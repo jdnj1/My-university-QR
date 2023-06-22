@@ -198,6 +198,81 @@ const updateUsers = async( req , res = response ) => {
 }
 
 /**
+ * Cambia la contrasena de un usuario.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const changePassword = async( req , res ) => {
+    // Se identifica a cada parte.
+    const requesterId = req.uid;
+    const userId = Number(req.params.id);
+
+    try{
+        // Solo el propio usuario puede cambiar su contrasena o un administrador.
+        if( req.role !== 1 && userId !== requesterId ){
+            res.status( 403 );
+            res.send();
+            return;
+        }
+
+        // El cuerpo de la peticion debe contener la antigua contrasena y la nueva.
+        const { oldPassword , newPassword } = req.body;
+
+        // La contrasena nueva y la antigua no pueden ser la misma.
+        if( oldPassword === newPassword ){
+            res.status( 400 ).json({
+                msg: 'La contrasena nueva y la antigua coinciden'
+            });
+            return;
+        }
+
+        // === Se comprueba que la contrasena recibida en la peticion coincida con la actual ===
+        
+        // Se busca al usuario cuyo ID coincide con el solicitado.
+        let userQuery = `SELECT * FROM user WHERE idUser = ${userId}`;
+        let user = await dbConsult(userQuery);
+       if( user.length === 0 ){
+            // Si no se encuentra al usuario, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Se contrasta la antigua contrasena con el hash existente.
+        const validPassword = bcrypt.compareSync( oldPassword , user[0].password );
+        if( !validPassword ){
+            res.status( 403 ).json({
+                msg: 'La contrasena proporcionada no coincide con la existente'
+            });
+            return;
+        }
+
+        // ------------------------------------------
+
+        // Se obtiene el hash de la nueva contrasena a partir de una cadena aleatoria.
+        const salt = bcrypt.genSaltSync();
+        let newpass = bcrypt.hashSync( newPassword , salt );
+
+        // Guarda los cambios.
+        passQuery = `UPDATE user SET password = '${newpass}' WHERE idUser = ${userId}`;
+
+        res.status(200).json({
+            msg: 'Contraseña actualizada',
+            user: user [0],
+        });
+
+        return;
+    } catch( error ){
+        console.error( error );
+        res.status(500).json({
+            msg: 'Error al realizar el cambio de contrasena'
+        });
+        return;
+    }
+}
+
+/**
  * Elimina un usuario.
  * 
  * @param {*} req Peticion del cliente.
@@ -233,4 +308,4 @@ const deleteUser = async(req, res) => {
     }
 }
 
-module.exports = {getUsers, getUserById, createUsers, updateUsers, deleteUser};
+module.exports = {getUsers, getUserById, createUsers, updateUsers, changePassword, deleteUser};
