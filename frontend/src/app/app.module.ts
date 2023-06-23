@@ -6,13 +6,17 @@ import { AppComponent } from './app.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { HeaderComponent } from './layouts/header/header.component';
+import { LoginComponent } from './pages/public/login/login.component';
+import { Error404Component } from './pages/public/error404/error404.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthLayoutComponent,
     AdminLayoutComponent,
-    HeaderComponent
+    HeaderComponent,
+    LoginComponent,
+    Error404Component
   ],
   imports: [
     BrowserModule,
