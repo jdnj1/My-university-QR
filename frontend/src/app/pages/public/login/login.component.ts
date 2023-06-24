@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +12,13 @@ export class LoginComponent {
   public formSubmit = false;
 
   public loginForm = this.fb.group({
-    email: ['hla', [Validators.required, Validators.email]],
+    email: ['userpass@gmail.com', [Validators.required, Validators.email]],
     password: ['1234', Validators.required ]
   });
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ){}
 
   login(){
@@ -25,6 +27,15 @@ export class LoginComponent {
     if (!this.loginForm.valid) {
       return;
     }
+
+    this.userService.login(this.loginForm.value).subscribe(
+      res => {
+        console.log('Respuesta', res)
+      },
+      (err) => {
+        console.warn('Error respuesta api');
+      }
+    );
 
 
 
