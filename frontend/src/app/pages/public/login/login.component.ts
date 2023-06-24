@@ -1,5 +1,7 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -18,7 +20,8 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ){}
 
   login(){
@@ -28,14 +31,18 @@ export class LoginComponent {
       return;
     }
 
-    this.userService.login(this.loginForm.value).subscribe(
-      res => {
-        console.log('Respuesta', res)
+    this.userService.login(this.loginForm.value).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        // Se almacena el token en el localStorage del navegador
+        localStorage.setItem('token', res.token);
+        // Se redirige a la página principal
+        //this.router.navigateByUrl('/pag');
       },
-      (err) => {
-        console.warn('Error respuesta api');
+      error: (err: HttpErrorResponse) => {
+        console.warn('Error respuesta api')
       }
-    );
+    });
 
 
 
