@@ -38,16 +38,12 @@ export class LoginComponent {
         localStorage.setItem('token', res.token);
         localStorage.setItem('isLoggedIn', 'true');
         // Se redirige a la página principal
-        //this.router.navigateByUrl('/pag');
+        this.router.navigateByUrl('/home');
       },
       error: (err: HttpErrorResponse) => {
         console.warn('Error respuesta api')
       }
     });
-
-
-
-
   }
 
   campoValido(campo: string){
