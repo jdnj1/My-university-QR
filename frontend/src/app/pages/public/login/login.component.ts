@@ -36,6 +36,7 @@ export class LoginComponent {
         console.log(res);
         // Se almacena el token en el localStorage del navegador
         localStorage.setItem('token', res.token);
+        localStorage.setItem('isLoggedIn', 'true');
         // Se redirige a la página principal
         //this.router.navigateByUrl('/pag');
       },

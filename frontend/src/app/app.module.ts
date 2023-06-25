@@ -10,6 +10,7 @@ import { LoginComponent } from './pages/public/login/login.component';
 import { Error404Component } from './pages/public/error404/error404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeComponent } from './pages/private/home/home.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     AdminLayoutComponent,
     HeaderComponent,
     LoginComponent,
-    Error404Component
+    Error404Component,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
