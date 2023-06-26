@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { loginform } from '../../../interfaces/login-form.interface';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +15,9 @@ export class LoginComponent {
   public formSubmit = false;
 
   public loginForm = this.fb.group({
-    email: ['userpass@gmail.com', [Validators.required, Validators.email]],
-    password: ['1234', Validators.required ]
+    email: [localStorage.getItem('email') || '', [Validators.required, Validators.email]],
+    password: ['', Validators.required ],
+    remember: [localStorage.getItem('email') || false]
   });
 
   constructor(
@@ -31,17 +33,17 @@ export class LoginComponent {
       return;
     }
 
+    console.log(this.loginForm)
+
     this.userService.login(this.loginForm.value).subscribe({
       next: (res: any) => {
         console.log(res);
-        // Se almacena el token en el localStorage del navegador
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('isLoggedIn', 'true');
+
         // Se redirige a la página principal
         this.router.navigateByUrl('/home');
       },
       error: (err: HttpErrorResponse) => {
-        console.warn('Error respuesta api')
+        console.warn('Error respuesta api', err)
       }
     });
   }

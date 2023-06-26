@@ -14,17 +14,21 @@ export class UserService {
   ) { }
 
   login(formData: any){
-    return this.http.post(`${environment.apiBaseUrl}/login`, formData);
+    return this.http.post(`${environment.apiBaseUrl}/login`, formData).pipe(
+      tap((res: any) =>{
+        // Se almacena el token en el localStorage del navegador
+        localStorage.setItem('token', res.token);
+        console.log(formData.remember)
+        // Si se marca el boton recordar se guarda el email en el localStorage
+        if(formData.remember){
+          localStorage.setItem('email', formData.email);
+        }
+        else{
+          localStorage.removeItem('email');
+        }
+      })
+    );
   }
-
-  // userIsLoggedIn(){
-  //   this.validateToken().pipe(
-  //     tap(res => {
-  //       console.log(res);
-  //       return true;
-  //     })
-  //   );
-  // }
 
   validateToken(){
     const token = localStorage.getItem('token') || '';
@@ -40,6 +44,7 @@ export class UserService {
       }),
       catchError(err => {
         console.warn(err);
+        localStorage.removeItem('token');
         return of(false);
       })
     );
