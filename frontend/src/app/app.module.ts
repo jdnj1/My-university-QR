@@ -11,6 +11,7 @@ import { Error404Component } from './pages/public/error404/error404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/private/home/home.component';
+import { AlertComponent } from './utils/alert/alert.component'
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { HomeComponent } from './pages/private/home/home.component';
     HeaderComponent,
     LoginComponent,
     Error404Component,
-    HomeComponent
+    HomeComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

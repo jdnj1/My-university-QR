@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { loginform } from '../../../interfaces/login-form.interface';
+import { AlertService } from 'src/app/utils/alert/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ){}
 
   login(){
@@ -43,7 +45,7 @@ export class LoginComponent {
         this.router.navigateByUrl('/home');
       },
       error: (err: HttpErrorResponse) => {
-        console.warn('Error respuesta api', err)
+        this.alertService.error('Usuario o contraseña incorrectos.');
       }
     });
   }

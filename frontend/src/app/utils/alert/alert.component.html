@@ -1,0 +1,4 @@
+<div *ngFor="let alert of alerts" class="{{cssClass(alert)}} mb-2 justify-content-between">
+    <div class="message-div"><span [innerHTML]="alert.message"></span></div>
+    <div class="close-div"><button type="button" class="btn-close" (click)="removeAlert(alert)"></button></div>
+</div>

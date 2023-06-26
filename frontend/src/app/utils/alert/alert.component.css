@@ -1,0 +1,23 @@
+.alert-section {
+    z-index: 30;
+    position: fixed;
+    top: calc(var(--app-header-height) + 20px);
+    word-break: break-word;
+    font-size: 14px;
+    right: 20px;
+    /* Para centrarlo
+    left: 50%;
+    transform: translate(-50%); */
+}
+
+.alert-section .alert {
+    display: flex;
+    width: 400px;
+    min-width: 300px;
+}
+
+.alert-section .alert .btn-close {
+    top: 0;
+    padding: 0.3rem 1rem;
+    float: right;
+}
