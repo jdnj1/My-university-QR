@@ -1,6 +1,6 @@
 /**
- * ROUTES: USER
- * Base URL: /api/users
+ * ROUTES: CODIGOS QR
+ * Base URL: /api/qr
  */
 
 // Librerias de terceros
@@ -8,7 +8,7 @@ const { Router } = require('express'); // Router de Express
 const { check } = require('express-validator'); // check de Express Validator
 
 // Propio
-const {getUsers, getUserById, createUsers, updateUsers, deleteUser, changePassword} = require('../controllers/user')
+const {getQr, createQr, getQrById, updateQr, deleteQr} = require('../controllers/qr')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
 const {validateJWT} = require('../middleware/validate-jwt')
@@ -19,41 +19,34 @@ const router = Router();
 //Llamadas
 router.get('/',
     validateJWT,
-    getUsers);
+    getQr);
 
 router.get('/:id', [
     check('id', 'El identificador no es válido').isInt(),
     validateJWT
-], getUserById); 
+], getQrById); 
 
 
 router.post('/', [
-    check('email', 'El campo email es obligatorio').notEmpty(),
-    check('password', 'El campo password es obligatorio').notEmpty(),
+    check('description', 'El campo descripción es obligatorio').notEmpty(),
+    check('tagName', 'El campo tagName es obligatorio').notEmpty(),
+    check('tagDescription', 'El campo tagDescription es obligatorio').notEmpty(),
     validateJWT,
     validateFields,
     validateRole
-], createUsers);    
+], createQr);    
 
 router.put('/:id', [
     check('id', 'El identificador no es válido').isInt(),
     validateJWT,
     validateFields,
     validateRole
-], updateUsers);    
-
-router.post('/:id/newPassword',[
-    check('id', 'El identificador no es válido').isInt(),
-    check('oldPassword', 'El campo oldPassword es obligatorio').notEmpty(),
-    check('newPassword', 'El campo newPassword es obligatorio').notEmpty(),
-    validateJWT,
-    validateFields
-], changePassword);
+], updateQr);    
 
 router.delete('/:id', [
     check('id', 'El identificador no es válido').isInt(),
     validateJWT,
     validateFields
-], deleteUser); 
+], deleteQr); 
 
 module.exports = router;

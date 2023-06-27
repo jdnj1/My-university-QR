@@ -20,6 +20,8 @@ app.use( express.json() );// Soporte para cuerpos codificados en JSON
 app.use('/api/users', require('./routes/user'));
 // Login
 app.use('/api/login', require('./routes/auth'));
+// Codigos QR
+app.use('/api/qr', require('./routes/qr'));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ', process.env.PORT);

@@ -85,13 +85,17 @@ const getUserById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createUsers = async( req , res = response ) => {
-    // Pagina y registros por pagina.
-    // const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
-    // const registropp = Number( process.env.DOCPAG );
-
     let {email, password} = req.body;
 
     try {
+        // Solo los usuarios administrador pueden crear nuevos usuarios
+        if(req.role !== 1){
+            res.status(403).json({
+                msg: 'Solo los administradores pueden crear usuarios'
+            });
+            return;
+        }
+
         // Comprueba si el email ya esta en uso
         const qEmail = `SELECT * FROM user WHERE email='${email}'`;
         const existeEmail = await dbConsult(qEmail);
@@ -113,7 +117,6 @@ const createUsers = async( req , res = response ) => {
         const user = await dbConsult(query);
 
         res.status(200).json({
-            ok: true,
             msg: 'postUsuarios',
             user
         });
@@ -148,7 +151,7 @@ const updateUsers = async( req , res = response ) => {
             return;
         }
 
-        // Extrae los campos que no cabe especificar a la hora de crear y el objeto por separado.
+        // Extrae los campos que no cabe especificar a la hora de crear.
         let { email, password, role, lim_consult } = req.body;
         let updateQuery = `UPDATE user SET`;
 
