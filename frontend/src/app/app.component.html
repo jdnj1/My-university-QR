@@ -1,10 +1,14 @@
+<!-- Reserva espacio para el header -->
+<app-header *ngIf="header"></app-header>
 
-<!-- <app-header></app-header> -->
+<!-- Reserva espacio para la barra laral -->
+<app-sidebar *ngIf="sidebar"></app-sidebar>
+
 <!--Reserva espacio para las alertas-->
 <div class="alert-section">
   <alert></alert>
 </div>
 
-<p *ngIf="header"> asdaskldaslkdj</p>
+
 
 <router-outlet></router-outlet>

@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { loginform } from '../interfaces/login-form.interface';
 import { environment } from '../../environments/environment';
 import { catchError, map, of, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import { catchError, map, of, tap } from 'rxjs';
 export class UserService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
   ) { }
 
   login(formData: any){
@@ -28,6 +30,11 @@ export class UserService {
         }
       })
     );
+  }
+
+  logout(){
+    localStorage.removeItem('token');
+    this,this.router.navigate(['/']);
   }
 
   validateToken(){

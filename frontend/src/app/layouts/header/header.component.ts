@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+  ){}
+
+  sidebarToggle(){
+    this.document.body.classList.toggle( 'toggle-sidebar' );
+  }
 
 }
