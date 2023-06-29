@@ -1,4 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { QrService } from 'src/app/services/qr.service';
+import { AlertService } from 'src/app/utils/alert/alert.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -6,11 +11,109 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  codesQr: any = [];
 
-  constructor(){}
+  disabledQr: any = [];
+
+  public activateForm: any = [];
+
+  constructor(
+    private qrService: QrService,
+    private alertService: AlertService,
+    private fb: FormBuilder,
+  ){}
 
   ngOnInit(): void{
+    this.getQr();
 
+    this.codesQr.forEach((qr: any) => {
+      console.log(qr.activated)
+
+
+    });
+
+  }
+
+  getQr(){
+    this.qrService.getQr().subscribe({
+      next: (res: any) => {
+        this.codesQr = res.qr;
+        console.log(this.codesQr)
+        // Cambiamos como se ve la fecha en el frontend
+        this.codesQr.forEach((qr: any) => {
+          let date = new Date(qr.date);
+          qr.date = date.toLocaleDateString();
+        });
+
+        for (let i = 0; i < this.codesQr.length; i++) {
+          if(this.codesQr[i].activated === 1){
+            this.activateForm[i] = this.fb.group({
+              activated: [true]
+            });
+
+            this.disabledQr[i] = false;
+          }
+          else{
+            this.activateForm[i] = this.fb.group({
+              activated: [false]
+            });
+
+            this.disabledQr[i] = true;
+          }
+
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('No se ha podido obtener el listado de códigos QR');
+      }
+    })
+  }
+
+  activateQr(index: any){
+    let value;
+
+    if(!this.activateForm[index].value.activated){
+      this.disabledQr[index] = true;
+      value = {activated: 0};
+    }
+    else{
+      this.disabledQr[index] = false;
+      value = {activated: 1};
+    }
+
+    //actualizamos el atributo activado de la base de datos.
+    this.qrService.updateQr(value, this.codesQr[index].idQr).subscribe({
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('Error al acutalizar el código QR');
+      }
+    })
+  }
+
+  deleteQr(index: any){
+    // Se lanza un mensaje modal para que el usuario confirme si quiere borrar el codigo QR
+    Swal.fire({
+      icon: 'warning',
+      title: 'Eliminar código QR',
+      text: 'Va a eliminar este código QR. Esta acción no se puede recertir.',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      confirmButtonColor: '#dc3545',
+      reverseButtons: true
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.qrService.deleteQr(this.codesQr[index].idQr).subscribe({
+          next: (res: any) => {
+            this.alertService.success('Código QR eliminado');
+
+            // Se elimina el codigo del array
+            this.codesQr.splice(index, 1);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.alertService.error('Error al eliminar el código QR');
+          }
+        })
+      }
+    });
   }
 
 }

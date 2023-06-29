@@ -1,0 +1,8 @@
+.disabled{
+  opacity: .5;
+  /* pointer-events: none; */
+}
+
+.disabledIn{
+  pointer-events: none;
+}

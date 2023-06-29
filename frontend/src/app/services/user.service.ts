@@ -34,7 +34,7 @@ export class UserService {
 
   logout(){
     localStorage.removeItem('token');
-    this,this.router.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   validateToken(){
