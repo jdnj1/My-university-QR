@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'http://localhost:3000/api',
+  appBaseUrl: 'http://localhost:4200',
   recordsByPage: 2,
 };
 

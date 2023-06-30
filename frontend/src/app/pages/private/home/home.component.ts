@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
+import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,6 +13,12 @@ import Swal from 'sweetalert2';
 })
 export class HomeComponent implements OnInit {
   codesQr: any = [];
+
+  // Qr generados
+  urlQr: any = [];
+  imgQr: any = [];
+  width = 60;
+  lgWidth = 300;
 
   disabledQr: any = [];
 
@@ -25,13 +32,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void{
     this.getQr();
-
-    this.codesQr.forEach((qr: any) => {
-      console.log(qr.activated)
-
-
-    });
-
   }
 
   getQr(){
@@ -43,6 +43,9 @@ export class HomeComponent implements OnInit {
         this.codesQr.forEach((qr: any) => {
           let date = new Date(qr.date);
           qr.date = date.toLocaleDateString();
+
+          // Almacenamos la url de cada código QR
+          this.urlQr.push(`${environment.appBaseUrl}/view/${qr.idQr}`);
         });
 
         for (let i = 0; i < this.codesQr.length; i++) {
@@ -60,7 +63,6 @@ export class HomeComponent implements OnInit {
 
             this.disabledQr[i] = true;
           }
-
         }
       },
       error: (err: HttpErrorResponse) => {
@@ -96,6 +98,7 @@ export class HomeComponent implements OnInit {
       title: 'Eliminar código QR',
       text: 'Va a eliminar este código QR. Esta acción no se puede recertir.',
       showCancelButton: true,
+      cancelButtonText: 'Cancelar',
       confirmButtonText: 'Eliminar',
       confirmButtonColor: '#dc3545',
       reverseButtons: true
@@ -116,4 +119,21 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // Función para guardar las url de los qr generados para usarlos en el mensaje modal
+  saveURL(event: any, index: any){
+    this.imgQr[index] = event.changingThisBreaksApplicationSecurity;
+
+  }
+
+  // Funcion para que se pueda ver el QR más grande cuando se pone el raton encima
+  onMouseQrEnter(index: any){
+    Swal.fire({
+      title: 'Código QR',
+      imageUrl: this.imgQr[index],
+      imageWidth: 300,
+      imageHeight: 300,
+      imageAlt: 'Imágen del código QR',
+      showConfirmButton: false,
+    })
+  }
 }
