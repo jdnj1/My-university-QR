@@ -24,7 +24,7 @@ const login = async( req , res = response ) => {
 
     try{
         // Se busca al usuario.
-        const qEmail = `SELECT * FROM user WHERE email='${email}'`;
+        const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
         const user = await dbConsult(qEmail);
 
         if(user.length === 0){
@@ -46,21 +46,11 @@ const login = async( req , res = response ) => {
         // Genera un token.
         const token = await generateJWT( user[0].idUser , user[0].role );
 
-        // Responde con el token.
-        //let userIdString = user._id.toString();
-
-        // Anade el UID a la peticion.
-        //req[ 'uid' ] = userIdString;
-
-
         res.status( 200 ).json( {
             user: user[0] ,
             token
             //expires: JWTExpire
         } );
-
-        // Quita el UID a la peticion.
-        //delete req[ 'uid' ];
 
         return;
     } catch( error ){
@@ -95,7 +85,7 @@ const token = async( req , res = response ) => {
         const { uid, role, ...object } = jwt.verify(token, process.env.JWTSECRET);
 
         // Comprobamos que el id del token recibido corresponde al usuario
-        const qUser = `SELECT * FROM user WHERE idUser='${uid}'`;
+        const qUser = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser='${uid}'`;
         const user = await dbConsult(qUser);
 
         if(user.length === 0){

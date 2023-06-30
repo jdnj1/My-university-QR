@@ -20,7 +20,7 @@ const getUsers = async( req , res ) => {
     const registropp = Number( process.env.DOCPAG );
 
     try {
-        const query = `SELECT * FROM user LIMIT ${desde}, ${registropp}`;
+        const query = `SELECT * FROM ${process.env.USERTABLE} LIMIT ${desde}, ${registropp}`;
         const users = await dbConsult(query);
         
         res.status(200).json({
@@ -51,7 +51,7 @@ const getUserById = async( req , res ) => {
     // Se extrae el id del usuario desde el path
     const uid = req.params.id;
     try {
-        const query = `SELECT * FROM user WHERE idUser = ${uid}`;
+        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${uid}`;
         const user = await dbConsult(query);
 
         if(user.length !== 0){
@@ -97,7 +97,7 @@ const createUsers = async( req , res = response ) => {
         }
 
         // Comprueba si el email ya esta en uso
-        const qEmail = `SELECT * FROM user WHERE email='${email}'`;
+        const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
         const existeEmail = await dbConsult(qEmail);
         if(existeEmail.length !== 0){
             res.status(400).json({
@@ -112,7 +112,7 @@ const createUsers = async( req , res = response ) => {
         // Cifra la contrasena con la cadena.
         password = bcrypt.hashSync(password, salt);
 
-        const query = `INSERT INTO user (email, password) VALUES ('${ email }', '${ password }')`;
+        const query = `INSERT INTO ${process.env.USERTABLE} (email, password) VALUES ('${ email }', '${ password }')`;
         console.log(query)
         const user = await dbConsult(query);
 
@@ -141,7 +141,7 @@ const updateUsers = async( req , res = response ) => {
     
     try{
         // Comprueba que haya un usuario con ese ID.
-        let userQuery = `SELECT * FROM user WHERE idUser=${uid}`;
+        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
         let user = await dbConsult(userQuery);
 
         if( user.length === 0 ){
@@ -153,12 +153,12 @@ const updateUsers = async( req , res = response ) => {
 
         // Extrae los campos que no cabe especificar a la hora de crear.
         let { email, password, role, lim_consult } = req.body;
-        let updateQuery = `UPDATE user SET`;
+        let updateQuery = `UPDATE ${process.env.USERTABLE} SET`;
 
         // Dependiendo de los campos que se envien la query es de una forma u otra.
         if(email){
             // Se comprueba si el email ya esta en uso
-            const qEmail = `SELECT * FROM user WHERE email='${email}'`;
+            const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
             const existeEmail = await dbConsult(qEmail);
 
             if(existeEmail.length !== 0){
@@ -233,7 +233,7 @@ const changePassword = async( req , res ) => {
         // === Se comprueba que la contrasena recibida en la peticion coincida con la actual ===
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
-        let userQuery = `SELECT * FROM user WHERE idUser = ${userId}`;
+        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${userId}`;
         let user = await dbConsult(userQuery);
        if( user.length === 0 ){
             // Si no se encuentra al usuario, responde con not found sin cuerpo.
@@ -258,7 +258,7 @@ const changePassword = async( req , res ) => {
         let newpass = bcrypt.hashSync( newPassword , salt );
 
         // Guarda los cambios.
-        passQuery = `UPDATE user SET password = '${newpass}' WHERE idUser = ${userId}`;
+        passQuery = `UPDATE ${process.env.USERTABLE} SET password = '${newpass}' WHERE idUser = ${userId}`;
 
         res.status(200).json({
             msg: 'Contraseña actualizada',
@@ -286,7 +286,7 @@ const deleteUser = async(req, res) => {
     
     try{
         // Se comprueba que haya un usuario con ese ID.
-        let userQuery = `SELECT * FROM user WHERE idUser=${uid}`;
+        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
         let user = await dbConsult(userQuery);
         if( user.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -296,7 +296,7 @@ const deleteUser = async(req, res) => {
         }
 
         // Se elimina usuario.
-        let deleteQuery = `DELETE FROM user WHERE idUser=${uid}`;
+        let deleteQuery = `DELETE FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
         user = await dbConsult(deleteQuery);
 
         res.status(200).json({
