@@ -104,7 +104,7 @@ const createQr = async( req , res = response ) => {
         const qr = await dbConsult(query);
 
         res.status(200).json({
-            msg: 'postUsuarios',
+            msg: 'postQR',
             qr
         });
         
@@ -140,25 +140,30 @@ const updateQr = async( req , res = response ) => {
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
         let { description, tagName, tagDescription, date, activated} = req.body;
-        let updateQuery = `UPDATE ${process.env.QRTABLE} SET`;
+        let updateQuery = `UPDATE ${process.env.QRTABLE} SET `;
+
+        // En este array se van almacenando todos los campos a actualizar
+        let updateFields = [];
 
         // Dependiendo de los campos que se envien la query es de una forma u otra.
         if(description){
-            updateQuery += ` description = '${description}'`;
+            updateFields.push(`description = '${description}'`);
         }
         if(tagName){
-            updateQuery += `, tagName = '${tagName}'`;
+            updateFields.push(`tagName = '${tagName}'`);
         }
         if(tagDescription){
-            updateQuery += `, tagDescription = '${tagDescription}'`;
+            updateFields.push(`tagDescription = '${tagDescription}'`);
         }
         if(date){
-            updateQuery += `, date = ${date}`;
+            updateFields.push(`date = '${date}'`);
         }
         if( activated === 1 || activated === 0 ){
-            updateQuery += ` activated = ${activated}`;
+            updateFields.push(`activated = '${activated}'`);
         }
 
+        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
+        updateQuery += updateFields.join(','); 
         updateQuery += ` WHERE idQr=${uid}`;
         
         // Se actualiza. 

@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit {
     this.qrService.getQr().subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
-        console.log(this.codesQr)
         // Cambiamos como se ve la fecha en el frontend
         this.codesQr.forEach((qr: any) => {
           let date = new Date(qr.date);
