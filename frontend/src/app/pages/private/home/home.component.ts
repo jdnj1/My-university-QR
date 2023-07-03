@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Eliminar código QR',
-      text: 'Va a eliminar este código QR. Esta acción no se puede recertir.',
+      text: 'Va a eliminar este código QR. Esta acción no se puede revertir.',
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Eliminar',
