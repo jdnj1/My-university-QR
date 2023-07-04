@@ -1,0 +1,124 @@
+
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Código QR</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+      <!-- barra de busqueda de codigos QR -->
+      <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="POST" action="#">
+          <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+          <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Tus códigos QR</h5>
+            <div class="d-flex justify-content-around">
+              <div>
+                <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
+                <div class="d-flex justify-content-around align-items-center">
+                  <form [formGroup]="activateForm">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
+                    </div>
+                  </form>
+                  <button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button>
+                </div>
+              </div>
+              <!-- Parte del formulario del codigo QR -->
+              <div>
+                <form [formGroup]="dataQrForm">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="scol-form-label">Datos del QR</h5>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="startUpdate()" [disabled]="buttons">
+                      <i class="bi bi-pencil-square"></i></button>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <label for="inputName" class="form-label">Nombre/Descripción</label>
+                      <textarea id="inputName" class="form-control" style="height: 100px"
+                        formControlName="description"></textarea>
+                    </div>
+
+                    <div>
+                      <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
+                      <input type="text" class="form-control" id="inputNameTag"
+                        formControlName="tagName">
+
+                      <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
+                      <input type="text" class="form-control" id="inputDescTag"
+                        formControlName="tagDescription">
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-end" *ngIf="buttons">
+                    <button type="button" class="btn btn-danger" (click)="cancelUpdate()">Cancelar</button>
+                    <button type="button" class="btn btn-success" (click)="updateQr()">Guardar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dashboard">
+    <div class="row">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Llamadas del código QR</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col"><i class="bi bi-qr-code"></i></th>
+                <th scope="col">Fecha validez</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Activar/Desactivar</th>
+                <th scope="col">Imprimir</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}"> -->
+                <!-- <td (click)="onMouseQrEnter(i)">
+                  <qrcode style="cursor: pointer;" (qrCodeURL)="saveURL($event, i)" [qrdata]="urlQr[i]" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
+                </td>
+                <td [ngClass]="{'disabledIn': disabledQr[i]}">{{qr.date}}</td>
+                <td [ngClass]="{'disabledIn': disabledQr[i]}">{{qr.description}}</td>
+                <td>
+                  <form [formGroup]="activateForm[i]">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr(i)">
+                    </div>
+                  </form> -->
+                <!-- </td> -->
+                <!-- <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
+                <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR"><i class="bi bi-pencil-square"></i></button></td>
+                <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td> -->
+              <!-- </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

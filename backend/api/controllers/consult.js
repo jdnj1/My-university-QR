@@ -95,7 +95,7 @@ const createConsult = async( req , res = response ) => {
 
     try {
         
-        const query = `INSERT INTO ${process.env.CONSULTTABLE} (qrCode) sVALUES (${ qrCode })`;
+        const query = `INSERT INTO ${process.env.CONSULTTABLE} (qrCode) VALUES (${ qrCode })`;
         console.log(query)
 
         const consult = await dbConsult(query);

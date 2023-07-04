@@ -67,23 +67,29 @@ export class HomeComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.alertService.error('No se ha podido obtener el listado de códigos QR');
       }
-    })
+    });
   }
 
   activateQr(index: any){
     let value;
+    let msg: string;
 
     if(!this.activateForm[index].value.activated){
       this.disabledQr[index] = true;
       value = {activated: 0};
+      msg= 'Código QR desactivado correctamente';
     }
     else{
       this.disabledQr[index] = false;
       value = {activated: 1};
+      msg= 'Código QR activado correctamente';
     }
 
     //actualizamos el atributo activado de la base de datos.
     this.qrService.updateQr(value, this.codesQr[index].idQr).subscribe({
+      next: (res:any) =>{
+        this.alertService.success(msg);
+      },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al acutalizar el código QR');
       }

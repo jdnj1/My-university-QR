@@ -1,57 +1,55 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class QrService {
+export class ConsultService {
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) { }
 
-  getQr(){
+  getConsults(){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.get(`${environment.apiBaseUrl}/qr`,{
+    return this.http.get(`${environment.apiBaseUrl}/consult`,{
       headers: {'x-token': token}
     });
   }
 
-  getQrbyId(id: any){
+  getConsultbyId(id: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.get(`${environment.apiBaseUrl}/qr/${id}`,{
+    return this.http.get(`${environment.apiBaseUrl}/consult/${id}`,{
       headers: {'x-token': token}
     });
   }
 
-  createQr(){
+  createConsult(){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/qr`,{
+    return this.http.post(`${environment.apiBaseUrl}/consult`,{
       headers: {'x-token': token}
     });
   }
 
-  updateQr(formData: any, id: Number){
+  updateConsult(formData: any, id: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.put(`${environment.apiBaseUrl}/qr/${id}`, formData, {
-      headers: {'x-token': token},
+    return this.http.put(`${environment.apiBaseUrl}/consult/${id}`, formData, {
+      headers: {'x-token': token}
     });
   }
 
-  deleteQr(id: Number){
+  deleteConsult(id: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.delete(`${environment.apiBaseUrl}/qr/${id}`,{
-      headers: {'x-token': token},
+    return this.http.delete(`${environment.apiBaseUrl}/consult/${id}`, {
+      headers: {'x-token': token}
     });
   }
-
 }
-

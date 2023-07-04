@@ -91,15 +91,15 @@ const getQrById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createQr = async( req , res = response ) => {
-    let {description, tagName, tagDescription} = req.body;
-    // Fecha de prueba de momento
-    let date = new Date(Date.now());
+    // Cuando se le da a añadir qr se redirige a la interfaz de configruacion del qr con datos
+    // predetermindados para que se cambien. Por ejemplo descriptiom = Qr de prueba
+
+    // Por si se introducen los campos por llamada
+    let {description, tagName, tagDescription, date} = req.body;
 
     try {
         
-        const query = `INSERT INTO ${process.env.QRTABLE} (description, tagName, tagDescription, date, user)
-         VALUES ('${ description }', '${ tagName }', '${tagDescription}', '${date.toJSON()}', ${req.uid})`;
-        console.log(query)
+        const query = `INSERT INTO ${process.env.QRTABLE} (user) VALUES (${req.uid})`;
 
         const qr = await dbConsult(query);
 
