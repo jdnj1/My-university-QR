@@ -32,7 +32,7 @@ export class QrService {
   createQr(){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/qr`,{
+    return this.http.post(`${environment.apiBaseUrl}/qr`, {}, {
       headers: {'x-token': token}
     });
   }

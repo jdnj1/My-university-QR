@@ -21,7 +21,7 @@
         </form>
       </div>
       <!-- Boton para añadir nuevos codigos QR -->
-      <button type="button" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Añadir QR</button>
+      <button type="button" class="btn btn-primary" (click)="createQr()"><i class="bi bi-plus-lg"></i> Añadir QR</button>
     </div>
   </div>
 
@@ -44,6 +44,9 @@
                 </tr>
               </thead>
               <tbody>
+                <tr *ngIf="codesQr.length === 0">
+                  <td colspan="7">No has creadao ningún código QR todavía.</td>
+                </tr>
                 <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}">
                   <td (click)="onMouseQrEnter(i)">
                     <qrcode style="cursor: pointer;" (qrCodeURL)="saveURL($event, i)" [qrdata]="urlQr[i]" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
@@ -58,7 +61,7 @@
                     </form>
                   </td>
                   <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
-                  <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR"><i class="bi bi-pencil-square"></i></button></td>
+                  <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
                   <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
                 </tr>
               </tbody>

@@ -5,6 +5,7 @@ import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
     private qrService: QrService,
     private alertService: AlertService,
     private fb: FormBuilder,
+    private route: Router
   ){}
 
   ngOnInit(): void{
@@ -68,6 +70,24 @@ export class HomeComponent implements OnInit {
         this.alertService.error('No se ha podido obtener el listado de códigos QR');
       }
     });
+  }
+
+  createQr(){
+    this.qrService.createQr().subscribe({
+      next: (res:any) =>{
+        console.log(res);
+        this.alertService.success("Código QR generado correctamente");
+        this.route.navigateByUrl(`/codeQr/${res.qr.insertId}`);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('Error al crear el código QR');
+        console.log(err)
+      }
+    });
+  }
+
+  editQr(index: any){
+    this.route.navigateByUrl(`codeQr/${this.codesQr[index].idQr}`)
   }
 
   activateQr(index: any){

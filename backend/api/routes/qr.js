@@ -28,12 +28,7 @@ router.get('/:id', [
 
 
 router.post('/', [
-    check('description', 'El campo descripción es obligatorio').notEmpty(),
-    check('tagName', 'El campo tagName es obligatorio').notEmpty(),
-    check('tagDescription', 'El campo tagDescription es obligatorio').notEmpty(),
-    validateJWT,
-    validateFields,
-    validateRole
+    validateJWT
 ], createQr);    
 
 router.put('/:id', [

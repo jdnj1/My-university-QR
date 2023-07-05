@@ -13,11 +13,12 @@ export class ConsultService {
     private router: Router
   ) { }
 
-  getConsults(){
+  getConsults(id: any){
     const token = localStorage.getItem('token') || '';
 
     return this.http.get(`${environment.apiBaseUrl}/consult`,{
-      headers: {'x-token': token}
+      headers: {'x-token': token},
+      params: {'idQr': id}
     });
   }
 
@@ -32,7 +33,7 @@ export class ConsultService {
   createConsult(){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/consult`,{
+    return this.http.post(`${environment.apiBaseUrl}/consult`, {}, {
       headers: {'x-token': token}
     });
   }
