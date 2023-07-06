@@ -55,6 +55,9 @@ export class QrComponent implements OnInit {
     this.getQr();
     this.getConsults();
 
+    this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
+    this.renderer.selectRootElement( '#msg' ).style.display = 'none';
+
     // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
     const searchFieldElement = this.renderer.selectRootElement( '#searchField' );
 
@@ -110,6 +113,13 @@ export class QrComponent implements OnInit {
     this.consultService.getConsults(id).subscribe({
       next: (res: any) => {
         this.consults = res.consult;
+
+        if(this.consults.length === 0){
+          const tdElement = this.renderer.selectRootElement( '#msg' );
+          tdElement.innerHTML = 'No has creadao ningún código QR todavía.';
+          tdElement.style.display = 'table-cell';
+          return;
+        }
 
         for (let i = 0; i < this.consults.length; i++) {
           if(this.consults[i].activated === 1){
@@ -258,6 +268,13 @@ export class QrComponent implements OnInit {
 
         this.consults = res.consult;
 
+        if(this.consults.length === 0){
+          const tdElement = this.renderer.selectRootElement( '#msg' );
+          tdElement.innerHTML = 'No se ha encontrado ninguna llamada.';
+          tdElement.style.display = 'table-cell';
+          return;
+        }
+
         for (let i = 0; i < this.consults.length; i++) {
           if(this.consults[i].activated === 1){
             this.consultForm[i] = this.fb.group({
@@ -295,6 +312,7 @@ export class QrComponent implements OnInit {
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
       this.getConsults();
+      this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }
     // Cuando no esta vacio
     else{

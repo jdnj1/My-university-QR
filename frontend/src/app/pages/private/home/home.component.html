@@ -47,8 +47,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="codesQr.length === 0">
-                  <td colspan="7">No has creadao ningún código QR todavía.</td>
+                <tr>
+                  <td colspan="7" id="msg">No has creadao ningún código QR todavía.</td>
                 </tr>
                 <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}">
                   <td (click)="onMouseQrEnter(i)">

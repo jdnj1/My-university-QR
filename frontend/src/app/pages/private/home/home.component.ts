@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
     this.getQr();
 
     this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
+    this.renderer.selectRootElement( '#msg' ).style.display = 'none';
 
 
     // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
@@ -59,12 +60,22 @@ export class HomeComponent implements OnInit {
     searchFieldElement.addEventListener('keydown', () =>{
       clearTimeout(this.timer);
     });
+
+
   }
 
   getQr(){
     this.qrService.getQr().subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
+
+        if(this.codesQr.length === 0){
+          const tdElement = this.renderer.selectRootElement( '#msg' );
+          tdElement.innerHTML = 'No has creadao ningún código QR todavía.';
+          tdElement.style.display = 'table-cell';
+          return;
+        }
+
         // Cambiamos como se ve la fecha en el frontend
         this.codesQr.forEach((qr: any) => {
           let date = new Date(qr.date);
@@ -203,6 +214,13 @@ export class HomeComponent implements OnInit {
 
         this.codesQr = res.qr;
 
+        if(this.codesQr.length === 0){
+          const tdElement = this.renderer.selectRootElement( '#msg' );
+          tdElement.innerHTML = 'No se han encontrado códigos QR.';
+          tdElement.style.display = 'table-cell';
+          return;
+        }
+
         // Cambiamos como se ve la fecha en el frontend
         this.codesQr.forEach((qr: any) => {
           let date = new Date(qr.date);
@@ -248,6 +266,7 @@ export class HomeComponent implements OnInit {
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
       this.getQr();
+      this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }
     // Cuando no esta vacio
     else{

@@ -101,8 +101,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="consults.length === 0">
-                <td colspan="4">Este código QR no tiene llamadas</td>
+              <tr>
+                <td colspan="4" id="msg">Este código QR no tiene llamadas</td>
               </tr>
               <tr *ngFor="let consult of consults; let i = index" [ngClass]="{'disabled': disableConsult[i]}">
                 <td [ngClass]="{'disabledIn': disableConsult[i]}">{{consult.name}}</td>
