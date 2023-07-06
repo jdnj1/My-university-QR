@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -25,15 +25,22 @@ export class HomeComponent implements OnInit {
 
   public activateForm: any = [];
 
+  // Form de búsqueda de QR
+  searchForm = this.fb.group({
+    searchQuery: ['']
+  });
+
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
     private fb: FormBuilder,
-    private route: Router
+    private route: Router,
+    private renderer: Renderer2
   ){}
 
   ngOnInit(): void{
     this.getQr();
+    this.checkSearch();
   }
 
   getQr(){
@@ -160,5 +167,31 @@ export class HomeComponent implements OnInit {
       imageAlt: 'Imágen del código QR',
       showConfirmButton: false,
     })
+  }
+
+  // Funciones relacionadas con la barra de búsqueda
+  search(){
+    // Se comprueba que el fomrulario este correcto
+    if(!this.searchForm.valid){
+      return;
+    }
+
+    // Se envia al componente de resultado de busqueda
+    this.route.navigateByUrl(`/home/search/${this.searchForm.value.searchQuery}`);
+  }
+
+  checkSearch(){
+    const searchClearElement = this.renderer.selectRootElement( '#searchClear' );
+
+    // Cuando esta vacio
+    if(this.searchForm.value.searchQuery === ''){
+      // Se esconde el boton de limpiar el input
+      searchClearElement.style.display = 'none';
+    }
+    // Cuando no esta vacio
+    else{
+      // Se muestra el boton
+      searchClearElement.style.display = 'inline-block';
+    }
   }
 }

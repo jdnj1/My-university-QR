@@ -6,3 +6,11 @@
 .disabledIn{
   pointer-events: none;
 }
+
+#searchClearButton{
+  margin-left: -45px;
+}
+
+#searchField{
+  padding-right: 65px;
+}
