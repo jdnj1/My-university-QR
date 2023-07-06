@@ -22,6 +22,18 @@ export class ConsultService {
     });
   }
 
+  getConsultsSearch(id: any, query: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.get(`${environment.apiBaseUrl}/consult`,{
+      headers: {'x-token': token},
+      params: {
+        'idQr': id,
+        'query': query
+      }
+    });
+  }
+
   getConsultbyId(id: any){
     const token = localStorage.getItem('token') || '';
 

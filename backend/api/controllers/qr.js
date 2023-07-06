@@ -19,15 +19,30 @@ const getQr = async( req , res ) => {
     const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
     const registropp = Number( process.env.DOCPAG );
 
+    // Se comprueba si se pasa alguna query por parametro para buscar qr
+    const querySearch = req.query.query;
+    
     try {
         let query = `SELECT * FROM ${process.env.QRTABLE}`;
 
         // Si el usuario no es admin se le devuelven solo sus codigos qr
         if(req.role === 0){
             query += ` WHERE user = ${req.uid}`
+
+            // Si ademas existe la query de busqueda
+            if(querySearch){
+                query += ` AND description LIKE '%${querySearch}%'`;
+            }
+        }else{
+            // Si el usuario es amdmin y ademas existe la query de busqueda
+            if(querySearch){
+                query += ` WHERE description LIKE '%${querySearch}%'`
+            }
         }
 
-        query += `  LIMIT ${desde}, ${registropp}`;
+        
+
+        query += ` LIMIT ${desde}, ${registropp}`;
 
         const qr = await dbConsult(query);
         

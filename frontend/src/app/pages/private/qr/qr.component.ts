@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
@@ -33,20 +33,41 @@ export class QrComponent implements OnInit {
     tagDescription: ['Descripción de etiqueta']
   });
 
+  // Form de búsqueda de QR
+  searchForm = this.fb.group({
+    searchQuery: ['']
+  });
+
   buttons = false;
+  timer: any;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private qrService: QrService,
-    private conusltService: ConsultService,
+    private consultService: ConsultService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ){}
 
   ngOnInit(): void {
     this.getQr();
     this.getConsults();
+
+    // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
+    const searchFieldElement = this.renderer.selectRootElement( '#searchField' );
+
+    searchFieldElement.addEventListener('keyup', () =>{
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() =>{
+        this.search();
+      }, 1000)
+    });
+
+    searchFieldElement.addEventListener('keydown', () =>{
+      clearTimeout(this.timer);
+    });
   }
 
   getQr(){
@@ -86,7 +107,7 @@ export class QrComponent implements OnInit {
     let id: any = this.route.snapshot.params['id'];
 
     // Obtenemos las llamadas del código QR.
-    this.conusltService.getConsults(id).subscribe({
+    this.consultService.getConsults(id).subscribe({
       next: (res: any) => {
         this.consults = res.consult;
 
@@ -183,7 +204,7 @@ export class QrComponent implements OnInit {
     }
 
     //actualizamos el atributo activado de la base de datos.
-    this.conusltService.updateConsult(value, this.consults[index].idConsult).subscribe({
+    this.consultService.updateConsult(value, this.consults[index].idConsult).subscribe({
       next: (res:any) =>{
         this.alertService.success(msg);
       },
@@ -206,7 +227,7 @@ export class QrComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if(result.isConfirmed){
-        this.conusltService.deleteConsult(this.consults[index].idConsult).subscribe({
+        this.consultService.deleteConsult(this.consults[index].idConsult).subscribe({
           next: (res: any) => {
             this.alertService.success('Llamada eliminada');
 
@@ -219,5 +240,66 @@ export class QrComponent implements OnInit {
         })
       }
     });
+  }
+
+  // Funciones relacionadas con la barra de búsqueda
+  search(){
+    // Se comprueba que el fomrulario este correcto
+    if(!this.searchForm.valid){
+      return;
+    }
+
+    // Se almacena el id del código QR
+    let id: any = this.route.snapshot.params['id'];
+
+    this.consultService.getConsultsSearch(id ,this.searchForm.value.searchQuery).subscribe({
+      next: (res: any) =>{
+        console.log(res);
+
+        this.consults = res.consult;
+
+        for (let i = 0; i < this.consults.length; i++) {
+          if(this.consults[i].activated === 1){
+            this.consultForm[i] = this.fb.group({
+              activated: [true]
+            });
+
+            this.disableConsult[i] = false;
+          }
+          else{
+            this.consultForm[i] = this.fb.group({
+              activated: [false]
+            });
+
+            this.disableConsult[i] = true;
+          }
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.alertService.error('Se ha producido un error al buscar llamadas')
+      }
+    });
+  }
+
+  cleanSearch(){
+    this.searchForm.get('searchQuery')?.setValue('');
+    this.checkSearch();
+  }
+
+  checkSearch(){
+    const searchClearElement = this.renderer.selectRootElement( '#searchClear' );
+
+    // Cuando esta vacio
+    if(this.searchForm.value.searchQuery === ''){
+      // Se esconde el boton de limpiar el input
+      searchClearElement.style.display = 'none';
+      this.getConsults();
+    }
+    // Cuando no esta vacio
+    else{
+      // Se muestra el boton
+      searchClearElement.style.display = 'inline-block';
+    }
   }
 }

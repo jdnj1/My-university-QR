@@ -13,13 +13,6 @@
           </ol>
         </nav>
       </div>
-      <!-- barra de busqueda de codigos QR -->
-      <div class="search-bar">
-        <form class="search-form d-flex align-items-center" method="POST" action="#">
-          <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-          <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-        </form>
-      </div>
     </div>
   </div>
 
@@ -85,11 +78,14 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-title">Llamadas del código QR</h5>
-            <!-- Barra de búsqueda de llamadas -->
+            <!-- barra de busqueda de codigos QR -->
             <div class="search-bar">
-              <form class="search-form d-flex align-items-center" method="POST" action="#">
-                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+              <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
+                <input id="searchField" type="text" name="query" placeholder="Buscar códigos QR..." title="Buscar códigos QR" formControlName="searchQuery" (input)="checkSearch()">
                 <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                <button id="searchClearButton" type="reset" (click)="cleanSearch()">
+                  <i id="searchClear" class="bi bi-x-lg"></i>
+                </button>
               </form>
             </div>
             <!-- Botón para añadir nuevas llamadas -->

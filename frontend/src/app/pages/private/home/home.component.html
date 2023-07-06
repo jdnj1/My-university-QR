@@ -18,7 +18,7 @@
         <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
           <input id="searchField" type="text" name="query" placeholder="Buscar códigos QR..." title="Buscar códigos QR" formControlName="searchQuery" (input)="checkSearch()">
           <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-          <button id="searchClearButton" type="reset">
+          <button id="searchClearButton" type="reset" (click)="cleanSearch()">
             <i id="searchClear" class="bi bi-x-lg"></i>
          </button>
         </form>

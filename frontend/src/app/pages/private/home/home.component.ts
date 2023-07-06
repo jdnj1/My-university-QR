@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
     searchQuery: ['']
   });
 
+  timer: any;
+
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
@@ -40,7 +42,23 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void{
     this.getQr();
-    this.checkSearch();
+
+    this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
+
+
+    // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
+    const searchFieldElement = this.renderer.selectRootElement( '#searchField' );
+
+    searchFieldElement.addEventListener('keyup', () =>{
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() =>{
+        this.search();
+      }, 1000)
+    });
+
+    searchFieldElement.addEventListener('keydown', () =>{
+      clearTimeout(this.timer);
+    });
   }
 
   getQr(){
@@ -177,7 +195,49 @@ export class HomeComponent implements OnInit {
     }
 
     // Se envia al componente de resultado de busqueda
-    this.route.navigateByUrl(`/home/search/${this.searchForm.value.searchQuery}`);
+    //this.route.navigateByUrl(`/home/search/${this.searchForm.value.searchQuery}`);
+
+    this.qrService.getQrSearch(this.searchForm.value.searchQuery).subscribe({
+      next: (res: any) =>{
+        console.log(res);
+
+        this.codesQr = res.qr;
+
+        // Cambiamos como se ve la fecha en el frontend
+        this.codesQr.forEach((qr: any) => {
+          let date = new Date(qr.date);
+          qr.date = date.toLocaleDateString();
+
+          // Almacenamos la url de cada código QR
+          this.urlQr.push(`${environment.appBaseUrl}/view/${qr.idQr}`);
+        });
+
+        for (let i = 0; i < this.codesQr.length; i++) {
+          if(this.codesQr[i].activated === 1){
+            this.activateForm[i] = this.fb.group({
+              activated: [true]
+            });
+
+            this.disabledQr[i] = false;
+          }
+          else{
+            this.activateForm[i] = this.fb.group({
+              activated: [false]
+            });
+
+            this.disabledQr[i] = true;
+          }
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      }
+    });
+  }
+
+  cleanSearch(){
+    this.searchForm.get('searchQuery')?.setValue('');
+    this.checkSearch();
   }
 
   checkSearch(){
@@ -187,6 +247,7 @@ export class HomeComponent implements OnInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
+      this.getQr();
     }
     // Cuando no esta vacio
     else{

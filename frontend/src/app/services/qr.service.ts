@@ -21,6 +21,15 @@ export class QrService {
     });
   }
 
+  getQrSearch(query: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.get(`${environment.apiBaseUrl}/qr`,{
+      headers: {'x-token': token},
+      params: {'query': query}
+    });
+  }
+
   getQrbyId(id: any){
     const token = localStorage.getItem('token') || '';
 

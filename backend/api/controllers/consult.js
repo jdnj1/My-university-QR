@@ -22,8 +22,17 @@ const getConsult = async( req , res ) => {
     // Se obtiene el id del codigo QR desde la query
     const idQr = req.query.idQr;
 
+    // Se comprueba si se pasa alguna query por parametro para buscar qr
+    const querySearch = req.query.query;
+
     try {
-        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${idQr} LIMIT ${desde}, ${registropp}`;
+        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${idQr}`; 
+        
+        if(querySearch){
+            query += ` AND name LIKE '%${querySearch}%'`
+        }
+        
+        query += ` LIMIT ${desde}, ${registropp}`;
 
         const consult = await dbConsult(query);
         
