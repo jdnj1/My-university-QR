@@ -24,7 +24,7 @@
             <h5 class="card-title">Tus códigos QR</h5>
             <div class="container">
               <div class="row">
-                <div class="col-sm-4" style="margin: 1em;">
+                <div class=" col col-sm-4" style="margin: 1em;">
                   <div class="d-flex align-items-center justify-content-center">
                     <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
                   </div>
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <!-- Parte del formulario del codigo QR -->
-                <div class="col">
+                <div class="col" style="margin: 1em;">
                   <form [formGroup]="dataQrForm">
                     <div class="d-flex align-items-center justify-content-sm-between m-2">
                       <h5 class="scol-form-label">Datos del QR</h5>

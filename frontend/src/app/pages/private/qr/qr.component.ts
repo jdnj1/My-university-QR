@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
+import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,7 +15,8 @@ import Swal from 'sweetalert2';
 })
 export class QrComponent implements OnInit {
   //Datos del qr
-  urlQr = "ahora lo cambio";
+  idQr = this.route.snapshot.params['id'];
+  urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
   width = 256;
   qr: any;
 
@@ -75,11 +77,8 @@ export class QrComponent implements OnInit {
   }
 
   getQr(){
-    // Se almacena el id del código QR
-    let id: any = this.route.snapshot.params['id'];
-
     // Obtenemos todos los datos del QR
-    this.qrService.getQrbyId(id).subscribe({
+    this.qrService.getQrbyId(this.idQr).subscribe({
       next: (res: any) => {
         this.qr = res.qr;
 
@@ -112,11 +111,8 @@ export class QrComponent implements OnInit {
   }
 
   getConsults(){
-    // Se almacena el id del código QR
-    let id: any = this.route.snapshot.params['id'];
-
     // Obtenemos las llamadas del código QR.
-    this.consultService.getConsults(id).subscribe({
+    this.consultService.getConsults(this.idQr).subscribe({
       next: (res: any) => {
         this.consults = res.consult;
 
