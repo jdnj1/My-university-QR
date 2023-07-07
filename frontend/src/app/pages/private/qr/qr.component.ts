@@ -30,7 +30,8 @@ export class QrComponent implements OnInit {
   dataQrForm = this.fb.group({
     description: ['Descripción del QR'],
     tagName: ['Nombre de etiqueta'],
-    tagDescription: ['Descripción de etiqueta']
+    tagDescription: ['Descripción de etiqueta'],
+    date: ['']
   });
 
   // Form de búsqueda de QR
@@ -82,10 +83,17 @@ export class QrComponent implements OnInit {
       next: (res: any) => {
         this.qr = res.qr;
 
+        //Adaptamos el formato de la fecha para poder ponerla en el input
+        let date = new Date(this.qr.date);
+        this.qr.date = date.toISOString().split('T')[0];
+
+        console.log(this.qr.date)
+
         this.dataQrForm = this.fb.group({
           description: [{value: this.qr.description, disabled: true}],
           tagName: [{value: this.qr.tagName, disabled: true}],
-          tagDescription: [{value: this.qr.tagDescription, disabled: true}]
+          tagDescription: [{value: this.qr.tagDescription, disabled: true}],
+          date: [{value: this.qr.date, disabled: true}]
         });
 
         if(this.qr.activated === 1){
@@ -173,6 +181,7 @@ export class QrComponent implements OnInit {
     this.dataQrForm.get('description')?.enable();
     this.dataQrForm.get('tagName')?.enable();
     this.dataQrForm.get('tagDescription')?.enable();
+    this.dataQrForm.get('date')?.enable();
     this.buttons = true;
   }
 
@@ -180,6 +189,7 @@ export class QrComponent implements OnInit {
     this.dataQrForm.get('description')?.disable();
     this.dataQrForm.get('tagName')?.disable();
     this.dataQrForm.get('tagDescription')?.disable();
+    this.dataQrForm.get('date')?.disable();
     this.buttons = false;
   }
 
