@@ -87,8 +87,6 @@ export class QrComponent implements OnInit {
         let date = new Date(this.qr.date);
         this.qr.date = date.toISOString().split('T')[0];
 
-        console.log(this.qr.date)
-
         this.dataQrForm = this.fb.group({
           description: [{value: this.qr.description, disabled: true}],
           tagName: [{value: this.qr.tagName, disabled: true}],
