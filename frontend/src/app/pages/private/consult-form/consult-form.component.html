@@ -1,0 +1,132 @@
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Configuración de la llamada</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Primera parte</h5>
+            <form class="row g-3" id="consForm1">
+              <div class="col-12">
+                <label for="nameConsult" class="col-form-label">Nombre</label>
+                <input type="text" name="name" class="form-control" formControlName="name" id="nameConsult" >
+                <!-- <div class="text-danger" *ngIf="!campoValido('email')">Por favor introduce un email correcto.</div> -->
+              </div>
+              <div class="col-12">
+                <label for="tokenConsult" class="col-form-label">Token</label>
+                <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult">
+              </div>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                      <label class="form-check-label" for="gridRadios1">
+                        Fecha absoluta
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                      <label class="form-check-label" for="gridRadios2">
+                        Fecha relativa
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <label for="dateFrom" class="col-form-label">Desde</label>
+                    <input type="date" class="form-control" id="dateFrom">
+                    <label for="dateTo" class="col-form-label">Hasta</label>
+                    <input type="date" class="form-control" id="dateTo">
+                  </div>
+                  <div class="col">
+                    <div class="row">
+                      <div class="col">
+                        <label for="relative" class="col-form-label">Número</label>
+                        <input type="number" name="relative" class="form-control" formControlName="relative" id="relative">
+                      </div>
+
+                      <div class="col">
+                        <label class="col-form-label">Unidad de tiempo</label>
+                        <select class="form-select" aria-label="Default select example">
+                          <option value="1" selected>Segundos</option>
+                          <option value="2">Minutos</option>
+                          <option value="3">Horas</option>
+                          <option value="4">Dias</option>
+                          <option value="5">Meses</option>
+                        </select>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Segunda parte del formulario</h5>
+            <form class="row g-3" id="consForm1">
+              <label class="form-label">Cantidad de datos</label>
+              <select class="form-select" aria-label="Default select example">
+                <option value="1" selected>Todos</option>
+                <option value="2">Máximo</option>
+                <option value="3">Mínimo</option>
+                <option value="4">Último</option>
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Filtros</h5>
+            <form>
+              <div class="row mb-3">
+                <label for="inputUid" class="col-sm-2 col-form-label">UID</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputUid">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <!-- Quizas esto sea una lista con las magnitudes de cada sonda nocex -->
+                <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="inputName">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Tipo de representación</h5>
+            <!-- aqui mirar que poner para poder selecionar el tipo de representacion -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+

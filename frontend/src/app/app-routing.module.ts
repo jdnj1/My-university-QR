@@ -6,11 +6,13 @@ import { Error404Component } from './pages/public/error404/error404.component';
 import { HomeComponent } from './pages/private/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { QrComponent } from './pages/private/qr/qr.component';
+import { ConsultFormComponent } from './pages/private/consult-form/consult-form.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard] },
+  { path: 'consult/:id', component: ConsultFormComponent, canActivate: [authGuard] },
   { path: '', pathMatch: 'full', component: LoginComponent },
   { path: '**', pathMatch: 'full', component: Error404Component }
 ];

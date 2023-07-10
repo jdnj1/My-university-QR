@@ -16,6 +16,7 @@ import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { QrItemComponent } from './components/qr-item/qr-item.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { QrComponent } from './pages/private/qr/qr.component';
+import { ConsultFormComponent } from './pages/private/consult-form/consult-form.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { QrComponent } from './pages/private/qr/qr.component';
     AlertComponent,
     SidebarComponent,
     QrItemComponent,
-    QrComponent
+    QrComponent,
+    ConsultFormComponent
   ],
   imports: [
     BrowserModule,
