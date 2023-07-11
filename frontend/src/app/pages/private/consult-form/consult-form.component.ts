@@ -18,7 +18,8 @@ export class ConsultFormComponent {
    firstForm = this.fb.group({
     name: ['', Validators.required],
     token: ['', Validators.required],
-    date: [true],
+    dateFrom: ['', Validators.required],
+    dateTo: ['', Validators.required]
   });
 
   // Form de la primera parte
