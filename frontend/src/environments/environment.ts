@@ -7,6 +7,20 @@ export const environment = {
   apiBaseUrl: 'http://localhost:3000/api',
   appBaseUrl: 'http://localhost:4200',
   recordsByPage: 2,
+  filters: [
+    "uid",
+    "description_origin",
+    "lat",
+    "lon",
+    "organizationid",
+    "alias",
+    "cota",
+    "description",
+    "metric",
+    "name",
+    "origin",
+    "typemeter"
+  ]
 };
 
 /*

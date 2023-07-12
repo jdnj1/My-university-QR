@@ -18,7 +18,7 @@
       <div class="col-12 col-lg-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Primera parte</h5>
+            <h5 class="card-title" (click)="updateConsult()">Primera parte</h5>
             <form class="row g-3" id="consForm1" [formGroup]="firstForm">
               <div class="col-12">
                 <label for="nameConsult" class="col-form-label">Nombre</label>
@@ -48,9 +48,9 @@
                   </div>
                   <div class="col" *ngIf="!date">
                     <label for="dateFrom" class="col-form-label">Desde</label>
-                    <input type="datetime-local" class="form-control" id="dateFrom">
+                    <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
                     <label for="dateTo" class="col-form-label">Hasta</label>
-                    <input type="datetime-local" class="form-control" id="dateTo">
+                    <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
                   </div>
                   <div class="col" *ngIf="date">
                     <div class="row">
@@ -100,7 +100,7 @@
           <div class="card-body">
             <div class="d-flex align-items-center">
               <h5 class="card-title">Filtros</h5>
-              <button *ngIf="filters" type="button" class="m-2 btn btn-primary"><i class="bi bi-plus-lg"></i></button>
+              <button *ngIf="filters" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
             </div>
             <form *ngIf="!filters">
               <div class="row mb-3">
@@ -117,20 +117,19 @@
                 </div>
               </div>
             </form>
-            <form class="row g-3 align-items-end" *ngIf="filters">
+            <form *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;">
               <!-- Poner aqui un div donde se iteren los filtros???? -->
-              <div class="col-sm-3">
-                <label class="form-label">Filtro 1</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option value="1" selected>filtro 1</option>
-                  <option value="2">filtro 2</option>
-                  <option value="3">filtro 3</option>
-                  <option value="4">...</option>
-                </select>
-              </div>
-              <input type="text" name="filters" id="filters" class="form-control col">
-              <div class="col-2">
-                <button type="button" class="btn btn-danger" title="Eliminar códig QR"><i class="bi bi-trash"></i></button>
+              <div class="row g-3 align-items-end m-2" *ngFor="let filter of filtersArray; let i = index">
+                <div class="col-sm-3">
+                  <label class="form-label">Filtro {{i + 1}}</label>
+                  <select class="form-select" aria-label="Default select example">
+                    <option *ngFor="let opt of options" value="{{opt}}" selected>{{opt}}</option>
+                  </select>
+                </div>
+                <input type="text" name="filters" id="filters" class="form-control col" value="{{filter}}">
+                <div class="col-2">
+                  <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i)"><i class="bi bi-trash"></i></button>
+                </div>
               </div>
             </form>
           </div>

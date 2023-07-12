@@ -4,4 +4,18 @@ export const environment = {
   appBaseUrl: 'http://localhost:4200',
   googleOAuth_ClientID: '314663795555-o1kmo76glu1jhep9u4cgbkn4bs4tmqm6.apps.googleusercontent.com',
   recordsByPage: 10,
+  filters: [
+    "uid",
+    "description_origin",
+    "lat",
+    "lon",
+    "organizationid",
+    "alias",
+    "cota",
+    "description",
+    "metric",
+    "name",
+    "origin",
+    "typemeter"
+  ]
 };
