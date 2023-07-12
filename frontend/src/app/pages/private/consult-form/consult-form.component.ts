@@ -38,7 +38,7 @@ export class ConsultFormComponent implements OnInit{
 
   // Form de la primera parte
   secondForm = this.fb.group({
-    data: ['', Validators.required],
+    data: ['1', Validators.required],
   });
 
 
