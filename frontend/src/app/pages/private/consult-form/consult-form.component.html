@@ -117,18 +117,17 @@
                 </div>
               </div>
             </form>
-            <form *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;">
-              <!-- Poner aqui un div donde se iteren los filtros???? -->
-              <div class="row g-3 align-items-end m-2" *ngFor="let filter of filtersArray; let i = index">
+            <form *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;" [formGroup]="filterForm">
+              <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
                 <div class="col-sm-3">
                   <label class="form-label">Filtro {{i + 1}}</label>
-                  <select class="form-select" aria-label="Default select example">
-                    <option *ngFor="let opt of options" value="{{opt}}" selected>{{opt}}</option>
+                  <select class="form-select" (selectionchange)="onChange(i, key)">
+                    <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]">{{opt}}</option>
                   </select>
                 </div>
-                <input type="text" name="filters" id="filters" class="form-control col" value="{{filter}}">
+                <input type="text" name="filters" id="filters" class="form-control col" formControlName="{{key}}">
                 <div class="col-2">
-                  <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i)"><i class="bi bi-trash"></i></button>
+                  <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
                 </div>
               </div>
             </form>

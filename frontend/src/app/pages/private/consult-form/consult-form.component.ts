@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -19,6 +19,12 @@ export class ConsultFormComponent implements OnInit{
   // Array donde se almacenan los filtros
   filtersArray: any = [];
 
+  // Array donde se almacenan las keys de los filtros
+  keys: any = [];
+
+  // Array donde se almacenan las keys y los filtros juntos
+  // entries: any = [];
+
   // Array donde se almacenan las ocpiones de filtros de smart university indicados en las variables de entorno
   options: any = [];
 
@@ -36,9 +42,13 @@ export class ConsultFormComponent implements OnInit{
     dateTo: ['', Validators.required]
   });
 
-  // Form de la primera parte
+  // Form de la segunda parte
   secondForm = this.fb.group({
     data: ['1', Validators.required],
+  });
+
+  // Form para los filtros
+  filterForm: FormGroup = this.fb.group({
   });
 
 
@@ -85,11 +95,22 @@ export class ConsultFormComponent implements OnInit{
 
         // Pasamos los filtros a JSON
         this.consult.filters = JSON.parse(this.consult.filters);
+        console.log(this.consult.filters)
 
         // Pasamos los filtros al array
         this.filtersArray = Object.values(this.consult.filters);
-        console.log(this.filtersArray)
+        console.log(this.filtersArray);
 
+        // Pasamos las keys al array
+        this.keys = Object.keys(this.consult.filters);
+        console.log(this.keys);
+
+        // this.entries = Object.entries(this.consult.filters);
+
+        // Agregamos los filtros al formulario
+        for(let i = 0; i < this.filtersArray.length; i ++){
+          this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -137,12 +158,23 @@ export class ConsultFormComponent implements OnInit{
 
   addFilter(){
     this.filtersArray.push('');
+    this.keys.push(this.keys.length+1);
+
+    // Agregamos un nuevo campo al formulario de los filtros
+    this.filterForm.addControl(this.keys.length, this.fb.control(''));
+    console.log(this.filterForm.value);
   }
 
-  deleteFilter(index: any){
+  deleteFilter(index: any, key: string){
     this.filtersArray.splice(index, 1);
+    this.keys.splice(index, 1);
+
+    this.filterForm.removeControl(key);
+    console.log(this.filterForm.value)
   }
 
-
+  onChange(index: any, key: string){
+    console.log(key)
+  }
 
 }
