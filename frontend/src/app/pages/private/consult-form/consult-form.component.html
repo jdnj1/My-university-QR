@@ -15,7 +15,7 @@
   </div>
   <section class="section">
     <div class="row align-items-center">
-      <div class="col-12 col-lg-6">
+      <div class="col">
         <div class="card">
           <div class="card-body">
             <form class="row g-3" id="consForm1" [formGroup]="firstForm">
@@ -30,7 +30,7 @@
               </div>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-sm-4">
+                  <div class="col">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="gridRadios" id="date1" value="date1" checked
                       (change)="changeDate()">
@@ -38,28 +38,33 @@
                         Fecha absoluta
                       </label>
                     </div>
+                    <div class="col" *ngIf="!date">
+                      <div class="row">
+                        <div class="col-6">
+                          <label for="dateFrom" class="col-form-label">Desde</label>
+                          <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
+                        </div>
+                        <div class="col-6">
+                          <label for="dateTo" class="col-form-label">Hasta</label>
+                          <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="gridRadios" id="date2" value="date2" (change)="changeDate()" >
                       <label class="form-check-label" for="date2">
                         Fecha relativa
                       </label>
                     </div>
-                  </div>
-                  <div class="col" *ngIf="!date">
-                    <label for="dateFrom" class="col-form-label">Desde</label>
-                    <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
-                    <label for="dateTo" class="col-form-label">Hasta</label>
-                    <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
-                  </div>
-                  <div class="col" *ngIf="date">
-                    <div class="row">
-                      <form [formGroup]="relativeForm">
-                        <div class="col">
-                          <label for="relative" class="col-form-label">Número</label>
-                          <input type="number" name="relative" class="form-control" id="relative" formControlName="number">
+                    <div class="col" *ngIf="date">
+                      <form class="row" [formGroup]="relativeForm">
+                        <div class="col-6">
+                          <label for="relative" class="col-form-label">Cantidad</label>
+                          <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
                         </div>
-
-                        <div class="col">
+                        <div class="col-6">
                           <label class="col-form-label">Unidad de tiempo</label>
                           <select class="form-select" aria-label="Default select example" formArrayName="unit">
                             <option value="1" selected>Segundos</option>
@@ -78,12 +83,14 @@
           </div>
         </div>
       </div>
+
+    </div>
+    <div class="row">
       <div class="col">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Segunda parte del formulario</h5>
             <form class="row g-3" id="consForm1" [formGroup]="secondForm">
-              <label class="form-label">Cantidad de datos</label>
+              <label class="form-label" style="margin-top: 2rem">Cantidad de datos</label>
               <select class="form-select" aria-label="Default select example" formControlName="data" (change)="selectData()">
                 <option value="1" selected>Todos</option>
                 <option value="2">Máximo</option>
@@ -91,14 +98,6 @@
                 <option value="4">Último</option>
               </select>
             </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-lg-6">
-        <div class="card">
-          <div class="card-body">
             <div class="d-flex align-items-center">
               <h5 class="card-title">Filtros</h5>
               <button *ngIf="filters" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
@@ -138,18 +137,18 @@
           </div>
         </div>
       </div>
-      <div class="col">
+      <!-- <div class="col">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Tipo de representación</h5>
-            <!-- aqui mirar que poner para poder selecionar el tipo de representacion -->
+            aqui mirar que poner para poder selecionar el tipo de representacion
           </div>
         </div>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-danger m-2">Cancelar</button>
           <button type="button" class="btn btn-success m-2" (click)="updateConsult()">Guardar</button>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 
