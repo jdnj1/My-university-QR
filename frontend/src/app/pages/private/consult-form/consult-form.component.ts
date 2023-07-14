@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -22,9 +22,6 @@ export class ConsultFormComponent implements OnInit{
   // Array donde se almacenan las keys de los filtros
   keys: any = [];
 
-  // Array donde se almacenan las keys y los filtros juntos
-  // entries: any = [];
-
   // Array donde se almacenan las ocpiones de filtros de smart university indicados en las variables de entorno
   options: any = [];
 
@@ -39,7 +36,8 @@ export class ConsultFormComponent implements OnInit{
     name: ['', Validators.required],
     token: ['', Validators.required],
     dateFrom: ['', Validators.required],
-    dateTo: ['', Validators.required]
+    dateTo: ['', Validators.required],
+    filters: ['']
   });
 
   // Form de la segunda parte
@@ -50,6 +48,12 @@ export class ConsultFormComponent implements OnInit{
   // Form para los filtros
   filterForm: FormGroup = this.fb.group({
   });
+
+  // Form para las fechas relativas
+  relativeForm: FormGroup = this.fb.group({
+    number: [0],
+    unit: ['1'],
+  })
 
 
   constructor(
@@ -90,7 +94,8 @@ export class ConsultFormComponent implements OnInit{
           name: [this.consult.name],
           token: [this.consult.token],
           dateFrom: [this.consult.dateFrom],
-          dateTo: [this.consult.dateTo]
+          dateTo: [this.consult.dateTo],
+          filters: ''
         });
 
         // Pasamos los filtros a JSON
@@ -104,8 +109,6 @@ export class ConsultFormComponent implements OnInit{
         // Pasamos las keys al array
         this.keys = Object.keys(this.consult.filters);
         console.log(this.keys);
-
-        // this.entries = Object.entries(this.consult.filters);
 
         // Agregamos los filtros al formulario
         for(let i = 0; i < this.filtersArray.length; i ++){
@@ -121,16 +124,41 @@ export class ConsultFormComponent implements OnInit{
 
   updateConsult(){
     // Se realizan todas las comprobaciones necesarias antes de actualizar
-    // Comprobar que la fecha hasta no sea anterior a la fecha desde
-    let dateFrom = this.firstForm.get('dateFrom')?.value;
-    let dateTo = this.firstForm!.get('dateTo')?.value;
+    // En caso de que este seleccionada la fecha absoluta
+    if(!this.date){
+      // Comprobar que la fecha hasta no sea anterior a la fecha desde
+      let dateFrom = this.firstForm.get('dateFrom')?.value;
+      let dateTo = this.firstForm!.get('dateTo')?.value;
 
-    if(dateFrom != null && dateFrom != undefined && dateTo != null && dateTo != undefined){
-      if(dateFrom >= dateTo){
-        this.alertService.error("La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'");
-        return;
+      if(dateFrom != null && dateFrom != undefined && dateTo != null && dateTo != undefined){
+        if(dateFrom >= dateTo){
+          this.alertService.error("La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'");
+          return;
+        }
       }
     }
+    // En caso de que este seleccionada la fecha relativa
+    else{
+      let now = new Date();
+      console.log(Math.abs(now.getTime() - 2));
+      return;
+    }
+
+    // Montar el campo de los filtros.
+    let json = `{`;
+    Object.keys(this.filterForm.controls).forEach((key, index) => {
+      json += `"${key}":"${this.filterForm.get(key)?.value}"`;
+
+      if(index !== Object.keys(this.filterForm.controls).length - 1){
+        json += ','
+      }
+
+    });
+
+    json += `}`;
+    // Se añade este campo al primer forumulario que es el que se envia al update
+    this.firstForm.setControl('filters', new FormControl(json));
+    console.log(this.firstForm.value)
 
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
       next: (res: any) => {
@@ -158,11 +186,10 @@ export class ConsultFormComponent implements OnInit{
 
   addFilter(){
     this.filtersArray.push('');
-    this.keys.push(this.keys.length+1);
+    this.keys.push(`newKey ${this.keys.length+1}`);
 
     // Agregamos un nuevo campo al formulario de los filtros
-    this.filterForm.addControl(this.keys.length, this.fb.control(''));
-    console.log(this.filterForm.value);
+    this.filterForm.addControl(`newKey ${this.keys.length}`, this.fb.control(''));
   }
 
   deleteFilter(index: any, key: string){
@@ -170,11 +197,26 @@ export class ConsultFormComponent implements OnInit{
     this.keys.splice(index, 1);
 
     this.filterForm.removeControl(key);
-    console.log(this.filterForm.value)
   }
 
-  onChange(index: any, key: string){
-    console.log(key)
+  onChange(index: any, key: string, event: any){
+    const newKey = event.target.value;
+
+    this.keys[index] = newKey;
+
+    // Actualizar el campo del formulario
+    const control = this.filterForm.get(key);
+
+    this.filterForm.setControl(newKey, control);
+    this.filterForm.removeControl(key);
+
   }
+
+  // Funcion para pasar todos los controles de un formulario a otro
+  // addAllcontrols(from: FormGroup, to: FormGroup){
+  //   Object.keys(from.controls).forEach(key => {
+  //     to.addControl(key, from.get(key));
+  //   });
+  // }
 
 }

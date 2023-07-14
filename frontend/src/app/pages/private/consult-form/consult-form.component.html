@@ -18,7 +18,6 @@
       <div class="col-12 col-lg-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title" (click)="updateConsult()">Primera parte</h5>
             <form class="row g-3" id="consForm1" [formGroup]="firstForm">
               <div class="col-12">
                 <label for="nameConsult" class="col-form-label">Nombre</label>
@@ -54,21 +53,23 @@
                   </div>
                   <div class="col" *ngIf="date">
                     <div class="row">
-                      <div class="col">
-                        <label for="relative" class="col-form-label">Número</label>
-                        <input type="number" name="relative" class="form-control" id="relative">
-                      </div>
+                      <form [formGroup]="relativeForm">
+                        <div class="col">
+                          <label for="relative" class="col-form-label">Número</label>
+                          <input type="number" name="relative" class="form-control" id="relative" formControlName="number">
+                        </div>
 
-                      <div class="col">
-                        <label class="col-form-label">Unidad de tiempo</label>
-                        <select class="form-select" aria-label="Default select example">
-                          <option value="1" selected>Segundos</option>
-                          <option value="2">Minutos</option>
-                          <option value="3">Horas</option>
-                          <option value="4">Dias</option>
-                          <option value="5">Meses</option>
-                        </select>
-                      </div>
+                        <div class="col">
+                          <label class="col-form-label">Unidad de tiempo</label>
+                          <select class="form-select" aria-label="Default select example" formArrayName="unit">
+                            <option value="1" selected>Segundos</option>
+                            <option value="2">Minutos</option>
+                            <option value="3">Horas</option>
+                            <option value="4">Dias</option>
+                            <option value="5">Meses</option>
+                          </select>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -94,7 +95,7 @@
         </div>
       </div>
     </div>
-    <div class="row align-items-center">
+    <div class="row">
       <div class="col-12 col-lg-6">
         <div class="card">
           <div class="card-body">
@@ -117,20 +118,23 @@
                 </div>
               </div>
             </form>
-            <form *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;" [formGroup]="filterForm">
+            <div *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;" [formGroup]="filterForm">
               <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
                 <div class="col-sm-3">
                   <label class="form-label">Filtro {{i + 1}}</label>
-                  <select class="form-select" (selectionchange)="onChange(i, key)">
-                    <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]">{{opt}}</option>
+                  <select class="form-select" (change)="onChange(i, key, $event)">
+                    <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
+                    [disabled]="keys.includes(opt)">{{opt}}</option>
                   </select>
                 </div>
-                <input type="text" name="filters" id="filters" class="form-control col" formControlName="{{key}}">
+                <form [formGroup]="filterForm" class="col">
+                  <input type="text" name="filters" id="filters" class="form-control" formControlName="{{key}}">
+                </form>
                 <div class="col-2">
                   <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -140,6 +144,10 @@
             <h5 class="card-title">Tipo de representación</h5>
             <!-- aqui mirar que poner para poder selecionar el tipo de representacion -->
           </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-danger m-2">Cancelar</button>
+          <button type="button" class="btn btn-success m-2" (click)="updateConsult()">Guardar</button>
         </div>
       </div>
     </div>
