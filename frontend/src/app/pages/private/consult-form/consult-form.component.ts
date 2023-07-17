@@ -98,21 +98,23 @@ export class ConsultFormComponent implements OnInit{
           filters: ''
         });
 
-        // Pasamos los filtros a JSON
-        this.consult.filters = JSON.parse(this.consult.filters);
-        console.log(this.consult.filters)
+        if(this.consult.filters !== ''){
+          // Pasamos los filtros a JSON
+          this.consult.filters = JSON.parse(this.consult.filters);
+          console.log(this.consult.filters)
 
-        // Pasamos los filtros al array
-        this.filtersArray = Object.values(this.consult.filters);
-        console.log(this.filtersArray);
+          // Pasamos los filtros al array
+          this.filtersArray = Object.values(this.consult.filters);
+          console.log(this.filtersArray);
 
-        // Pasamos las keys al array
-        this.keys = Object.keys(this.consult.filters);
-        console.log(this.keys);
+          // Pasamos las keys al array
+          this.keys = Object.keys(this.consult.filters);
+          console.log(this.keys);
 
-        // Agregamos los filtros al formulario
-        for(let i = 0; i < this.filtersArray.length; i ++){
-          this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
+          // Agregamos los filtros al formulario
+          for(let i = 0; i < this.filtersArray.length; i ++){
+            this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
+          }
         }
       },
       error: (err: HttpErrorResponse) => {
@@ -140,8 +142,39 @@ export class ConsultFormComponent implements OnInit{
     // En caso de que este seleccionada la fecha relativa
     else{
       let now = new Date();
-      console.log(Math.abs(now.getTime() - 2));
-      return;
+      let result;
+      let num = this.relativeForm.get('number')?.value;
+
+      // Se pasa el numero introducido a milisegundos en todos los casos
+      switch(this.relativeForm.get('unit')?.value){
+        case '1':
+          // De segundos a milisegundos
+          num *= 1000;
+          break;
+
+        case '2':
+          // De minutos a milisegundos
+          num *= 60 * 1000;
+          break;
+
+        case '3':
+          // De horas a milisegundos
+          num *= 3600 * 1000;
+          break;
+
+        case '4':
+          // De dias a milisegundos
+          num *= 24*3600*1000
+          break;
+
+        default:
+          break;
+      }
+
+      result = new Date(now.getTime() - num);
+
+      this.firstForm.get('dateFrom')?.setValue(result.toISOString());
+      this.firstForm.get('dateTo')?.setValue(now.toISOString());
     }
 
     // Montar el campo de los filtros.

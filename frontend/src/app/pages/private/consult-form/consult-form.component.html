@@ -14,10 +14,10 @@
     </div>
   </div>
   <section class="section">
-    <div class="row align-items-center">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
             <form class="row g-3" id="consForm1" [formGroup]="firstForm">
               <div class="col-12">
                 <label for="nameConsult" class="col-form-label">Nombre</label>
@@ -66,12 +66,11 @@
                         </div>
                         <div class="col-6">
                           <label class="col-form-label">Unidad de tiempo</label>
-                          <select class="form-select" aria-label="Default select example" formArrayName="unit">
+                          <select class="form-select" aria-label="Default select example" formControlName="unit">
                             <option value="1" selected>Segundos</option>
                             <option value="2">Minutos</option>
                             <option value="3">Horas</option>
                             <option value="4">Dias</option>
-                            <option value="5">Meses</option>
                           </select>
                         </div>
                       </form>
@@ -81,9 +80,57 @@
               </div>
             </form>
           </div>
+          <div class="col-6">
+            <form class="row g-3" id="consForm1" [formGroup]="secondForm">
+              <div>
+                <label class="col-form-label">Cantidad de datos</label>
+                <select class="form-select" aria-label="Default select example" formControlName="data" (change)="selectData()">
+                  <option value="1" selected>Todos</option>
+                  <option value="2">Máximo</option>
+                  <option value="3">Mínimo</option>
+                  <option value="4">Último</option>
+                </select>
+              </div>
+            </form>
+            <div class="d-flex align-items-center">
+              <h5 class="card-title">Filtros</h5>
+              <button *ngIf="filters" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
+            </div>
+            <form *ngIf="!filters">
+              <div class="row mb-3">
+                <label for="inputUid" class="col-sm-2 col-form-label">UID</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputUid">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <!-- Quizas esto sea una lista con las magnitudes de cada sonda nocex -->
+                <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="inputName">
+                </div>
+              </div>
+            </form>
+            <div *ngIf="filters" style="height: 500px; ;max-height: 400px; overflow-y: scroll;" [formGroup]="filterForm">
+              <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
+                <div class="col-sm-3">
+                  <label class="form-label">Filtro {{i + 1}}</label>
+                  <select class="form-select" (change)="onChange(i, key, $event)">
+                    <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
+                    [disabled]="keys.includes(opt)">{{opt}}</option>
+                  </select>
+                </div>
+                <form [formGroup]="filterForm" class="col">
+                  <input type="text" name="filters" id="filters" class="form-control" formControlName="{{key}}">
+                </form>
+                <div class="col-2">
+                  <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
     <div class="row">
       <div class="col">
@@ -137,18 +184,112 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col">
+      <div class="col">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Tipo de representación</h5>
-            aqui mirar que poner para poder selecionar el tipo de representacion
+
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="assets/img/line-simple.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                  <img src="assets/img/bar-simple.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                  <img src="assets/img/gauge-grade.png" class="d-block w-100" alt="...">
+                </div>
+              </div>
+
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+
+            </div>
+
+            <!-- <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <div class="col" *ngIf="!date">
+                    <div class="row">
+                      <div class="col-6">
+                        <label for="dateFrom" class="col-form-label">Desde</label>
+                        <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
+                      </div>
+                      <div class="col-6">
+                        <label for="dateTo" class="col-form-label">Hasta</label>
+                        <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="col" *ngIf="date">
+                    <form class="row" [formGroup]="relativeForm">
+                      <div class="col-6">
+                        <label for="relative" class="col-form-label">Cantidad</label>
+                        <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
+                      </div>
+                      <div class="col-6">
+                        <label class="col-form-label">Unidad de tiempo</label>
+                        <select class="form-select" aria-label="Default select example" formArrayName="unit">
+                          <option value="1" selected>Segundos</option>
+                          <option value="2">Minutos</option>
+                          <option value="3">Horas</option>
+                          <option value="4">Dias</option>
+                          <option value="5">Meses</option>
+                        </select>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="assets/img/gauge-grade.png" class="d-block w-100" alt="...">
+                </div>
+              </div>
+
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+
+            </div> -->
+
+
+            <div class="row">
+              <div class="col carousel-item-active">
+                <img src="assets/img/line-simple.png" alt="" class="img" style="width: 100%;">
+              </div>
+              <div class="col">
+                <img src="assets/img/bar-simple.png" alt="" style="width: 100%;">
+              </div>
+              <div class="col">
+                <img src="assets/img/gauge-grade.png" alt="" style="width: 100%;">
+              </div>
+
+            </div>
           </div>
         </div>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-danger m-2">Cancelar</button>
           <button type="button" class="btn btn-success m-2" (click)="updateConsult()">Guardar</button>
         </div>
-      </div> -->
+      </div>
     </div>
   </section>
 
