@@ -1,3 +1,8 @@
 .img:hover{
   scale: 1.5;
 }
+
+.selected{
+  border: 5px #28FF32 solid;
+  border-radius: 10px;
+}

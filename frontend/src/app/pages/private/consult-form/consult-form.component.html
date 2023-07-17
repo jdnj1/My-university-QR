@@ -17,7 +17,7 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col-6">
+          <div class="col-lg-6">
             <form class="row g-3" id="consForm1" [formGroup]="firstForm">
               <div class="col-12">
                 <label for="nameConsult" class="col-form-label">Nombre</label>
@@ -30,41 +30,47 @@
               </div>
               <div class="col-12">
                 <div class="row">
-                  <div class="col">
+                  <div class="col-6">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="gridRadios" id="date1" value="date1" checked
                       (change)="changeDate()">
                       <label class="form-check-label" for="date1">
+                        <i class="bi bi-calendar"></i>
                         Fecha absoluta
                       </label>
                     </div>
-                    <div class="col" *ngIf="!date">
-                      <div class="row">
-                        <div class="col-6">
-                          <label for="dateFrom" class="col-form-label">Desde</label>
-                          <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
-                        </div>
-                        <div class="col-6">
-                          <label for="dateTo" class="col-form-label">Hasta</label>
-                          <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                  <div class="col">
+                  <div class="col-6">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="gridRadios" id="date2" value="date2" (change)="changeDate()" >
                       <label class="form-check-label" for="date2">
+                        <i class="bi bi-stopwatch"></i>
                         Fecha relativa
                       </label>
                     </div>
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col" *ngIf="!date">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <label for="dateFrom" class="col-form-label">Desde</label>
+                        <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
+                      </div>
+                      <div class="col-sm-6">
+                        <label for="dateTo" class="col-form-label">Hasta</label>
+                        <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="col"> -->
                     <div class="col" *ngIf="date">
                       <form class="row" [formGroup]="relativeForm">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                           <label for="relative" class="col-form-label">Cantidad</label>
                           <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                           <label class="col-form-label">Unidad de tiempo</label>
                           <select class="form-select" aria-label="Default select example" formControlName="unit">
                             <option value="1" selected>Segundos</option>
@@ -75,12 +81,12 @@
                         </div>
                       </form>
                     </div>
-                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
             </form>
           </div>
-          <div class="col-6">
+          <div class="col-lg-6">
             <form class="row g-3" id="consForm1" [formGroup]="secondForm">
               <div>
                 <label class="col-form-label">Cantidad de datos</label>
@@ -104,7 +110,6 @@
                 </div>
               </div>
               <div class="row mb-3">
-                <!-- Quizas esto sea una lista con las magnitudes de cada sonda nocex -->
                 <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputName">
@@ -133,7 +138,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <!-- <div class="col">
         <div class="card">
           <div class="card-body">
             <form class="row g-3" id="consForm1" [formGroup]="secondForm">
@@ -157,7 +162,7 @@
                 </div>
               </div>
               <div class="row mb-3">
-                <!-- Quizas esto sea una lista con las magnitudes de cada sonda nocex -->
+
                 <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputName">
@@ -183,20 +188,20 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Tipo de representación</h5>
 
-            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <!-- <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
               <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" aria-label="Slide 2"></button>
                 <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" aria-label="Slide 3"></button>
               </div>
               <div class="carousel-inner">
-                <div class="carousel-item active">
+                <div id="chart" class="carousel-item active">
                   <img src="assets/img/line-simple.png" class="d-block w-100" alt="...">
                 </div>
                 <div class="carousel-item">
@@ -211,12 +216,12 @@
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" (click)="pru()">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
 
-            </div>
+            </div> -->
 
             <!-- <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
               <div class="carousel-inner">
@@ -272,15 +277,15 @@
 
 
             <div class="row">
-              <div class="col carousel-item-active">
-                <img src="assets/img/line-simple.png" alt="" class="img" style="width: 100%;">
+              <div class="col-12 col-sm-6 m-2 m-sm-0">
+                <img src="assets/img/line-simple.png" alt="Gráfica de líneas" class="d-block w-100" style="cursor: pointer;"
+                 [ngClass]="{'selected': lines}" (click)="line()">
               </div>
-              <div class="col">
-                <img src="assets/img/bar-simple.png" alt="" style="width: 100%;">
+              <div class="col-12 col-sm-6 m-2 m-sm-0">
+                <img src="assets/img/bar-simple.png" alt="Gráfica de barras" class="d-block w-100" style="cursor: pointer;"
+                [ngClass]="{'selected': bars}" (click)="bar()">
               </div>
-              <div class="col">
-                <img src="assets/img/gauge-grade.png" alt="" style="width: 100%;">
-              </div>
+
 
             </div>
           </div>

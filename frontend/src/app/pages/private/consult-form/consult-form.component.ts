@@ -37,7 +37,8 @@ export class ConsultFormComponent implements OnInit{
     token: ['', Validators.required],
     dateFrom: ['', Validators.required],
     dateTo: ['', Validators.required],
-    filters: ['']
+    filters: [''],
+    chart: 0
   });
 
   // Form de la segunda parte
@@ -55,6 +56,11 @@ export class ConsultFormComponent implements OnInit{
     unit: ['1'],
   })
 
+  // Booleanos para controlar el tipo de grafica que se selecciona para representar
+  lines: boolean = false;
+  bars: boolean = false;
+  gauge: boolean = false;
+  number: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -95,8 +101,23 @@ export class ConsultFormComponent implements OnInit{
           token: [this.consult.token],
           dateFrom: [this.consult.dateFrom],
           dateTo: [this.consult.dateTo],
-          filters: ''
+          filters: '',
+          chart: [this.consult.chart]
         });
+
+        // Se comprubeba que tipo de representacion tiene la llamada
+        if(this.consult.chart === 0){
+          this.lines = true;
+        }
+        else if(this.consult.chart === 1){
+          this.bars = true;
+        }
+        else if(this.consult.chart === 2){
+
+        }
+        else if(this.consult.chart === 3){
+
+        }
 
         if(this.consult.filters !== ''){
           // Pasamos los filtros a JSON
@@ -164,7 +185,7 @@ export class ConsultFormComponent implements OnInit{
 
         case '4':
           // De dias a milisegundos
-          num *= 24*3600*1000
+          num *= 24 * 3600 * 1000
           break;
 
         default:
@@ -192,6 +213,20 @@ export class ConsultFormComponent implements OnInit{
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
     console.log(this.firstForm.value)
+
+    // Se comprueba que grafica se ha seleccionado
+    if(this.lines){
+      this.firstForm.get('chart')?.setValue(0);
+    }
+    else if(this.bars){
+      this.firstForm.get('chart')?.setValue(1);
+    }
+    else if(this.bars){
+      this.firstForm.get('chart')?.setValue(1);
+    }
+    else if(this.bars){
+      this.firstForm.get('chart')?.setValue(1);
+    }
 
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
       next: (res: any) => {
@@ -251,5 +286,15 @@ export class ConsultFormComponent implements OnInit{
   //     to.addControl(key, from.get(key));
   //   });
   // }
+
+  line(){
+    this.lines = true;
+    this.bars = false;
+  }
+
+  bar(){
+    this.lines = false;
+    this.bars = true;
+  }
 
 }
