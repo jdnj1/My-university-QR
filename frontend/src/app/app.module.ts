@@ -13,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/private/home/home.component';
 import { AlertComponent } from './utils/alert/alert.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
-import { QrItemComponent } from './components/qr-item/qr-item.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { QrComponent } from './pages/private/qr/qr.component';
 import { ConsultFormComponent } from './pages/private/consult-form/consult-form.component';
@@ -29,7 +28,6 @@ import { ConsultFormComponent } from './pages/private/consult-form/consult-form.
     HomeComponent,
     AlertComponent,
     SidebarComponent,
-    QrItemComponent,
     QrComponent,
     ConsultFormComponent
   ],
