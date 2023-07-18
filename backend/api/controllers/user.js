@@ -19,8 +19,18 @@ const getUsers = async( req , res ) => {
     const desde      = Number( req.query.desde ) || 0; // En caso de que no venga nada o no sea un numero se inicializa a 0.
     const registropp = Number( process.env.DOCPAG );
 
+    // Se comprueba si se pasa alguna query por parametro para buscar usuarios
+    const querySearch = req.query.query;
+
     try {
-        const query = `SELECT * FROM ${process.env.USERTABLE} LIMIT ${desde}, ${registropp}`;
+        let query = `SELECT * FROM ${process.env.USERTABLE}`; 
+
+        if(querySearch){
+            query += ` WHERE email LIKE '%${querySearch}%'`
+        }
+
+        query += ` LIMIT ${desde}, ${registropp}`;
+
         const users = await dbConsult(query);
         
         res.status(200).json({

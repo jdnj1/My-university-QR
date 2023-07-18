@@ -7,12 +7,18 @@ import { HomeComponent } from './pages/private/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { QrComponent } from './pages/private/qr/qr.component';
 import { ConsultFormComponent } from './pages/private/consult-form/consult-form.component';
+import { ViewComponent } from './pages/public/view/view.component';
+import { UsersComponent } from './pages/private/users/users.component';
+import { CreateUserComponent } from './pages/private/users/create-user/create-user.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard] },
   { path: 'consult/:id', component: ConsultFormComponent, canActivate: [authGuard] },
+  { path: 'users-list', component: UsersComponent, canActivate: [authGuard] },
+  { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard] },
+  { path: 'view/:id', component: ViewComponent },
   { path: '', pathMatch: 'full', component: LoginComponent },
   { path: '**', pathMatch: 'full', component: Error404Component }
 ];

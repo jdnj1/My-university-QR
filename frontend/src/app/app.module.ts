@@ -16,6 +16,10 @@ import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { QrComponent } from './pages/private/qr/qr.component';
 import { ConsultFormComponent } from './pages/private/consult-form/consult-form.component';
+import { ViewComponent } from './pages/public/view/view.component';
+import { UsersComponent } from './pages/private/users/users.component';
+import { CreateUserComponent } from './pages/private/users/create-user/create-user.component';
+import { EditUserComponent } from './pages/private/users/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,11 @@ import { ConsultFormComponent } from './pages/private/consult-form/consult-form.
     AlertComponent,
     SidebarComponent,
     QrComponent,
-    ConsultFormComponent
+    ConsultFormComponent,
+    ViewComponent,
+    UsersComponent,
+    CreateUserComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,

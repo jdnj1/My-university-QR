@@ -59,8 +59,8 @@ export class ConsultFormComponent implements OnInit{
   // Booleanos para controlar el tipo de grafica que se selecciona para representar
   lines: boolean = false;
   bars: boolean = false;
-  gauge: boolean = false;
-  number: boolean = false;
+  gauges: boolean = false;
+  numbers: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -221,11 +221,11 @@ export class ConsultFormComponent implements OnInit{
     else if(this.bars){
       this.firstForm.get('chart')?.setValue(1);
     }
-    else if(this.bars){
-      this.firstForm.get('chart')?.setValue(1);
+    else if(this.gauges){
+      this.firstForm.get('chart')?.setValue(2);
     }
-    else if(this.bars){
-      this.firstForm.get('chart')?.setValue(1);
+    else if(this.numbers){
+      this.firstForm.get('chart')?.setValue(3);
     }
 
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
@@ -290,11 +290,29 @@ export class ConsultFormComponent implements OnInit{
   line(){
     this.lines = true;
     this.bars = false;
+    this.gauges = false;
+    this.numbers = false;
   }
 
   bar(){
     this.lines = false;
     this.bars = true;
+    this.gauges = false;
+    this.numbers = false;
+  }
+
+  gauge(){
+    this.lines = false;
+    this.bars = false;
+    this.gauges = true;
+    this.numbers = false;
+  }
+
+  number(){
+    this.lines = false;
+    this.bars = false;
+    this.gauges = false;
+    this.numbers = true;
   }
 
 }

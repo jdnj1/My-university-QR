@@ -57,4 +57,54 @@ export class UserService {
     );
   }
 
+  // Funciones GET, POST, PUT y DELETE de los usuarios
+  getUsers(){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.get(`${environment.apiBaseUrl}/users`, {
+      headers: {'x-token': token}
+    });
+  }
+
+  getUserSearch(query: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.get(`${environment.apiBaseUrl}/users`,{
+      headers: {'x-token': token},
+      params: {'query': query}
+    });
+  }
+
+  getUserById(id: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.get(`${environment.apiBaseUrl}/users/${id}`, {
+      headers: {'x-token': token}
+    });
+  }
+
+  createUser(userData: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.post(`${environment.apiBaseUrl}/users/`, userData, {
+      headers: {'x-token': token}
+    });
+  }
+
+  updateUser(userData: any, id: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.put(`${environment.apiBaseUrl}/users/${id}`, userData, {
+      headers: {'x-token': token}
+    });
+  }
+
+  deleteUser(id: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.delete(`${environment.apiBaseUrl}/users/${id}`, {
+      headers: {'x-token': token}
+    });
+  }
+
 }

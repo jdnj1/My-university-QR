@@ -63,25 +63,23 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <div class="col"> -->
-                    <div class="col" *ngIf="date">
-                      <form class="row" [formGroup]="relativeForm">
-                        <div class="col-sm-6">
-                          <label for="relative" class="col-form-label">Cantidad</label>
-                          <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
-                        </div>
-                        <div class="col-sm-6">
-                          <label class="col-form-label">Unidad de tiempo</label>
-                          <select class="form-select" aria-label="Default select example" formControlName="unit">
-                            <option value="1" selected>Segundos</option>
-                            <option value="2">Minutos</option>
-                            <option value="3">Horas</option>
-                            <option value="4">Dias</option>
-                          </select>
-                        </div>
-                      </form>
-                    </div>
-                  <!-- </div> -->
+                  <div class="col" *ngIf="date">
+                    <form class="row" [formGroup]="relativeForm">
+                      <div class="col-sm-6">
+                        <label for="relative" class="col-form-label">Cantidad</label>
+                        <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
+                      </div>
+                      <div class="col-sm-6">
+                        <label class="col-form-label">Unidad de tiempo</label>
+                        <select class="form-select" aria-label="Default select example" formControlName="unit">
+                          <option value="1" selected>Segundos</option>
+                          <option value="2">Minutos</option>
+                          <option value="3">Horas</option>
+                          <option value="4">Dias</option>
+                        </select>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </form>
@@ -100,7 +98,7 @@
             </form>
             <div class="d-flex align-items-center">
               <h5 class="card-title">Filtros</h5>
-              <button *ngIf="filters" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
+              <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
             </div>
             <form *ngIf="!filters">
               <div class="row mb-3">
@@ -276,7 +274,7 @@
             </div> -->
 
 
-            <div class="row">
+            <div class="row" *ngIf="filters">
               <div class="col-12 col-sm-6 m-2 m-sm-0">
                 <img src="assets/img/line-simple.png" alt="Gráfica de líneas" class="d-block w-100" style="cursor: pointer;"
                  [ngClass]="{'selected': lines}" (click)="line()">
@@ -285,9 +283,19 @@
                 <img src="assets/img/bar-simple.png" alt="Gráfica de barras" class="d-block w-100" style="cursor: pointer;"
                 [ngClass]="{'selected': bars}" (click)="bar()">
               </div>
-
-
             </div>
+
+            <div class="row" *ngIf="!filters">
+              <div class="col-12 col-sm-6 m-2 m-sm-0">
+                <img src="assets/img/gauge-grade.png" alt="Gráfica de líneas" class="d-block w-100" style="cursor: pointer;"
+                 [ngClass]="{'selected': gauges}" (click)="gauge()">
+              </div>
+              <div class="col-12 col-sm-6 m-2 m-sm-0">
+                <img src="assets/img/number.png" alt="Gráfica de barras" class="d-block w-100" style="cursor: pointer;"
+                [ngClass]="{'selected': numbers}" (click)="number()">
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="d-flex justify-content-end">
