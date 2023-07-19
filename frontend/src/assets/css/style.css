@@ -747,9 +747,21 @@ h6 {
   font-weight: 600;
   color: #4154f1;
   transition: 0.3;
-  background: #f6f9ff;
   padding: 10px 15px;
   border-radius: 4px;
+}
+
+.sidebar-nav .nav-link.active {
+	background: #f1edff;
+}
+
+.sidebar-nav .nav-link:not(.active) {
+	color: #012970;
+	background: #fff;
+}
+
+.sidebar-nav .nav-link:not(.active) i {
+	color: #899bbd;
 }
 
 .sidebar-nav .nav-link i {
