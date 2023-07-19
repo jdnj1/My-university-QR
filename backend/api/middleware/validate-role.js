@@ -1,7 +1,7 @@
 const { response } = require('express'); // Response de Express
 
 // Roles reconocidos
-const rolesAccepted = ['basic', 'admin'];
+const rolesAccepted = [0, 1];
 
 /**
  * Valida el rol.

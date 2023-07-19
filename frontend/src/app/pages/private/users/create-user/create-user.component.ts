@@ -16,7 +16,7 @@ export class CreateUserComponent {
   // Formulario para crear nuevos usuarios
   public userForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required ],
+    password: ['', Validators.required ]
   });
 
   constructor(
@@ -52,6 +52,10 @@ export class CreateUserComponent {
 
   campoValido(campo: string){
     return this.userForm.get(campo)?.valid || !this.formSubmit;
+  }
+
+  cancel(){
+    this.router.navigateByUrl('users-list');
   }
 
 }

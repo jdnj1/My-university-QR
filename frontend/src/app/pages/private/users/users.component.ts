@@ -79,7 +79,7 @@ export class UsersComponent implements OnInit{
   }
 
   updateUser(index: any){
-
+    this.router.navigateByUrl(`/edit-user/${this.userArray[index].idUser}`);
   }
 
   deleteUser(index: any){

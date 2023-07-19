@@ -1,1 +1,69 @@
-<p>edit-user works!</p>
+
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Editar usuario</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">
+                <i class="bi bi-person-circle"></i>
+                {{emailUser}}
+              </h5>
+
+              <form class="row g-3 needs-validation" id="loginForm" [formGroup]="userForm" (ngSubmit)="updateUser()" novalidate>
+
+                <div class="col-12">
+                  <label for="yourEmail" class="form-label">Email</label>
+                  <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                    <input type="text" name="email" class="form-control" formControlName="email" id="yourEmail" >
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="yourPassword" class="form-label">Contraseña</label>
+                  <input type="password" name="password" class="form-control" formControlName="password" id="yourPassword" >
+                </div>
+
+                <div class="col-12">
+                  <label for="limit" class="form-label">Límite de consultas</label>
+                  <input type="number" min="0" name="limit" class="form-control" formControlName="lim_consult" id="limit" >
+                </div>
+
+                <div class="col-12 form-check">
+                  <input type="checkbox" name="role" class="form-check-input" formControlName="role" id="role">
+                  <label for="role" class="form-check-label">Permisos de administrador</label>
+                </div>
+
+                <div class="col-12 d-flex justify-content-around">
+                  <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
+                  <button class="btn btn-primary" type="submit">Guardar cambios</button>
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

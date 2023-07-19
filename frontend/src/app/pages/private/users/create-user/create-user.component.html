@@ -41,11 +41,12 @@
                 <div class="col-12">
                   <label for="yourPassword" class="form-label">Contraseña</label>
                   <input type="password" name="password" class="form-control" formControlName="password" id="yourPassword" >
-                  <div class="text-danger" *ngIf="!campoValido('password')">Porfavor introduce tu contraseña</div>
+                  <div class="text-danger" *ngIf="!campoValido('password')">Porfavor introduce una contraseña</div>
                 </div>
 
-                <div class="col-12">
-                  <button class="btn btn-primary w-100" type="submit">Crear usuario</button>
+                <div class="col-12 d-flex justify-content-around">
+                  <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
+                  <button class="btn btn-primary" type="submit">Crear usuario</button>
                 </div>
               </form>
 

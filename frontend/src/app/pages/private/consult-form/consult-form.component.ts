@@ -38,7 +38,7 @@ export class ConsultFormComponent implements OnInit{
     dateFrom: ['', Validators.required],
     dateTo: ['', Validators.required],
     filters: [''],
-    chart: 0
+    chart: [0]
   });
 
   // Form de la segunda parte

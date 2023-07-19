@@ -163,7 +163,10 @@ const updateUsers = async( req , res = response ) => {
 
         // Extrae los campos que no cabe especificar a la hora de crear.
         let { email, password, role, lim_consult } = req.body;
-        let updateQuery = `UPDATE ${process.env.USERTABLE} SET`;
+        let updateQuery = `UPDATE ${process.env.USERTABLE} SET `;
+
+         // En este array se van almacenando todos los campos a actualizar
+         let updateFields = [];
 
         // Dependiendo de los campos que se envien la query es de una forma u otra.
         if(email){
@@ -180,20 +183,22 @@ const updateUsers = async( req , res = response ) => {
                     return;
                 }
             }
-            updateQuery += ` email = '${email}'`;
+            updateFields.push(`email = '${email}'`);
         }
 
         // Los siguientes campos solo se pueden modificar por un administrador
         if(req.role === 1){
-            if(role !== undefined){
-                updateQuery += `, role = ${role}`;
+            if(role === 1 || role === 0){
+                updateFields.push(`role = '${role}'`);
             }
 
-            if(lim_consult !== undefined){
-                updateQuery += `, lim_consult = ${lim_consult}`;
+            if(lim_consult){
+                updateFields.push(`lim_consult = ${lim_consult}`);
             }
         }
 
+        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
+        updateQuery += updateFields.join(','); 
         updateQuery += ` WHERE idUser=${uid}`;
         
         // Se actualiza. 
