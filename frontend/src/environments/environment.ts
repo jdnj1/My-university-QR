@@ -20,6 +20,12 @@ export const environment = {
     "name",
     "origin",
     "typemeter"
+  ],
+  charts: [
+    'assets/img/line-simple.png',
+    'assets/img/bar-simple.png',
+    'assets/img/gauge-grade.png',
+    'assets/img/number.png'
   ]
 };
 

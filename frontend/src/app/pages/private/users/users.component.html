@@ -48,7 +48,7 @@
                     <td colspan="5" id="msg">No se ha obtenido ningún usuario</td>
                   </tr>
                   <tr *ngFor="let user of userArray; let i = index">
-                    <td colspan="3" [ngClass]="{'text-success': user.email === appUser}">{{user.email}}
+                    <td colspan="3" [ngClass]="{'text-primary': user.email === appUser}">{{user.email}}
                       <span *ngIf="user.role === 1" class="badge bg-primary">admin</span>
                     </td>
                     <td><button type="button" class="btn btn-primary" title="Editar código QR" (click)="updateUser(i)"><i class="bi bi-pencil-square"></i></button></td>

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './consult-form.component.html',
   styleUrls: ['./consult-form.component.css']
 })
-export class ConsultFormComponent implements OnInit{
+export class ConsultFormComponent implements OnInit, OnDestroy {
 
   // En esta variable se almacenan los datos de la consulta a configurar
   consult: any;
@@ -62,6 +62,15 @@ export class ConsultFormComponent implements OnInit{
   gauges: boolean = false;
   numbers: boolean = false;
 
+  urlChart = '';
+
+  // Booleano para comprobar si se han realizado cambios en el formulario
+  hasChanges: Boolean = false;
+
+  firstFormSubscription: any;
+  relativeFormSubscription: any;
+  filterFormSubscription: any;
+
   constructor(
     private fb: FormBuilder,
     private renderer: Renderer2,
@@ -77,6 +86,13 @@ export class ConsultFormComponent implements OnInit{
 
     // Se almacenan las opciones de filtro en el array
     this.options = environment.filters;
+  }
+
+  ngOnDestroy(): void {
+    // Liberar recursos
+    this.firstFormSubscription.unsubscribe();
+    this.relativeFormSubscription.unsubscribe();
+    this.filterFormSubscription.unsubscribe();
   }
 
   getConsult(){
@@ -108,15 +124,19 @@ export class ConsultFormComponent implements OnInit{
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
           this.lines = true;
+          this.urlChart = environment.charts[0];
         }
         else if(this.consult.chart === 1){
           this.bars = true;
+          this.urlChart = environment.charts[1];
         }
         else if(this.consult.chart === 2){
-
+          this.gauges = true;
+          this.urlChart = environment.charts[2];
         }
         else if(this.consult.chart === 3){
-
+          this.numbers = true;
+          this.urlChart = environment.charts[3];
         }
 
         if(this.consult.filters !== ''){
@@ -137,6 +157,20 @@ export class ConsultFormComponent implements OnInit{
             this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
           }
         }
+
+        // Nos suscribimos a los cambios que puedan tener los fomrmularios
+        this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
+          this.hasChanges = true;
+        });
+
+        this.relativeFormSubscription = this.relativeForm.valueChanges.subscribe(() => {
+          this.hasChanges = true;
+        });
+
+        this.relativeFormSubscription = this.filterForm.valueChanges.subscribe(() => {
+          this.hasChanges = true;
+        });
+
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -214,23 +248,10 @@ export class ConsultFormComponent implements OnInit{
     this.firstForm.setControl('filters', new FormControl(json));
     console.log(this.firstForm.value)
 
-    // Se comprueba que grafica se ha seleccionado
-    if(this.lines){
-      this.firstForm.get('chart')?.setValue(0);
-    }
-    else if(this.bars){
-      this.firstForm.get('chart')?.setValue(1);
-    }
-    else if(this.gauges){
-      this.firstForm.get('chart')?.setValue(2);
-    }
-    else if(this.numbers){
-      this.firstForm.get('chart')?.setValue(3);
-    }
-
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
       next: (res: any) => {
         this.alertService.success('Llamada actualizada correctamente');
+        this.hasChanges = false;
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al acutalizar la llamada')
@@ -251,6 +272,10 @@ export class ConsultFormComponent implements OnInit{
     else {
       this.filters = true;
     }
+  }
+
+  selectChart(event: any){
+    this.urlChart = environment.charts[event.target.value]
   }
 
   addFilter(){
@@ -279,41 +304,6 @@ export class ConsultFormComponent implements OnInit{
     this.filterForm.setControl(newKey, control);
     this.filterForm.removeControl(key);
 
-  }
-
-  // Funcion para pasar todos los controles de un formulario a otro
-  // addAllcontrols(from: FormGroup, to: FormGroup){
-  //   Object.keys(from.controls).forEach(key => {
-  //     to.addControl(key, from.get(key));
-  //   });
-  // }
-
-  line(){
-    this.lines = true;
-    this.bars = false;
-    this.gauges = false;
-    this.numbers = false;
-  }
-
-  bar(){
-    this.lines = false;
-    this.bars = true;
-    this.gauges = false;
-    this.numbers = false;
-  }
-
-  gauge(){
-    this.lines = false;
-    this.bars = false;
-    this.gauges = true;
-    this.numbers = false;
-  }
-
-  number(){
-    this.lines = false;
-    this.bars = false;
-    this.gauges = false;
-    this.numbers = true;
   }
 
 }
