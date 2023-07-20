@@ -239,8 +239,9 @@ export class ConsultFormComponent implements OnInit{
     });
   }
 
-  changeDate(){
+  changeDateTrue(){
     this.date = !this.date;
+    console.log(this.date)
   }
 
   selectData(){

@@ -325,4 +325,8 @@ export class QrComponent implements OnInit {
       searchClearElement.style.display = 'inline-block';
     }
   }
+
+  goConsult(index: any){
+    this.router.navigateByUrl(`/consult/${this.consults[index].idConsult}`)
+  }
 }

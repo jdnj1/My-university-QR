@@ -124,7 +124,7 @@
                       </div>
                     </form>
                   </td>
-                  <td [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-primary" title="Editar código QR"><i class="bi bi-pencil-square"></i></button></td>
+                  <td [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
                   <td [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
                 </tr>
               </tbody>
