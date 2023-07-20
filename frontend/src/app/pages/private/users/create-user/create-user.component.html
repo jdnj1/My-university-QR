@@ -44,9 +44,19 @@
                   <div class="text-danger" *ngIf="!campoValido('password')">Porfavor introduce una contraseña</div>
                 </div>
 
+                <div class="col-12">
+                  <label for="limit" class="form-label">Límite de consultas</label>
+                  <input type="number" min="0" name="limit" class="form-control" formControlName="lim_consult" id="limit" >
+                </div>
+
+                <div class="col-12 form-check">
+                  <input type="checkbox" name="role" class="form-check-input" formControlName="role" id="role">
+                  <label for="role" class="form-check-label">Permisos de administrador</label>
+                </div>
+
                 <div class="col-12 d-flex justify-content-around">
                   <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
-                  <button class="btn btn-primary" type="submit">Crear usuario</button>
+                  <button class="btn btn-primary" type="submit" [disabled]="!hasChanges">Crear usuario</button>
                 </div>
               </form>
 

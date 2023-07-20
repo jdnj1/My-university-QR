@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -10,13 +10,20 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css']
 })
-export class CreateUserComponent {
+export class CreateUserComponent implements OnDestroy {
   public formSubmit = false;
+
+  // Booleano para comprobar si han habido cambios en el formulario
+  hasChanges: Boolean = false;
+
+  formSubscription: any;
 
   // Formulario para crear nuevos usuarios
   public userForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required ]
+    password: ['', Validators.required ],
+    lim_consult: [10],
+    role: [0]
   });
 
   constructor(
@@ -26,7 +33,15 @@ export class CreateUserComponent {
     private alertService: AlertService
 
   ){
+    // Nos suscribimos a los cambios que pueda tener el fomrmulario
+    this.formSubscription = this.userForm.valueChanges.subscribe(newValue => {
+      this.hasChanges = true;
+    });
+  }
 
+  ngOnDestroy(): void {
+    // Liberar recursos
+    this.formSubscription.unsubscribe();
   }
 
   createUser(){
@@ -36,6 +51,16 @@ export class CreateUserComponent {
     if (!this.userForm.valid) {
       return;
     }
+
+    let role = this.userForm.get('role')?.value;
+    if(!role){
+      this.userForm.get('role')?.setValue(0);
+    }
+    else{
+      this.userForm.get('role')?.setValue(1);
+    }
+
+    console.log(this.userForm.value);
 
     this.userService.createUser(this.userForm.value).subscribe({
       next: (res: any) => {

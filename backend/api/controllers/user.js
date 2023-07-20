@@ -95,7 +95,7 @@ const getUserById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createUsers = async( req , res = response ) => {
-    let {email, password} = req.body;
+    let {email, password, lim_consult, role} = req.body;
 
     try {
         // Solo los usuarios administrador pueden crear nuevos usuarios
@@ -122,8 +122,31 @@ const createUsers = async( req , res = response ) => {
         // Cifra la contrasena con la cadena.
         password = bcrypt.hashSync(password, salt);
 
-        const query = `INSERT INTO ${process.env.USERTABLE} (email, password) VALUES ('${ email }', '${ password }')`;
-        console.log(query)
+        let query = `INSERT INTO ${process.env.USERTABLE} (email, password`;
+
+        // Se comprueba si se pasa el rol y el limite de consultas
+        if(lim_consult){
+            query += `, lim_consult`;
+        }
+
+        if(role === 1 || role === 0){
+            query += `, role`;
+        }
+
+        query += `) VALUES ('${ email }', '${ password }'`;
+
+        if(lim_consult){
+            query += `, ${lim_consult}`;
+        }
+
+        if(role === 1 || role === 0){
+            query += `, ${role}`;
+        }
+
+        query += ')';
+
+        console.log(query);
+
         const user = await dbConsult(query);
 
         res.status(200).json({
