@@ -26,7 +26,10 @@ const getConsult = async( req , res ) => {
     const querySearch = req.query.query;
 
     try {
-        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${idQr}`; 
+        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${idQr}`;
+        
+        // Se realiza una busqueda de todas las consultas del QR para poder hacer la paginación
+        const total = await dbConsult(query);
         
         if(querySearch){
             query += ` AND name LIKE '%${querySearch}%'`
@@ -42,7 +45,7 @@ const getConsult = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: consult.length
+                total: total.length
             }
         });
     } catch (error) {

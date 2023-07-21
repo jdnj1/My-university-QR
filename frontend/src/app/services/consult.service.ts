@@ -13,12 +13,15 @@ export class ConsultService {
     private router: Router
   ) { }
 
-  getConsults(id: any){
+  getConsults(id: any, desde: any){
     const token = localStorage.getItem('token') || '';
 
     return this.http.get(`${environment.apiBaseUrl}/consult`,{
       headers: {'x-token': token},
-      params: {'idQr': id}
+      params: {
+          'idQr': id,
+          'desde': desde
+        }
     });
   }
 

@@ -44,6 +44,11 @@ export class QrComponent implements OnInit {
   buttons = false;
   timer: any;
 
+  // Variable que indica cuantas paginas deben haber
+  page: number = 0;
+  pageArray: Array<number> = [];
+  numPage: number = 0;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -56,7 +61,7 @@ export class QrComponent implements OnInit {
 
   ngOnInit(): void {
     this.getQr();
-    this.getConsults();
+    this.getConsults(0);
 
     this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
     this.renderer.selectRootElement( '#msg' ).style.display = 'none';
@@ -111,9 +116,9 @@ export class QrComponent implements OnInit {
     });
   }
 
-  getConsults(){
+  getConsults(page: any){
     // Obtenemos las llamadas del código QR.
-    this.consultService.getConsults(this.idQr).subscribe({
+    this.consultService.getConsults(this.idQr, page).subscribe({
       next: (res: any) => {
         this.consults = res.consult;
 
@@ -122,6 +127,12 @@ export class QrComponent implements OnInit {
           tdElement.innerHTML = 'No has creadao ningún código QR todavía.';
           tdElement.style.display = 'table-cell';
           return;
+        }
+
+        this.page = Math.ceil(res.page.total / 10);
+        console.log(this.page)
+        for (let i = 0; i < this.page; i++) {
+          this.pageArray.push(i+1);
         }
 
         for (let i = 0; i < this.consults.length; i++) {
@@ -316,7 +327,7 @@ export class QrComponent implements OnInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
-      this.getConsults();
+      this.getConsults(0);
       this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }
     // Cuando no esta vacio
@@ -328,5 +339,16 @@ export class QrComponent implements OnInit {
 
   goConsult(index: any){
     this.router.navigateByUrl(`/consult/${this.consults[index].idConsult}`)
+  }
+
+  pageConsult(page: any){
+    if(page !== this.numPage){
+      this.pageArray.splice(0);
+
+      if(page > this.numPage) this.numPage ++;
+      else this.numPage --;
+
+      this.getConsults(page*10)
+    }
   }
 }

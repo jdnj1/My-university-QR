@@ -21,6 +21,7 @@ export class AppComponent {
     // Comprobamos si tenemos que renderrizar los componentes
     this.router.events.subscribe( ( event: any ) => {
       if( event instanceof NavigationStart ){
+        // console.log(event)
         if(event.url !== '/'){
           this.header = true;
           this.sidebar = true;

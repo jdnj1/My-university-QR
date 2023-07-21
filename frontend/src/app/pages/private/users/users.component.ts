@@ -28,6 +28,11 @@ export class UsersComponent implements OnInit{
   // Contador para la barra de búsqueda
   timer: any;
 
+  // Variable que indica cuantas paginas deben haber
+  page: number = 0;
+  pageArray: Array<number> = [];
+  numPage: number = 0;
+
   constructor(
     private userService: UserService,
     private renderer: Renderer2,
@@ -39,7 +44,7 @@ export class UsersComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.getUsers();
+    this.getUsers(0);
 
     this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
@@ -61,12 +66,19 @@ export class UsersComponent implements OnInit{
     });
   }
 
-  getUsers(){
+  getUsers(page: any){
     // Se hace la peticion al servicio de los usuarios para obtener la lista de estos
-    this.userService.getUsers().subscribe({
+    this.userService.getUsers(page).subscribe({
       next: (res: any) => {
         console.log(res);
         this.userArray = res.users;
+
+        this.page = Math.ceil(res.page.total / 10);
+        console.log(this.page)
+        for (let i = 0; i < this.page; i++) {
+          this.pageArray.push(i+1);
+        }
+
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -147,13 +159,24 @@ export class UsersComponent implements OnInit{
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
-      this.getUsers();
+      this.getUsers(0);
       this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }
     // Cuando no esta vacio
     else{
       // Se muestra el boton
       searchClearElement.style.display = 'inline-block';
+    }
+  }
+
+  pageUsers(page: any){
+    if(page !== this.numPage){
+      this.pageArray.splice(0);
+
+      if(page > this.numPage) this.numPage ++;
+      else this.numPage --;
+
+      this.getUsers(page*10)
     }
   }
 

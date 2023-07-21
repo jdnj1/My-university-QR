@@ -25,6 +25,9 @@ const getUsers = async( req , res ) => {
     try {
         let query = `SELECT * FROM ${process.env.USERTABLE}`; 
 
+        // Se realiza una busqueda de todos los usuarios para poder hacer la paginación
+        const total = await dbConsult(query);
+
         if(querySearch){
             query += ` WHERE email LIKE '%${querySearch}%'`
         }
@@ -39,7 +42,7 @@ const getUsers = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: users.length
+                total: total.length
             }
         });
     } catch (error) {

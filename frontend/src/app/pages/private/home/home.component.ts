@@ -293,8 +293,6 @@ export class HomeComponent implements OnInit {
       if(page > this.numPage) this.numPage ++;
       else this.numPage --;
 
-      console.log(this.numPage)
-
       this.getQr(page*10)
     }
   }
