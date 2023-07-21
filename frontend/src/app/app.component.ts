@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { ActivationEnd, ActivationStart, NavigationStart, Router } from '@angular/router';
+import { Error404Component } from './pages/public/error404/error404.component';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +21,24 @@ export class AppComponent {
   ngOnInit(){
     // Comprobamos si tenemos que renderrizar los componentes
     this.router.events.subscribe( ( event: any ) => {
+      //console.log(event)
       if( event instanceof NavigationStart ){
-        // console.log(event)
+        //console.log(event)
         if(event.url !== '/'){
           this.header = true;
           this.sidebar = true;
+        }
+        else{
+          this.header = false;
+          this.sidebar = false;
+        }
+      }
+
+      if (event instanceof ActivationEnd ){
+        console.log(event)
+        if(event.snapshot.component === Error404Component){
+          this.header = false;
+          this.sidebar = false;
         }
       }
     });
