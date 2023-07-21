@@ -32,6 +32,11 @@ export class HomeComponent implements OnInit {
 
   timer: any;
 
+  // Variable que indica cuantas paginas deben haber
+  page: number = 0;
+  pageArray: Array<number> = [];
+  numPage: number = 0;
+
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
@@ -41,7 +46,7 @@ export class HomeComponent implements OnInit {
   ){}
 
   ngOnInit(): void{
-    this.getQr();
+    this.getQr(0);
 
     this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
     this.renderer.selectRootElement( '#msg' ).style.display = 'none';
@@ -64,8 +69,8 @@ export class HomeComponent implements OnInit {
 
   }
 
-  getQr(){
-    this.qrService.getQr().subscribe({
+  getQr(page: any){
+    this.qrService.getQr(page).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
 
@@ -74,6 +79,12 @@ export class HomeComponent implements OnInit {
           tdElement.innerHTML = 'No has creadao ningún código QR todavía.';
           tdElement.style.display = 'table-cell';
           return;
+        }
+
+        this.page = Math.ceil(res.page.total / 10);
+        console.log(this.page)
+        for (let i = 0; i < this.page; i++) {
+          this.pageArray.push(i+1);
         }
 
         // Cambiamos como se ve la fecha en el frontend
@@ -265,13 +276,26 @@ export class HomeComponent implements OnInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
-      this.getQr();
+      this.getQr(0);
       this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }
     // Cuando no esta vacio
     else{
       // Se muestra el boton
       searchClearElement.style.display = 'inline-block';
+    }
+  }
+
+  pageQr(page: any){
+    if(page !== this.numPage){
+      this.pageArray.splice(0);
+
+      if(page > this.numPage) this.numPage ++;
+      else this.numPage --;
+
+      console.log(this.numPage)
+
+      this.getQr(page*10)
     }
   }
 }

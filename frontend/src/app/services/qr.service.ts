@@ -13,11 +13,12 @@ export class QrService {
     private router: Router
   ) { }
 
-  getQr(){
+  getQr(desde: any){
     const token = localStorage.getItem('token') || '';
 
     return this.http.get(`${environment.apiBaseUrl}/qr`,{
-      headers: {'x-token': token}
+      headers: {'x-token': token},
+      params: {'desde': desde}
     });
   }
 

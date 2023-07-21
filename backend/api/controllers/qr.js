@@ -25,9 +25,14 @@ const getQr = async( req , res ) => {
     try {
         let query = `SELECT * FROM ${process.env.QRTABLE}`;
 
+        // Se realiza una busqueda de todos los QR para poder hacer la paginación
+        let total = await dbConsult(query);
+
         // Si el usuario no es admin se le devuelven solo sus codigos qr
         if(req.role === 0){
             query += ` WHERE user = ${req.uid}`
+
+            total = await dbConsult(query);
 
             // Si ademas existe la query de busqueda
             if(querySearch){
@@ -39,7 +44,6 @@ const getQr = async( req , res ) => {
                 query += ` WHERE description LIKE '%${querySearch}%'`
             }
         }
-
         
 
         query += ` LIMIT ${desde}, ${registropp}`;
@@ -52,7 +56,7 @@ const getQr = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: qr.length
+                total: total.length
             }
         });
     } catch (error) {
