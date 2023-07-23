@@ -25,9 +25,11 @@
             <div class="container">
               <div class="row">
                 <div class=" col col-sm-4" style="margin: 1em;">
+                  <p class="text-center m-0">{{dataQrForm.get('tagName')?.value}}</p>
                   <div class="d-flex align-items-center justify-content-center">
                     <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
                   </div>
+                  <p class="text-center small">{{dataQrForm.get('tagDescription')?.value}}</p>
                   <div class="d-flex justify-content-around align-items-center">
                     <form [formGroup]="activateForm">
                       <div class="form-check form-switch">
@@ -40,20 +42,29 @@
                 <!-- Parte del formulario del codigo QR -->
                 <div class="col" style="margin: 1em;">
                   <form [formGroup]="dataQrForm">
-                    <div class="d-flex align-items-center justify-content-sm-between m-2">
-                      <h5 class="scol-form-label">Datos del QR</h5>
-                      <button style="margin-left: 1em;" type="button" class="btn btn-primary btn-sm" (click)="startUpdate()" [disabled]="buttons">
-                        <i class="bi bi-pencil-square"></i></button>
-                    </div>
                     <div class="container">
                       <div class="row">
                         <div class="col">
-                          <label for="inputName" class="form-label">Nombre/Descripción</label>
-                          <textarea id="inputName" class="form-control" style="height: 100px;"
+                          <div class="d-flex align-items-center justify-content-sm-between">
+                            <h5 class="scol-form-label">Datos del QR</h5>
+                            <button style="margin-left: 1em;" type="button" class="btn btn-primary btn-sm d-md-none" (click)="startUpdate()" [disabled]="buttons">
+                              <i class="bi bi-pencil-square"></i></button>
+                            </div>
+                          <label for="inputName" class="form-label">Título</label>
+                          <textarea id="inputName" class="form-control" style="height: 100px; max-height: 200px;"
                             formControlName="description"></textarea>
+
+                          <label for="inputDate" class="form-label">Fecha de validez</label>
+                          <input type="date" class="form-control" id="inputDate"
+                            formControlName="date">
                         </div>
 
                         <div class="col">
+                          <div class="d-flex align-items-center justify-content-sm-between">
+                            <h5 class="scol-form-label">Datos de impresión</h5>
+                            <button style="margin-left: 1em;" type="button" class="btn btn-primary btn-sm d-none d-md-inline" (click)="startUpdate()" [disabled]="buttons">
+                              <i class="bi bi-pencil-square"></i></button>
+                          </div>
                           <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
                           <input type="text" class="form-control" id="inputNameTag"
                             formControlName="tagName">
@@ -62,14 +73,12 @@
                           <input type="text" class="form-control" id="inputDescTag"
                             formControlName="tagDescription">
 
-                          <label for="inputDate" class="form-label">Fecha de validez</label>
-                          <input type="date" class="form-control" id="inputDate"
-                            formControlName="date">
+
                         </div>
                       </div>
                     </div>
                     <div class="d-flex justify-content-end" *ngIf="buttons">
-                      <button type="button" class="btn btn-danger m-2" (click)="cancelUpdate()">Cancelar</button>
+                      <button type="button" class="btn btn-danger m-2" (click)="cancelUpdate(true)">Cancelar</button>
                       <button type="button" class="btn btn-success m-2" (click)="updateQr()">Guardar</button>
                     </div>
                   </form>
@@ -133,7 +142,7 @@
             <nav aria-label="Page navigation example">
               <ul class="pagination justify-content-center">
                 <li class="page-item" [ngClass]="{'disabled': numPage === 0}">
-                  <button class="page-link" aria-label="Previous" title="Anterior"(click)="pageConsult(numPage - 1)">
+                  <button class="page-link" aria-label="Previous" title="Anterior" (click)="pageConsult(numPage - 1)">
                     <span aria-hidden="true">&laquo;</span>
                   </button>
                 </li>

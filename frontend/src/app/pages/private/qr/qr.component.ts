@@ -191,12 +191,20 @@ export class QrComponent implements OnInit {
     this.buttons = true;
   }
 
-  cancelUpdate(){
+  cancelUpdate(reset: boolean){
     this.dataQrForm.get('description')?.disable();
     this.dataQrForm.get('tagName')?.disable();
     this.dataQrForm.get('tagDescription')?.disable();
     this.dataQrForm.get('date')?.disable();
     this.buttons = false;
+
+    if(reset){
+      // Se vuelven a poner los datos que tenian antes de acutalizar
+      this.dataQrForm.get('description')?.reset(this.qr.description);
+      this.dataQrForm.get('tagName')?.reset(this.qr.tagName);
+      this.dataQrForm.get('tagDescription')?.reset(this.qr.tagDescription);
+      this.dataQrForm.get('date')?.reset(this.qr.date);
+    }
   }
 
   updateQr(){
@@ -204,7 +212,7 @@ export class QrComponent implements OnInit {
     this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
       next: (res: any) => {
         this.alertService.success('QR actualizado correctamente');
-        this.cancelUpdate();
+        this.cancelUpdate(false);
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al intentar actualizar el QR');

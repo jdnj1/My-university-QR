@@ -38,6 +38,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     dateFrom: ['', Validators.required],
     dateTo: ['', Validators.required],
     filters: [''],
+    operation:[1],
     chart: [0]
   });
 
@@ -50,17 +51,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   filterForm: FormGroup = this.fb.group({
   });
 
+  // Form para las llamadas de max, min o last
+  operationForm: FormGroup = this.fb.group({
+    uid: [''],
+    name: ['']
+  });
+
   // Form para las fechas relativas
   relativeForm: FormGroup = this.fb.group({
     number: [0],
     unit: ['1'],
   })
-
-  // Booleanos para controlar el tipo de grafica que se selecciona para representar
-  lines: boolean = false;
-  bars: boolean = false;
-  gauges: boolean = false;
-  numbers: boolean = false;
 
   urlChart = '';
 
@@ -70,6 +71,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   firstFormSubscription: any;
   relativeFormSubscription: any;
   filterFormSubscription: any;
+  operationFormSubscription: any;
 
   constructor(
     private fb: FormBuilder,
@@ -93,6 +95,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.firstFormSubscription.unsubscribe();
     this.relativeFormSubscription.unsubscribe();
     this.filterFormSubscription.unsubscribe();
+    this.operationFormSubscription.unsubscribe();
   }
 
   getConsult(){
@@ -118,24 +121,21 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           dateFrom: [this.consult.dateFrom],
           dateTo: [this.consult.dateTo],
           filters: '',
+          operation: 1,
           chart: [this.consult.chart]
         });
 
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
-          this.lines = true;
           this.urlChart = environment.charts[0];
         }
         else if(this.consult.chart === 1){
-          this.bars = true;
           this.urlChart = environment.charts[1];
         }
         else if(this.consult.chart === 2){
-          this.gauges = true;
           this.urlChart = environment.charts[2];
         }
         else if(this.consult.chart === 3){
-          this.numbers = true;
           this.urlChart = environment.charts[3];
         }
 
@@ -158,6 +158,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           }
         }
 
+        this.secondForm.get('data')?.setValue(this.consult.operation);
+
         // Nos suscribimos a los cambios que puedan tener los fomrmularios
         this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
           this.hasChanges = true;
@@ -168,6 +170,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         });
 
         this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
+          this.hasChanges = true;
+        });
+
+        this.operationFormSubscription = this.operationForm.valueChanges.subscribe(() => {
           this.hasChanges = true;
         });
 
@@ -234,19 +240,30 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
     // Montar el campo de los filtros.
     let json = `{`;
-    Object.keys(this.filterForm.controls).forEach((key, index) => {
-      json += `"${key}":"${this.filterForm.get(key)?.value}"`;
 
-      if(index !== Object.keys(this.filterForm.controls).length - 1){
-        json += ','
-      }
+    if(Number(this.secondForm.value.data) > 1){
+      Object.keys(this.operationForm.controls).forEach((key, index) => {
+        json += `"${key}":"${this.operationForm.get(key)?.value}"`;
 
-    });
+        if(index !== Object.keys(this.filterForm.controls).length - 1){
+          json += ','
+        }
+      });
+    }
+    else{
+      Object.keys(this.filterForm.controls).forEach((key, index) => {
+        json += `"${key}":"${this.filterForm.get(key)?.value}"`;
+
+        if(index !== Object.keys(this.filterForm.controls).length - 1){
+          json += ','
+        }
+      });
+    }
 
     json += `}`;
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
-    console.log(this.firstForm.value)
+    //this.firstForm.setControl('operation', this.secondForm.value.data);
 
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
       next: (res: any) => {
