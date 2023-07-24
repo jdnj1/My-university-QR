@@ -53,8 +53,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   // Form para las llamadas de max, min o last
   operationForm: FormGroup = this.fb.group({
-    uid: [''],
-    name: ['']
+    uid: ['', Validators.required],
+    name: ['', Validators.required]
   });
 
   // Form para las fechas relativas
@@ -121,7 +121,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           dateFrom: [this.consult.dateFrom],
           dateTo: [this.consult.dateTo],
           filters: '',
-          operation: 1,
+          operation: [this.consult.operation],
           chart: [this.consult.chart]
         });
 
@@ -139,11 +139,16 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.urlChart = environment.charts[3];
         }
 
-        if(this.consult.filters !== ''){
-          // Pasamos los filtros a JSON
-          this.consult.filters = JSON.parse(this.consult.filters);
-          console.log(this.consult.filters)
+        // Pasamos los filtros a JSON
+        this.consult.filters = JSON.parse(this.consult.filters);
 
+        if(Number(this.firstForm.value.operation) > 1){
+          this.filters = false;
+
+          this.operationForm.get('uid')?.setValue(Object.values(this.consult.filters)[0]);
+          this.operationForm.get('name')?.setValue(Object.values(this.consult.filters)[1]);
+        }
+        else if(this.consult.filters !== ''){
           // Pasamos los filtros al array
           this.filtersArray = Object.values(this.consult.filters);
           console.log(this.filtersArray);
@@ -157,8 +162,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
             this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
           }
         }
-
-        this.secondForm.get('data')?.setValue(this.consult.operation);
 
         // Nos suscribimos a los cambios que puedan tener los fomrmularios
         this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
@@ -241,11 +244,18 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Montar el campo de los filtros.
     let json = `{`;
 
-    if(Number(this.secondForm.value.data) > 1){
+    if(Number(this.firstForm.value.operation) > 1){
+
+      // Se comprueba que se hayan introducido los campos necesarios
+      if(!this.operationForm.valid){
+        this.alertService.error("Los campos UID y Magnitud deben tener un valor");
+        return;
+      }
+
       Object.keys(this.operationForm.controls).forEach((key, index) => {
         json += `"${key}":"${this.operationForm.get(key)?.value}"`;
 
-        if(index !== Object.keys(this.filterForm.controls).length - 1){
+        if(index !== Object.keys(this.operationForm.controls).length - 1){
           json += ','
         }
       });
@@ -263,7 +273,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     json += `}`;
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
-    //this.firstForm.setControl('operation', this.secondForm.value.data);
 
     this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
       next: (res: any) => {
@@ -283,7 +292,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   selectData(){
-    if(Number(this.secondForm.value.data) > 1){
+    if(Number(this.firstForm.value.operation) > 1){
       this.filters = false;
     }
     else {
@@ -297,10 +306,19 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   addFilter(){
     this.filtersArray.push('');
-    this.keys.push(`newKey ${this.keys.length+1}`);
+    if(this.keys.length === 0){
+      this.keys.push(`uid`);
+      // Agregamos un nuevo campo al formulario de los filtros
+      this.filterForm.addControl(`uid`, this.fb.control(''));
+    }
+    else{
+      this.keys.push(`newKey ${this.keys.length+1}`);
+      // Agregamos un nuevo campo al formulario de los filtros
+      this.filterForm.addControl(`newKey ${this.keys.length}`, this.fb.control(''));
+    }
 
-    // Agregamos un nuevo campo al formulario de los filtros
-    this.filterForm.addControl(`newKey ${this.keys.length}`, this.fb.control(''));
+
+
   }
 
   deleteFilter(index: any, key: string){

@@ -14,148 +14,149 @@
     </div>
   </div>
   <section class="section">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-6">
-            <form class="row g-3" id="consForm1" [formGroup]="firstForm">
+    <form id="consForm1" [formGroup]="firstForm">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
 
-              <div class="col-12">
-                <label for="nameConsult" class="col-form-label">Nombre</label>
-                <input type="text" name="name" class="form-control" formControlName="name" id="nameConsult" >
-              </div>
+            <div class="col-lg-6">
+              <div class="row g-3" >
+                <div class="col-12">
+                  <label for="nameConsult" class="col-form-label">Nombre</label>
+                  <input type="text" name="name" class="form-control" formControlName="name" id="nameConsult" >
+                </div>
 
-              <div class="col-12 mb-5">
-                <label for="tokenConsult" class="col-form-label">Token</label>
-                <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult">
-              </div>
+                <div class="col-12 mb-5">
+                  <label for="tokenConsult" class="col-form-label">Token</label>
+                  <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult">
+                </div>
 
-              <div class="col-12 mb-5">
+                <div class="col-12 mb-5">
 
-                <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
-                  <li class="nav-item flex-fill" role="presentation">
-                    <button class="nav-link w-100 active" id="absolute-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true" (click)="date = false">
-                      <i class="bi bi-calendar"></i>
-                      <span class="d-none d-sm-inline m-1">Fecha absoluta</span>
-                    </button>
-                  </li>
-                  <li class="nav-item flex-fill" role="presentation">
-                    <button class="nav-link w-100" id="relative-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" (click)="date = true">
-                      <i class="bi bi-stopwatch"></i>
-                      <span class="d-none d-sm-inline m-1">Fecha relativa</span>
-                    </button>
-                  </li>
-                </ul>
-                <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-                  <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="absolute-tab">
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <label for="dateFrom" class="col-form-label">Desde</label>
-                        <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
-                      </div>
-                      <div class="col-sm-6">
-                        <label for="dateTo" class="col-form-label">Hasta</label>
-                        <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
+                  <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+                    <li class="nav-item flex-fill" role="presentation">
+                      <button class="nav-link w-100 active" id="absolute-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true" (click)="date = false">
+                        <i class="bi bi-calendar"></i>
+                        <span class="d-none d-sm-inline m-1">Fecha absoluta</span>
+                      </button>
+                    </li>
+                    <li class="nav-item flex-fill" role="presentation">
+                      <button class="nav-link w-100" id="relative-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" (click)="date = true">
+                        <i class="bi bi-stopwatch"></i>
+                        <span class="d-none d-sm-inline m-1">Fecha relativa</span>
+                      </button>
+                    </li>
+                  </ul>
+                  <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+                    <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="absolute-tab">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="dateFrom" class="col-form-label">Desde</label>
+                          <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="dateTo" class="col-form-label">Hasta</label>
+                          <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="tab-pane fade" id="bordered-justified-contact" role="tabpanel" aria-labelledby="relative-tab">
-                    <form class="row" [formGroup]="relativeForm">
-                      <div class="col-sm-6">
-                        <label for="relative" class="col-form-label">Cantidad</label>
-                        <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
-                      </div>
-                      <div class="col-sm-6">
-                        <label class="col-form-label">Unidad de tiempo</label>
-                        <select class="form-select" aria-label="Default select example" formControlName="unit">
-                          <option value="1" selected>Segundos</option>
-                          <option value="2">Minutos</option>
-                          <option value="3">Horas</option>
-                          <option value="4">Dias</option>
-                        </select>
-                      </div>
-                    </form>
+                    <div class="tab-pane fade" id="bordered-justified-contact" role="tabpanel" aria-labelledby="relative-tab">
+                      <form class="row" [formGroup]="relativeForm">
+                        <div class="col-sm-6">
+                          <label for="relative" class="col-form-label">Cantidad</label>
+                          <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="col-form-label">Unidad de tiempo</label>
+                          <select class="form-select" aria-label="Default select example" formControlName="unit">
+                            <option value="1" selected>Segundos</option>
+                            <option value="2">Minutos</option>
+                            <option value="3">Horas</option>
+                            <option value="4">Dias</option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="col-sm-6">
+                <div class="col-sm-6">
 
-                <label class="col-form-label">Selecciona la gráfica para representar los datos</label>
-                <select class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
-                  <option value="0" *ngIf="filters">Gráfica lineal</option>
-                  <option value="1" *ngIf="filters">Gráfica de barras</option>
-                  <option value="2" *ngIf="!filters">Gráfica de gauge</option>
-                  <option value="3" *ngIf="!filters">Solo el valor</option>
-                </select>
-              </div>
-
-              <div class="col-sm-6 mb-5">
-                <div class="">
-                  <img src="{{urlChart}}" alt="Gráfica seleccionada" class="d-block w-100">
+                  <label class="col-form-label">Selecciona la gráfica para representar los datos</label>
+                  <select class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
+                    <option value="0" *ngIf="filters">Gráfica lineal</option>
+                    <option value="1" *ngIf="filters">Gráfica de barras</option>
+                    <option value="2" *ngIf="!filters">Gráfica de gauge</option>
+                    <option value="3" *ngIf="!filters">Solo el valor</option>
+                  </select>
                 </div>
 
-              </div>
-            </form>
-          </div>
+                <div class="col-sm-6 mb-5">
+                  <div class="">
+                    <img src="{{urlChart}}" alt="Gráfica seleccionada" class="d-block w-100">
+                  </div>
 
-          <div class="col-lg-6">
-            <form class="row g-3" id="consForm1" [formGroup]="secondForm">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+
               <div>
                 <label class="col-form-label">Cantidad de datos</label>
-                <select class="form-select" aria-label="Default select example" formControlName="data" (change)="selectData()">
+                <select class="form-select" aria-label="Default select example" formControlName="operation" (change)="selectData()">
                   <option value="1" selected>Todos</option>
                   <option value="2">Máximo</option>
                   <option value="3">Mínimo</option>
                   <option value="4">Último</option>
                 </select>
               </div>
-            </form>
-            <div class="d-flex align-items-center">
-              <h5 class="card-title">Filtros</h5>
-              <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
-            </div>
-            <form *ngIf="!filters" [formGroup]="operationForm">
-              <div class="row mb-3">
-                <label for="inputUid" class="col-sm-2 col-form-label">UID</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputUid" formControlName="uid">
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="inputName" formControlName="name">
-                </div>
-              </div>
-            </form>
-            <div *ngIf="filters" style="height: 500px; ;max-height: 100%; overflow-y: scroll;" [formGroup]="filterForm">
-              <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
-                <div class="col-sm-3">
-                  <label class="form-label">Filtro {{i + 1}}</label>
-                  <select class="form-select" (change)="onChange(i, key, $event)">
-                    <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
-                    [disabled]="keys.includes(opt)">{{opt}}</option>
-                  </select>
-                </div>
-                <form [formGroup]="filterForm" class="col">
-                  <input type="text" name="filters" id="filters" class="form-control" formControlName="{{key}}">
-                </form>
-                <div class="col-2">
-                  <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
-                </div>
-              </div>
-            </div>
 
-            <div class="d-flex justify-content-end m-2">
-              <button type="button" class="btn btn-danger m-2">Cancelar</button>
-              <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">Guardar</button>
-            </div>
+              <div class="d-flex align-items-center">
+                <h5 class="card-title">Filtros</h5>
+                <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
+              </div>
+              <form *ngIf="!filters" [formGroup]="operationForm">
+                <div class="row mb-3">
+                  <label for="inputUid" class="col-sm-2 col-form-label">UID</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputUid" formControlName="uid">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputName" formControlName="name">
+                  </div>
+                </div>
+              </form>
+              <div *ngIf="filters" style="height: 500px; ;max-height: 100%; overflow-y: scroll;" [formGroup]="filterForm">
+                <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
+                  <div class="col-sm-3">
+                    <label class="form-label">Filtro {{i + 1}}</label>
+                    <select class="form-select" (change)="onChange(i, key, $event)">
+                      <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
+                      [disabled]="keys.includes(opt)">{{opt}}</option>
+                    </select>
+                  </div>
+                  <form [formGroup]="filterForm" class="col">
+                    <input type="text" name="filters" id="filters" class="form-control" formControlName="{{key}}">
+                  </form>
+                  <div class="col-2">
+                    <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
+                  </div>
+                </div>
+              </div>
 
+              <div class="d-flex justify-content-end m-2">
+                <button type="button" class="btn btn-danger m-2">Cancelar</button>
+                <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">Guardar</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </section>
 
 </main>
