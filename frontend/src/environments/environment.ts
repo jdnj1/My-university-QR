@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiBaseUrl: 'http://localhost:3000/api',
   appBaseUrl: 'http://localhost:4200',
+  openApi: 'http://openapi.smartua.es',
   recordsByPage: 2,
   filters: [
     "uid",

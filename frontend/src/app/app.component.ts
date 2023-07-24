@@ -35,7 +35,6 @@ export class AppComponent {
       }
 
       if (event instanceof ActivationEnd ){
-        console.log(event)
         if(event.snapshot.component === Error404Component){
           this.header = false;
           this.sidebar = false;

@@ -111,6 +111,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
         console.log(this.consult)
         // Se adaptan las fechas
+        this.consult.dateFrom = new Date(this.consult.dateFrom);
+        console.log(this.consult.dateFrom)
+        return;
         this.consult.dateFrom = this.consult.dateFrom.slice(0, -1);
         this.consult.dateTo = this.consult.dateTo.slice(0, -1);
 
