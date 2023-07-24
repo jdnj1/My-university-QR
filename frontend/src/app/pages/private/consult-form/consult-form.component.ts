@@ -5,6 +5,7 @@ import { ActivatedRoute, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-consult-form',
@@ -112,10 +113,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         console.log(this.consult)
         // Se adaptan las fechas
         this.consult.dateFrom = new Date(this.consult.dateFrom);
-        console.log(this.consult.dateFrom)
-        return;
-        this.consult.dateFrom = this.consult.dateFrom.slice(0, -1);
-        this.consult.dateTo = this.consult.dateTo.slice(0, -1);
+        this.consult.dateFrom = format(this.consult.dateFrom, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+        this.consult.dateTo = new Date(this.consult.dateTo);
+        this.consult.dateTo = format(this.consult.dateTo, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         // Se rellenan los datos del formulario con los datos de la consulta
         this.firstForm = this.fb.group({
