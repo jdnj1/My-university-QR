@@ -159,12 +159,41 @@ export class ViewComponent implements OnInit {
               });
             }
             else{
-              // todos
-              this.uniService.getData();
+              // Todos los datos disponibles
+              // Se comienza a montar el cuerpo de la petición
+              let body = `{"time_start": "${cons.dateFrom}", "time_end": "${cons.dateTo}", "filters":[`;
+
+              // Añadir los filtros
+              if(cons.filter !== ''){
+                // Pasamos los filtros a JSON
+                console.log(cons.filters)
+                cons.filters = JSON.parse(cons.filters);
+                console.log(cons.filters)
+                Object.entries(cons.filters).forEach((key, index) => {
+                  //Comprobar si tienen muchos valores una misma clave
+                  body += `{"filter": "${key[0]}", "values": ["${key[1]}"]}`;
+
+                  if(index !== Object.entries(cons.filters).length - 1){
+                    body += ','
+                  }
+                });
+              }
+
+              body += ']}';
+              console.log(body)
+              body = JSON.parse(body)
+              console.log(body)
+              // Se realiza la peticion a smartuniversity con el json creado
+              this.uniService.getData(cons.token, body).subscribe({
+                next: (res: any) => {
+                  console.log(res)
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.log(err)
+                }
+              });
             }
           }
-
-          //this.uniService.
         });
       },
       error: (err: HttpErrorResponse) => {

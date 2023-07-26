@@ -139,29 +139,32 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.urlChart = environment.charts[3];
         }
 
-        // Pasamos los filtros a JSON
-        this.consult.filters = JSON.parse(this.consult.filters);
+        // Pasamos los filtros a JSON si tiene
+        if(this.consult.filters !== ''){
+          this.consult.filters = JSON.parse(this.consult.filters);
 
-        if(Number(this.firstForm.value.operation) > 1){
-          this.filters = false;
+          if(Number(this.firstForm.value.operation) > 1){
+            this.filters = false;
 
-          this.operationForm.get('uid')?.setValue(Object.values(this.consult.filters)[0]);
-          this.operationForm.get('name')?.setValue(Object.values(this.consult.filters)[1]);
-        }
-        else if(this.consult.filters !== ''){
-          // Pasamos los filtros al array
-          this.filtersArray = Object.values(this.consult.filters);
-          console.log(this.filtersArray);
+            this.operationForm.get('uid')?.setValue(Object.values(this.consult.filters)[0]);
+            this.operationForm.get('name')?.setValue(Object.values(this.consult.filters)[1]);
+          }
+          else if(this.consult.filters !== ''){
+            // Pasamos los filtros al array
+            this.filtersArray = Object.values(this.consult.filters);
+            console.log(this.filtersArray);
 
-          // Pasamos las keys al array
-          this.keys = Object.keys(this.consult.filters);
-          console.log(this.keys);
+            // Pasamos las keys al array
+            this.keys = Object.keys(this.consult.filters);
+            console.log(this.keys);
 
-          // Agregamos los filtros al formulario
-          for(let i = 0; i < this.filtersArray.length; i ++){
-            this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
+            // Agregamos los filtros al formulario
+            for(let i = 0; i < this.filtersArray.length; i ++){
+              this.filterForm.addControl(this.keys[i], this.fb.control(this.filtersArray[i]));
+            }
           }
         }
+
 
         // Nos suscribimos a los cambios que puedan tener los fomrmularios
         this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {

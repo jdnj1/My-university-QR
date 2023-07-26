@@ -11,8 +11,8 @@ export class UniversityService {
     private http: HttpClient,
   ) { }
 
-  getData(){
-
+  getData(token: any, body: any){
+    return this.http.post(`${environment.openApi}/${token}/getData`, body);
   }
 
   getDataOperation(token: any, ts: any, te: any, operation: any, uid: any, name: any){
