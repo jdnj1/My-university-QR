@@ -11,7 +11,9 @@ export class UniversityService {
     private http: HttpClient,
   ) { }
 
-  getData(){}
+  getData(){
+
+  }
 
   getDataOperation(token: any, ts: any, te: any, operation: any, uid: any, name: any){
     return this.http.get(`${environment.openApi}/${token}/time_start/${ts}/time_end/${te}/operation/${operation}/uid/${uid}/name/${name}/getDataOperation`);

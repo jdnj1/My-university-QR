@@ -35,7 +35,10 @@ const getConsult = async( req , res ) => {
             query += ` AND name LIKE '%${querySearch}%'`
         }
         
-        query += ` LIMIT ${desde}, ${registropp}`;
+        // Si se envia un -1 por parametro hacer que devuelva todos las consultas del qr
+        if(desde !== -1){
+            query += ` LIMIT ${desde}, ${registropp}`;
+        }
 
         const consult = await dbConsult(query);
         

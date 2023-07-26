@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, UrlTree } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
@@ -43,11 +43,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     chart: [0]
   });
 
-  // Form de la segunda parte
-  secondForm = this.fb.group({
-    data: ['1', Validators.required],
-  });
-
   // Form para los filtros
   filterForm: FormGroup = this.fb.group({
   });
@@ -79,7 +74,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private consultService: ConsultService,
     private route: ActivatedRoute,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ){
 
   }
@@ -343,6 +339,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.filterForm.setControl(newKey, control);
     this.filterForm.removeControl(key);
 
+  }
+
+  cancel(){
+    this.router.navigateByUrl(`codeQr/${this.consult.qrCode}`)
   }
 
 }
