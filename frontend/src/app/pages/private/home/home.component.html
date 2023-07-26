@@ -5,7 +5,7 @@
   <div class="pagetitle">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h1>Códigos QR</h1>
+        <h1>{{'titulo.home' | translate}}</h1>
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
@@ -15,7 +15,7 @@
       <!-- barra de busqueda de codigos QR -->
       <div class="search-bar">
         <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
-          <input id="searchField" type="text" name="query" placeholder="Buscar códigos QR..." title="Buscar códigos QR" formControlName="searchQuery" (input)="checkSearch()">
+          <input id="searchField" type="text" name="query" placeholder="{{'search.Qr' | translate}}..." title="{{'search.Qr' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
           <button type="submit" title="Search"><i class="bi bi-search"></i></button>
           <button id="searchClearButton" type="reset" (click)="cleanSearch()">
             <i id="searchClear" class="bi bi-x-lg"></i>
@@ -23,7 +23,7 @@
         </form>
       </div>
       <!-- Boton para añadir nuevos codigos QR -->
-      <button type="button" class="btn btn-primary" (click)="createQr()"><i class="bi bi-plus-lg"></i> Añadir QR</button>
+      <button type="button" class="btn btn-primary" (click)="createQr()"><i class="bi bi-plus-lg"></i> {{'boton.Qr' | translate}}</button>
     </div>
   </div>
 
@@ -32,23 +32,23 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Tus códigos QR</h5>
+            <h5 class="card-title">{{'table.Qr' | translate}}</h5>
             <div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
                     <th scope="col"><i class="bi bi-qr-code"></i></th>
-                    <th scope="col">Fecha validez</th>
-                    <th scope="col">Título</th>
-                    <th scope="col">Activar/Desactivar</th>
-                    <th scope="col">Imprimir</th>
-                    <th scope="col">Editar</th>
-                    <th scope="col">Eliminar</th>
+                    <th scope="col">{{'table.date' | translate}}</th>
+                    <th scope="col">{{'table.title' | translate}}</th>
+                    <th scope="col">{{'table.onoff' | translate}}</th>
+                    <th scope="col">{{'table.print' | translate}}</th>
+                    <th scope="col">{{'table.edit' | translate}}</th>
+                    <th scope="col">{{'table.delete' | translate}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="7" id="msg">No has creadao ningún código QR todavía.</td>
+                    <td colspan="7" id="msg">{{'msg.home' | translate}}</td>
                   </tr>
                   <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}">
                     <td (click)="onMouseQrEnter(i)">

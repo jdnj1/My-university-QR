@@ -99,10 +99,10 @@ export class ViewComponent implements OnInit {
               // Pasamos los filtros a JSON
               cons.filters = JSON.parse(cons.filters);
 
-              this.uniService.getDataOperation(cons.token, cons.dateFrom, cons.dateTo,
-                this.op[cons.operation - 1], Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
+              this.uniService.getDataOperation(cons.token, '2023-05-19T05:18:38Z', '2023-05-19T07:18:38Z',
+              'max', Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
                   next: (res: any) => {
-                    console.log(res)
+                    console.log(res.values[0][2])
 
                     const pru = document.getElementById(`chart${index}`);
                       const chart = echarts.init(pru);
@@ -126,9 +126,6 @@ export class ViewComponent implements OnInit {
                     }
                     else{
                       const option = {
-                        tooltip: {
-                          formatter: '{a} <br/>{b} : {c}%'
-                        },
                         series: [
                           {
                             name: 'Pressure',
@@ -142,7 +139,7 @@ export class ViewComponent implements OnInit {
                             },
                             data: [
                               {
-                                value: res.value[0][1],
+                                value: res.values[0][2],
                                 name: 'SCORE'
                               }
                             ]

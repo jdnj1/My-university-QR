@@ -1,0 +1,5 @@
+<div>
+  <select class="form-select" aria-label="Default select example" (change)="changeLang($event)">
+    <option *ngFor="let lang of langs" value="{{lang}}" [selected]="lang===activeLang">{{lang}}</option>
+  </select>
+</div>

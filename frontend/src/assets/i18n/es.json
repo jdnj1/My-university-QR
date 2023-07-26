@@ -1,0 +1,16 @@
+{
+  "titulo.home": "Códigos QR",
+  "boton.Qr": "Añadir QR",
+  "table.Qr": "Tus códigos QR",
+  "table.date": "Fecha validez",
+  "table.title": "Título",
+  "table.onoff": "Activar/Desactivar",
+  "table.print": "Imprimir",
+  "table.edit": "Editar",
+  "table.delete" :"Eliminar",
+  "search.Qr": "Buscar códigos QR",
+  "msg.home": "No has creadao ningún código QR todavía."
+
+
+
+}

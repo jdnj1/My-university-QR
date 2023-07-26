@@ -27,6 +27,10 @@ export const environment = {
     'assets/img/bar-simple.png',
     'assets/img/gauge-grade.png',
     'assets/img/number.png'
+  ],
+  langs: [
+    "es",
+    "en"
   ]
 };
 

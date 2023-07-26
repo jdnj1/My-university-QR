@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivationEnd, ActivationStart, NavigationStart, Router } from '@angular/router';
 import { Error404Component } from './pages/public/error404/error404.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,10 @@ export class AppComponent {
 
   constructor(
     private router: Router,
-    ){}
+    private translateService: TranslateService
+    ){
+      this.translateService.setDefaultLang('es');
+    }
 
   ngOnInit(){
     // Comprobamos si tenemos que renderrizar los componentes

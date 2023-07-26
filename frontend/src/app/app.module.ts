@@ -9,7 +9,7 @@ import { HeaderComponent } from './layouts/header/header.component';
 import { LoginComponent } from './pages/public/login/login.component';
 import { Error404Component } from './pages/public/error404/error404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/private/home/home.component';
 import { AlertComponent } from './utils/alert/alert.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
@@ -20,6 +20,12 @@ import { ViewComponent } from './pages/public/view/view.component';
 import { UsersComponent } from './pages/private/users/users.component';
 import { CreateUserComponent } from './pages/private/users/create-user/create-user.component';
 import { EditUserComponent } from './pages/private/users/edit-user/edit-user.component';
+
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslationComponent } from './layouts/translation/translation.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +43,8 @@ import { EditUserComponent } from './pages/private/users/edit-user/edit-user.com
     ViewComponent,
     UsersComponent,
     CreateUserComponent,
-    EditUserComponent
+    EditUserComponent,
+    TranslationComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +53,16 @@ import { EditUserComponent } from './pages/private/users/edit-user/edit-user.com
     ReactiveFormsModule,
     HttpClientModule,
     QRCodeModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => {
+          return new TranslateHttpLoader(http);
+        },
+        deps: [ HttpClient ]
+      }
+    }),
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
