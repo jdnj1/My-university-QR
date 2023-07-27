@@ -276,6 +276,7 @@ export class HomeComponent implements OnInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       searchClearElement.style.display = 'none';
+      this.pageArray.splice(0);
       this.getQr(0);
       this.renderer.selectRootElement( '#msg' ).style.display = 'none';
     }

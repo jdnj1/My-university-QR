@@ -35,7 +35,8 @@ export class ViewComponent implements OnInit {
   type: Array<string> = [
     "line",
     "bar",
-    "gauge"
+    "gauge",
+    "number"
   ]
 
   activated: boolean = true;
@@ -100,16 +101,16 @@ export class ViewComponent implements OnInit {
               cons.filters = JSON.parse(cons.filters);
 
               this.uniService.getDataOperation(cons.token, '2023-05-19T05:18:38Z', '2023-05-19T07:18:38Z',
-              'max', Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
+                this.op[cons.operation - 2], Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
                   next: (res: any) => {
-                    console.log(res.values[0][2])
+                    console.log(res)
 
                     const pru = document.getElementById(`chart${index}`);
                       const chart = echarts.init(pru);
-                    if(res === 'No data'){
+                    if(res.columns.length === 0){
                       const option = {
                         title: {
-                          text: `${res}`,
+                          text: `No data`,
                           subtext: "No se ha encontrado ningún dato disponible en estas fechas",
                           left: "center",
                           top: "center",
@@ -125,29 +126,54 @@ export class ViewComponent implements OnInit {
                       chart.setOption(option);
                     }
                     else{
-                      const option = {
-                        series: [
-                          {
-                            name: 'Pressure',
-                            type: this.type[cons.chart],
-                            progress: {
-                              show: true
-                            },
-                            detail: {
-                              valueAnimation: true,
-                              formatter: '{value}'
-                            },
-                            data: [
-                              {
-                                value: res.values[0][2],
-                                name: 'SCORE'
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      // Comprobar que tipo de grafica es
+                      if(this.type[cons.chart] === 'gauge'){
+                        const option = {
+                          tooltip: {
+                            formatter: `{a} <br/>{b} : {c}`
+                          },
+                          series: [
+                            {
+                              name: res.values[0][res.columns.indexOf('description')],
+                              type: this.type[cons.chart],
+                              progress: {
+                                show: true
+                              },
+                              detail: {
+                                valueAnimation: true,
+                                formatter: '{value}'
+                              },
+                              data: [
+                                {
+                                  value: res.values[0][res.columns.indexOf(this.op[cons.operation - 2])],
+                                  name: res.values[0][res.columns.indexOf('metric')]
+                                }
+                              ]
+                            }
+                          ]
+                        }
 
-                      chart.setOption(option);
+                        chart.setOption(option);
+                      }
+                      // Solo el valor
+                      else{
+                        const option = {
+                          title: {
+                            text: `${res.values[0][res.columns.indexOf(this.op[cons.operation - 2])]} ${res.values[0][res.columns.indexOf('metric')]}`,
+                            subtext: res.values[0][res.columns.indexOf('description')],
+                            left: "center",
+                            top: "center",
+                            textStyle: {
+                              fontSize: 30
+                            },
+                            subtextStyle: {
+                              fontSize: 20
+                            }
+                          }
+                        }
+
+                        chart.setOption(option);
+                      }
                     }
                   },
                   error: (err: HttpErrorResponse) => {

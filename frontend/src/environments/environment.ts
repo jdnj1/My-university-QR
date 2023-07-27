@@ -31,6 +31,10 @@ export const environment = {
   langs: [
     "es",
     "en"
+  ],
+  roles: [
+    "Básico",
+    "Administrador"
   ]
 };
 

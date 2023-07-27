@@ -46,13 +46,17 @@
                 </div>
 
                 <div class="col-12">
-                  <label for="limit" class="form-label">Límite de consultas</label>
+                  <label for="limit" class="form-label">Límite de códigos QR</label>
+                  <p class="small">Para no tener límite, introduzca un 0</p>
                   <input type="number" min="0" name="limit" class="form-control" formControlName="lim_consult" id="limit" >
                 </div>
 
-                <div class="col-12 form-check">
-                  <input type="checkbox" name="role" class="form-check-input" formControlName="role" id="role">
-                  <label for="role" class="form-check-label">Permisos de administrador</label>
+                <div class="col-12">
+                  <label class="col-form-label">Rol</label>
+                  <select class="form-select" aria-label="Default select example" formControlName="role">
+                    <option value="0" selected>Básico</option>
+                    <option value="1">Administrador</option>
+                  </select>
                 </div>
 
                 <div class="col-12 d-flex justify-content-around">

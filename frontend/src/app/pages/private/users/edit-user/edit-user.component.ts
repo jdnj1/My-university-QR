@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-user',
@@ -35,6 +36,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   // Suscripción para detectar cualquier cambio en el formulario.
   formSubscription: any;
+
+  roles = environment.roles;
 
   constructor(
     private fb: FormBuilder,
@@ -89,12 +92,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     }
 
     let role = this.userForm.get('role')?.value;
-    if(!role){
-      this.userForm.get('role')?.setValue(0);
-    }
-    else{
-      this.userForm.get('role')?.setValue(1);
-    }
+    this.userForm.get('role')?.setValue(Number(role) || 0);
 
     if(!this.userForm.get('email')?.dirty){
       this.userForm.get('email')?.setValue('');

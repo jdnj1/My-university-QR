@@ -53,12 +53,7 @@ export class CreateUserComponent implements OnDestroy {
     }
 
     let role = this.userForm.get('role')?.value;
-    if(!role){
-      this.userForm.get('role')?.setValue(0);
-    }
-    else{
-      this.userForm.get('role')?.setValue(1);
-    }
+    this.userForm.get('role')?.setValue(Number(role) || 0);
 
     console.log(this.userForm.value);
 
@@ -71,6 +66,7 @@ export class CreateUserComponent implements OnDestroy {
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al crear al nuevo usuario');
+        console.log(err)
       }
     });
   }
