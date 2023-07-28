@@ -25,7 +25,7 @@ const getData = async( req , res ) => {
             .then((result) => {
                 console.log(result.data)
                 res.status(200).json({
-                    res: result.data
+                    result: result.data
                 });
                 return;
         
@@ -60,7 +60,7 @@ const getDataOperation = async( req , res ) => {
             .then((result) => {
                 console.log(result.data)
                 res.status(200).json({
-                    res: result.data
+                    result: result.data
                 });
                 return;
             

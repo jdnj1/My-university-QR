@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivationEnd, ActivationStart, NavigationStart, Router } from '@angular/router';
 import { Error404Component } from './pages/public/error404/error404.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ViewComponent } from './pages/public/view/view.component';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,13 @@ export class AppComponent {
 
       if (event instanceof ActivationEnd ){
         if(event.snapshot.component === Error404Component){
+          this.header = false;
+          this.sidebar = false;
+        }
+      }
+
+      if (event instanceof ActivationEnd ){
+        if(event.snapshot.component === ViewComponent){
           this.header = false;
           this.sidebar = false;
         }

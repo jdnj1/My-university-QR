@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import * as echarts from 'echarts';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-view',
@@ -104,10 +105,17 @@ export class ViewComponent implements OnInit {
                 this.op[cons.operation - 2], Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
                   next: (res: any) => {
                     console.log(res)
+                    let data = res.result;
 
-                    const pru = document.getElementById(`chart${index}`);
-                      const chart = echarts.init(pru);
-                    if(res.columns.length === 0){
+                    const div = document.getElementById(`chart${index}`);
+                    const chart = echarts.init(div);
+
+                    // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+                    window.addEventListener('resize', function() {
+                      chart.resize();
+                    })
+
+                    if(data.columns.length === 0){
                       const option = {
                         title: {
                           text: `No data`,
@@ -134,7 +142,7 @@ export class ViewComponent implements OnInit {
                           },
                           series: [
                             {
-                              name: res.values[0][res.columns.indexOf('description')],
+                              name: data.values[0][data.columns.indexOf('description')],
                               type: this.type[cons.chart],
                               progress: {
                                 show: true
@@ -145,8 +153,8 @@ export class ViewComponent implements OnInit {
                               },
                               data: [
                                 {
-                                  value: res.values[0][res.columns.indexOf(this.op[cons.operation - 2])],
-                                  name: res.values[0][res.columns.indexOf('metric')]
+                                  value: data.values[0][data.columns.indexOf(this.op[cons.operation - 2])],
+                                  name: data.values[0][data.columns.indexOf('metric')]
                                 }
                               ]
                             }
@@ -159,15 +167,15 @@ export class ViewComponent implements OnInit {
                       else{
                         const option = {
                           title: {
-                            text: `${res.values[0][res.columns.indexOf(this.op[cons.operation - 2])]} ${res.values[0][res.columns.indexOf('metric')]}`,
-                            subtext: res.values[0][res.columns.indexOf('description')],
+                            text: `${data.values[0][data.columns.indexOf(this.op[cons.operation - 2])]} ${data.values[0][data.columns.indexOf('metric')]}`,
+                            subtext: data.values[0][data.columns.indexOf('description')],
                             left: "center",
                             top: "center",
                             textStyle: {
                               fontSize: 30
                             },
                             subtextStyle: {
-                              fontSize: 20
+                              fontSize: 12
                             }
                           }
                         }
@@ -184,7 +192,7 @@ export class ViewComponent implements OnInit {
             else{
               // Todos los datos disponibles
               // Se comienza a montar el cuerpo de la petición
-              let body = `{"time_start": "${cons.dateFrom}", "time_end": "${cons.dateTo}", "filters":[`;
+              let body: any = `{"time_start": "${cons.dateFrom}", "time_end": "${cons.dateTo}", "filters":[`;
 
               // Añadir los filtros
               if(cons.filter !== ''){
@@ -192,9 +200,22 @@ export class ViewComponent implements OnInit {
                 console.log(cons.filters)
                 cons.filters = JSON.parse(cons.filters);
                 console.log(cons.filters)
-                Object.entries(cons.filters).forEach((key, index) => {
-                  //Comprobar si tienen muchos valores una misma clave
-                  body += `{"filter": "${key[0]}", "values": ["${key[1]}"]}`;
+
+                Object.entries(cons.filters).forEach((key: any, index) => {
+                  // Comprobar si tienen muchos valores una misma clave
+                  key[1] = key[1].split(',');
+
+                  body += `{"filter": "${key[0]}", "values": [`;
+                  key[1].forEach((elem: any, index: any) => {
+                    body += `"${elem}"`;
+                    console.log(index)
+
+                    if(index !== key[1].length - 1){
+                      body += ','
+                    }
+                  });
+
+                  body += `]}`;
 
                   if(index !== Object.entries(cons.filters).length - 1){
                     body += ','
@@ -205,11 +226,60 @@ export class ViewComponent implements OnInit {
               body += ']}';
               console.log(body)
               body = JSON.parse(body)
-              console.log(body)
+
               // Se realiza la peticion a smartuniversity con el json creado
               this.uniService.getData(cons.token, body).subscribe({
                 next: (res: any) => {
                   console.log(res)
+                  let data = res.result;
+
+                  console.log(data.values)
+
+                  // Montar el objeto de las series
+                  console.log(body)
+                  let ids = body.filters.map((id: any) => {
+                    console.log(Object.values(id))
+                    if(Object.values(id)[0] === 'uid'){
+                      Object.values(id)[1]
+                    }
+                  })
+                  console.log(ids)
+                  let series = {
+
+                  }
+                  let values = data.values.map((subarray: any) => subarray[data.columns.indexOf('value')]);
+                  console.log(values)
+                  let dates = data.values.map((subarray: any) => subarray[data.columns.indexOf('time')]);
+
+                  const div = document.getElementById(`chart${index}`);
+                  const chart = echarts.init(div);
+
+                  // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+                  window.addEventListener('resize', function() {
+                    chart.resize();
+                  });
+
+                  const option = {
+                    tooltip: {
+                      trigger: 'axis'
+                    },
+                    xAxis: {
+                      type: 'category',
+                      data: dates
+                    },
+                    yAxis: {
+                      type: 'value'
+                    },
+                    series: [
+                      {
+                        data: values,
+                        type: this.type[cons.chart]
+                      }
+                    ]
+                  };
+
+                  chart.setOption(option);
+
                 },
                 error: (err: HttpErrorResponse) => {
                   console.log(err)
