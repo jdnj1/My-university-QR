@@ -45,10 +45,10 @@ export class ConsultService {
     });
   }
 
-  createConsult(){
+  createConsult(id: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/consult`, {}, {
+    return this.http.post(`${environment.apiBaseUrl}/consult`, id, {
       headers: {'x-token': token}
     });
   }

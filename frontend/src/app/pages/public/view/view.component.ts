@@ -101,98 +101,113 @@ export class ViewComponent implements OnInit {
               // Pasamos los filtros a JSON
               cons.filters = JSON.parse(cons.filters);
 
-              this.uniService.getDataOperation(cons.token, '2023-05-19T05:18:38Z', '2023-05-19T07:18:38Z',
-                this.op[cons.operation - 2], Object.values(cons.filters)[0], Object.values(cons.filters)[1]).subscribe({
-                  next: (res: any) => {
-                    console.log(res)
-                    let data = res.result;
+              let data = {
+                token: cons.token,
+                dateFrom: '2023-05-19T05:18:38Z', //cambiar por cons.dateFrom
+                dateTo: '2023-05-19T07:18:38Z',
+                operation: this.op[cons.operation - 2],
+                uid: Object.values(cons.filters)[0],
+                name: Object.values(cons.filters)[1]
+              }
 
-                    const div = document.getElementById(`chart${index}`);
-                    const chart = echarts.init(div);
+              this.uniService.getDataOperation(data).subscribe({
+                next: (res: any) => {
+                  console.log(res)
+                  let data = res.result;
 
-                    // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
-                    window.addEventListener('resize', function() {
-                      chart.resize();
-                    })
+                  const div = document.getElementById(`chart${index}`);
+                  const chart = echarts.init(div);
 
-                    if(data.columns.length === 0){
+                  // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+                  window.addEventListener('resize', function() {
+                    chart.resize();
+                  })
+
+                  if(data.columns.length === 0){
+                    const option = {
+                      title: {
+                        text: `No data`,
+                        subtext: "No se ha encontrado ningún dato disponible en estas fechas",
+                        left: "center",
+                        top: "center",
+                        textStyle: {
+                          fontSize: 30
+                        },
+                        subtextStyle: {
+                          fontSize: 20
+                        }
+                      }
+                    }
+
+                    chart.setOption(option);
+                  }
+                  else{
+                    // Comprobar que tipo de grafica es
+                    if(this.type[cons.chart] === 'gauge'){
+                      const option = {
+                        tooltip: {
+                          formatter: `{a} <br/>{b} : {c}`
+                        },
+                        title: {
+                          text: cons.name
+                        },
+                        series: [
+                          {
+                            name: data.values[0][data.columns.indexOf('description')],
+                            type: this.type[cons.chart],
+                            progress: {
+                              show: true
+                            },
+                            detail: {
+                              valueAnimation: true,
+                              fontSize: 20,
+                              formatter: '{value}'
+                            },
+                            axisLabel: {
+                              fontSize: 10
+                            },
+                            data: [
+                              {
+                                value: data.values[0][data.columns.indexOf(this.op[cons.operation - 2])],
+                                name: data.values[0][data.columns.indexOf('metric')]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+
+                      chart.setOption(option);
+                    }
+                    // Solo el valor
+                    else{
                       const option = {
                         title: {
-                          text: `No data`,
-                          subtext: "No se ha encontrado ningún dato disponible en estas fechas",
+                          text: `${data.values[0][data.columns.indexOf(this.op[cons.operation - 2])]} ${data.values[0][data.columns.indexOf('metric')]}`,
+                          subtext: data.values[0][data.columns.indexOf('description')],
                           left: "center",
                           top: "center",
                           textStyle: {
                             fontSize: 30
                           },
                           subtextStyle: {
-                            fontSize: 20
+                            fontSize: 12
                           }
                         }
                       }
 
                       chart.setOption(option);
                     }
-                    else{
-                      // Comprobar que tipo de grafica es
-                      if(this.type[cons.chart] === 'gauge'){
-                        const option = {
-                          tooltip: {
-                            formatter: `{a} <br/>{b} : {c}`
-                          },
-                          series: [
-                            {
-                              name: data.values[0][data.columns.indexOf('description')],
-                              type: this.type[cons.chart],
-                              progress: {
-                                show: true
-                              },
-                              detail: {
-                                valueAnimation: true,
-                                formatter: '{value}'
-                              },
-                              data: [
-                                {
-                                  value: data.values[0][data.columns.indexOf(this.op[cons.operation - 2])],
-                                  name: data.values[0][data.columns.indexOf('metric')]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-
-                        chart.setOption(option);
-                      }
-                      // Solo el valor
-                      else{
-                        const option = {
-                          title: {
-                            text: `${data.values[0][data.columns.indexOf(this.op[cons.operation - 2])]} ${data.values[0][data.columns.indexOf('metric')]}`,
-                            subtext: data.values[0][data.columns.indexOf('description')],
-                            left: "center",
-                            top: "center",
-                            textStyle: {
-                              fontSize: 30
-                            },
-                            subtextStyle: {
-                              fontSize: 12
-                            }
-                          }
-                        }
-
-                        chart.setOption(option);
-                      }
-                    }
-                  },
-                  error: (err: HttpErrorResponse) => {
-                    console.log(err)
                   }
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.log(err)
+                }
               });
             }
             else{
               // Todos los datos disponibles
               // Se comienza a montar el cuerpo de la petición
-              let body: any = `{"time_start": "${cons.dateFrom}", "time_end": "${cons.dateTo}", "filters":[`;
+              let body: any = `{"token": "${cons.token}", "time_start": "${cons.dateFrom}", "time_end": "${cons.dateTo}", "filters":[`;
 
               // Añadir los filtros
               if(cons.filter !== ''){
@@ -208,7 +223,6 @@ export class ViewComponent implements OnInit {
                   body += `{"filter": "${key[0]}", "values": [`;
                   key[1].forEach((elem: any, index: any) => {
                     body += `"${elem}"`;
-                    console.log(index)
 
                     if(index !== key[1].length - 1){
                       body += ','
@@ -228,7 +242,7 @@ export class ViewComponent implements OnInit {
               body = JSON.parse(body)
 
               // Se realiza la peticion a smartuniversity con el json creado
-              this.uniService.getData(cons.token, body).subscribe({
+              this.uniService.getData(body).subscribe({
                 next: (res: any) => {
                   console.log(res)
                   let data = res.result;
@@ -236,19 +250,29 @@ export class ViewComponent implements OnInit {
                   console.log(data.values)
 
                   // Montar el objeto de las series
+
+                  // Primero se obtienen los uid presentes en los filtros
+                  let ids: any;
                   console.log(body)
-                  let ids = body.filters.map((id: any) => {
-                    console.log(Object.values(id))
+                  body.filters.map((id: any) => {
                     if(Object.values(id)[0] === 'uid'){
-                      Object.values(id)[1]
+                      ids = Object.values(id)[1]
                     }
                   })
-                  console.log(ids)
-                  let series = {
 
-                  }
-                  let values = data.values.map((subarray: any) => subarray[data.columns.indexOf('value')]);
-                  console.log(values)
+                  let seriesData: any = [];
+                  ids.forEach((id: any) => {
+                    // Se filtran los arrays por cada uid y se obtienen sus valores
+                    let series = data.values.filter((array: any) => array[data.columns.indexOf('uid')] === id)
+                      .map((array: any) => array[data.columns.indexOf('value')]);
+
+                    seriesData.push({
+                      name: id,
+                      data: series,
+                      type: this.type[cons.chart]
+                    })
+                  });
+
                   let dates = data.values.map((subarray: any) => subarray[data.columns.indexOf('time')]);
 
                   const div = document.getElementById(`chart${index}`);
@@ -260,8 +284,15 @@ export class ViewComponent implements OnInit {
                   });
 
                   const option = {
+                    title: {
+                      text: cons.name
+                    },
                     tooltip: {
                       trigger: 'axis'
+                    },
+                    legend: {
+                      data: ids,
+                      top: 22
                     },
                     xAxis: {
                       type: 'category',
@@ -270,12 +301,18 @@ export class ViewComponent implements OnInit {
                     yAxis: {
                       type: 'value'
                     },
-                    series: [
+                    dataZoom: [
                       {
-                        data: values,
-                        type: this.type[cons.chart]
+                        type: 'inside',
+                        start: 0,
+                        end: 10
+                      },
+                      {
+                        start: 0,
+                        end: 10
                       }
-                    ]
+                    ],
+                    series: seriesData
                   };
 
                   chart.setOption(option);
@@ -295,31 +332,31 @@ export class ViewComponent implements OnInit {
     });
   }
 
-  getConsultById(){
-    this.consultService.getConsultbyId(1).subscribe({
-      next: (res: any) => {
-        console.log(res)
-        this.consult = res.consult;
+  // getConsultById(){
+  //   this.consultService.getConsultbyId(1).subscribe({
+  //     next: (res: any) => {
+  //       console.log(res)
+  //       this.consult = res.consult;
 
-        // Pasamos los filtros a JSON
-        this.consult.filters = JSON.parse(this.consult.filters);
+  //       // Pasamos los filtros a JSON
+  //       this.consult.filters = JSON.parse(this.consult.filters);
 
-        this.uniService.getDataOperation(this.consult.token, '2023-05-19T05:18:38Z', '2023-05-19T07:18:38Z',
-          'max', Object.values(this.consult.filters)[0], Object.values(this.consult.filters)[1])
-          .subscribe({
-            next: (res: any) => {
-              console.log(res)
-              this.petition = res;
-            },
-            error: (err: HttpErrorResponse) => {
-              console.log(err)
-            }
-          });
+  //       this.uniService.getDataOperation(this.consult.token, '2023-05-19T05:18:38Z', '2023-05-19T07:18:38Z',
+  //         'max', Object.values(this.consult.filters)[0], Object.values(this.consult.filters)[1])
+  //         .subscribe({
+  //           next: (res: any) => {
+  //             console.log(res)
+  //             this.petition = res;
+  //           },
+  //           error: (err: HttpErrorResponse) => {
+  //             console.log(err)
+  //           }
+  //         });
 
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-      }
-    });
-  }
+  //     },
+  //     error: (err: HttpErrorResponse) => {
+  //       console.log(err)
+  //     }
+  //   });
+  // }
 }

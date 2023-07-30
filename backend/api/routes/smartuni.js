@@ -17,7 +17,7 @@ const {validateJWT} = require('../middleware/validate-jwt')
 const router = Router();
 
 //Llamadas
-router.get('/',
+router.post('/operation',
     getDataOperation);
 
 router.post('/', [

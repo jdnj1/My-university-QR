@@ -11,22 +11,11 @@ export class UniversityService {
     private http: HttpClient,
   ) { }
 
-  getData(token: any, body: any){
-    return this.http.post(`${environment.apiBaseUrl}/smartuni`, body, {
-      params: {'token' : token}
-    });
+  getData(body: any){
+    return this.http.post(`${environment.apiBaseUrl}/smartuni`, body);
   }
 
-  getDataOperation(token: any, ts: any, te: any, operation: any, uid: any, name: any){
-    return this.http.get(`${environment.apiBaseUrl}/smartuni`, {
-      params: {
-        'token': token,
-        'dateFrom': ts,
-        'dateTo': te,
-        'operation': operation,
-        'uid': uid,
-        'name': name
-      }
-    })
+  getDataOperation(data: any){
+    return this.http.post(`${environment.apiBaseUrl}/smartuni/operation`, data)
   }
 }

@@ -158,6 +158,20 @@ export class QrComponent implements OnInit {
     })
   }
 
+  createConsult(){
+    this.consultService.createConsult({qrCode: this.idQr}).subscribe({
+      next: (res:any) =>{
+        console.log(res);
+        this.alertService.success("Llamada generada correctamente");
+        this.router.navigateByUrl(`/consult/${res.consult.insertId}`);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('Error al crear la llamada');
+        console.log(err)
+      }
+    });
+  }
+
 
   activateQr(){
     let value;

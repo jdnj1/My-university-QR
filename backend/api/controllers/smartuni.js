@@ -19,18 +19,21 @@ const bcrypt = require('bcryptjs'); // BcryptJS
  */
 const getData = async( req , res ) => {
     try {
-        let token = req.query.token;
+        let token = req.body.token;
+
+        // Eliminamos el token de la llamada del cuerpo de la peticion antes de enviarselo a SmartUniversity
+        delete req.body.token;
 
         axios.post(`${process.env.URLSU}/${token}/getData`, req.body)
             .then((result) => {
-                console.log(result.data)
+                //console.log(result.data)
                 res.status(200).json({
                     result: result.data
                 });
                 return;
         
             }).catch((err) => {
-                console.log(err)
+                //console.log(err)
                 res.status(400).json({
                     res: err
                 });
@@ -38,7 +41,7 @@ const getData = async( req , res ) => {
             });
 
     } catch (error) {
-        console.error(error);
+        //console.error(error);
 
         res.status(500).json({
             msg: 'Error al intentar devolver los datos'
@@ -54,7 +57,7 @@ const getData = async( req , res ) => {
  */
 const getDataOperation = async( req , res ) => {
     try {
-        let {token, dateFrom, dateTo, operation, uid, name} = req.query;
+        let {token, dateFrom, dateTo, operation, uid, name} = req.body;
 
         axios.get(`${process.env.URLSU}/${token}/time_start/${dateFrom}/time_end/${dateTo}/operation/${operation}/uid/${uid}/name/${name}/getDataOperation`)
             .then((result) => {
