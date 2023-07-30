@@ -15,10 +15,10 @@
       <!-- barra de busqueda de codigos QR -->
       <div class="search-bar">
         <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
-          <input id="searchField" type="text" name="query" placeholder="{{'search.Qr' | translate}}..." title="{{'search.Qr' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
+          <input #searchField type="text" name="query" placeholder="{{'search.Qr' | translate}}..." title="{{'search.Qr' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
           <button type="submit" title="Search"><i class="bi bi-search"></i></button>
           <button id="searchClearButton" type="reset" (click)="cleanSearch()">
-            <i id="searchClear" class="bi bi-x-lg"></i>
+            <i #searchClear class="bi bi-x-lg"></i>
          </button>
         </form>
       </div>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="7" id="msg">{{'msg.home' | translate}}</td>
+                    <td colspan="7" #msg>{{'msg.home' | translate}}</td>
                   </tr>
                   <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}">
                     <td (click)="onMouseQrEnter(i)">

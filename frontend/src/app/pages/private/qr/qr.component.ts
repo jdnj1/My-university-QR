@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
@@ -13,7 +13,11 @@ import Swal from 'sweetalert2';
   templateUrl: './qr.component.html',
   styleUrls: ['./qr.component.css']
 })
-export class QrComponent implements OnInit {
+export class QrComponent implements OnInit, AfterViewInit {
+  @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
+  @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
+  @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
+
   //Datos del qr
   idQr = this.route.snapshot.params['id'];
   urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
@@ -62,21 +66,21 @@ export class QrComponent implements OnInit {
   ngOnInit(): void {
     this.getQr();
     this.getConsults(0);
+  }
 
-    this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
-    this.renderer.selectRootElement( '#msg' ).style.display = 'none';
+  ngAfterViewInit(): void {
+    this.searchClearElement.nativeElement.style.display = 'none';
+    this.msgElement.nativeElement.style.display = 'none';
 
     // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
-    const searchFieldElement = this.renderer.selectRootElement( '#searchField' );
-
-    searchFieldElement.addEventListener('keyup', () =>{
+    this.searchFieldElement.nativeElement.addEventListener('keyup', () =>{
       clearTimeout(this.timer);
       this.timer = setTimeout(() =>{
         this.search();
       }, 1000)
     });
 
-    searchFieldElement.addEventListener('keydown', () =>{
+    this.searchFieldElement.nativeElement.addEventListener('keydown', () =>{
       clearTimeout(this.timer);
     });
   }
@@ -307,9 +311,8 @@ export class QrComponent implements OnInit {
         this.consults = res.consult;
 
         if(this.consults.length === 0){
-          const tdElement = this.renderer.selectRootElement( '#msg' );
-          tdElement.innerHTML = 'No se ha encontrado ninguna llamada.';
-          tdElement.style.display = 'table-cell';
+          this.msgElement.nativeElement.innerHTML = 'No se ha encontrado ninguna llamada.';
+          this.msgElement.nativeElement.style.display = 'table-cell';
           return;
         }
 
@@ -343,20 +346,18 @@ export class QrComponent implements OnInit {
   }
 
   checkSearch(){
-    const searchClearElement = this.renderer.selectRootElement( '#searchClear' );
-
     // Cuando esta vacio
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
-      searchClearElement.style.display = 'none';
+      this.searchClearElement.nativeElement.style.display = 'none';
       this.pageArray.splice(0);
       this.getConsults(0);
-      this.renderer.selectRootElement( '#msg' ).style.display = 'none';
+      this.msgElement.nativeElement.style.display = 'none';
     }
     // Cuando no esta vacio
     else{
       // Se muestra el boton
-      searchClearElement.style.display = 'inline-block';
+      this.searchClearElement.nativeElement.style.display = 'inline-block';
     }
   }
 

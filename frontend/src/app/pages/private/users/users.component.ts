@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -11,7 +11,10 @@ import Swal from 'sweetalert2';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit{
+export class UsersComponent implements OnInit, AfterViewInit {
+  @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
+  @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
+  @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
 
   // Array donde se almacenan los usuarios obtenidos
   userArray: any = [];
@@ -46,22 +49,22 @@ export class UsersComponent implements OnInit{
   ngOnInit(): void {
     this.getUsers(0);
 
-    this.renderer.selectRootElement( '#msg' ).style.display = 'none';
-    this.renderer.selectRootElement( '#searchClear' ).style.display = 'none';
-
     this.appUser = localStorage.getItem('email') || '';
+  }
+
+  ngAfterViewInit(): void {
+    this.searchClearElement.nativeElement.style.display = 'none';
+    this.msgElement.nativeElement.style.display = 'none';
 
     // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
-    const searchFieldElement = this.renderer.selectRootElement( '#searchField' );
-
-    searchFieldElement.addEventListener('keyup', () =>{
+    this.searchFieldElement.nativeElement.addEventListener('keyup', () =>{
       clearTimeout(this.timer);
       this.timer = setTimeout(() =>{
         this.search();
       }, 1000)
     });
 
-    searchFieldElement.addEventListener('keydown', () =>{
+    this.searchFieldElement.nativeElement.addEventListener('keydown', () =>{
       clearTimeout(this.timer);
     });
   }
@@ -135,9 +138,8 @@ export class UsersComponent implements OnInit{
         this.userArray = res.users;
 
         if(this.userArray.length === 0){
-          const tdElement = this.renderer.selectRootElement( '#msg' );
-          tdElement.innerHTML = 'No se han encontrado usuarios.';
-          tdElement.style.display = 'table-cell';
+          this.msgElement.nativeElement.innerHTML = 'No se han encontrado usuarios.';
+          this.msgElement.nativeElement.style.display = 'table-cell';
           return;
         }
       },
@@ -153,20 +155,18 @@ export class UsersComponent implements OnInit{
   }
 
   checkSearch(){
-    const searchClearElement = this.renderer.selectRootElement( '#searchClear' );
-
     // Cuando esta vacio
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
-      searchClearElement.style.display = 'none';
+      this.searchClearElement.nativeElement.style.display = 'none';
       this.pageArray.splice(0);
       this.getUsers(0);
-      this.renderer.selectRootElement( '#msg' ).style.display = 'none';
+      this.msgElement.nativeElement.style.display = 'none';
     }
     // Cuando no esta vacio
     else{
       // Se muestra el boton
-      searchClearElement.style.display = 'inline-block';
+      this.searchClearElement.nativeElement.style.display = 'inline-block';
     }
   }
 

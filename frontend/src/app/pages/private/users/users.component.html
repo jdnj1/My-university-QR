@@ -16,10 +16,10 @@
       <!-- barra de busqueda de los usuarios -->
       <div class="search-bar">
         <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
-          <input id="searchField" type="text" name="query" placeholder="Buscar usuarios..." title="Buscar usuarios" formControlName="searchQuery" (input)="checkSearch()">
+          <input #searchField type="text" name="query" placeholder="Buscar usuarios..." title="Buscar usuarios" formControlName="searchQuery" (input)="checkSearch()">
           <button type="submit" title="Search"><i class="bi bi-search"></i></button>
           <button id="searchClearButton" type="reset" (click)="cleanSearch()">
-            <i id="searchClear" class="bi bi-x-lg"></i>
+            <i #searchClear class="bi bi-x-lg"></i>
          </button>
         </form>
       </div>
@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="5" id="msg">No se ha obtenido ningún usuario</td>
+                    <td colspan="5" #msg>No se ha obtenido ningún usuario</td>
                   </tr>
                   <tr *ngFor="let user of userArray; let i = index">
                     <td colspan="3" [ngClass]="{'text-primary': user.email === appUser}">{{user.email}}
