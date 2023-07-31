@@ -1,0 +1,63 @@
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Creación de nuevo usuario</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
+            <li class="breadcrumb-item"><a routerLink="/users-list">cambiar la contraseña</a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">
+                <i class="bi-person-fill-add"></i>
+                Introduce los datos del nuevo usuario
+              </h5>
+
+              <form class="row g-3 needs-validation" id="loginForm" [formGroup]="passForm" (ngSubmit)="changePass()" novalidate>
+
+                <div class="col-12">
+                  <label for="yourEmail" class="form-label">Contraseña actual</label>
+                  <input type="password" name="oldPass" class="form-control" formControlName="oldPassword" id="oldPass" >
+                  <div class="text-danger" *ngIf="!campoValido('oldPassword')">Porfavor introduce la contraseña acutal</div>
+                </div>
+
+                <div class="col-12">
+                  <label for="newPass" class="form-label">Nueva contraseña</label>
+                  <input type="password" name="password" class="form-control" formControlName="newPassword" id="newPass" >
+                  <div class="text-danger" *ngIf="!campoValido('newPassword')">Porfavor introduce una contraseña</div>
+                </div>
+
+                <div class="col-12">
+                  <label for="again" class="form-label">Repetir nueva contraseña</label>
+                  <input type="password" name="again" class="form-control" formControlName="newAgain" id="again" >
+                  <div class="text-danger" *ngIf="!campoValido('newAgain')">Porfavor introduce una contraseña</div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-around">
+                  <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
+                  <button class="btn btn-primary" type="submit" [disabled]="!hasChanges">Cambiar contraseña</button>
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

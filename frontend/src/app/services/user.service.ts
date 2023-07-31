@@ -61,6 +61,14 @@ export class UserService {
     );
   }
 
+  changePassword(id: any, body: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.post(`${environment.apiBaseUrl}/users/${id}/newPassword`, body, {
+      headers: {'x-token': token}
+    });
+  }
+
   // Funciones GET, POST, PUT y DELETE de los usuarios
   getUsers(desde: any){
     const token = localStorage.getItem('token') || '';

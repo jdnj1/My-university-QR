@@ -25,6 +25,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationComponent } from './layouts/translation/translation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UsersComponent,
     CreateUserComponent,
     EditUserComponent,
-    TranslationComponent
+    TranslationComponent,
+    ChangePassComponent
   ],
   imports: [
     BrowserModule,

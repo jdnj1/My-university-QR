@@ -299,7 +299,8 @@ const changePassword = async( req , res ) => {
         let newpass = bcrypt.hashSync( newPassword , salt );
 
         // Guarda los cambios.
-        passQuery = `UPDATE ${process.env.USERTABLE} SET password = '${newpass}' WHERE idUser = ${userId}`;
+        let passQuery = `UPDATE ${process.env.USERTABLE} SET password = '${newpass}' WHERE idUser = ${userId}`;
+        await dbConsult(passQuery);
 
         res.status(200).json({
             msg: 'Contraseña actualizada',

@@ -11,6 +11,7 @@ import { ViewComponent } from './pages/public/view/view.component';
 import { UsersComponent } from './pages/private/users/users.component';
 import { CreateUserComponent } from './pages/private/users/create-user/create-user.component';
 import { EditUserComponent } from './pages/private/users/edit-user/edit-user.component';
+import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'users-list', component: UsersComponent, canActivate: [authGuard] },
   { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard] },
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard] },
+  { path: 'changePass', component: ChangePassComponent, canActivate: [authGuard] },
   { path: 'view/:id', component: ViewComponent },
   { path: '', pathMatch: 'full', component: LoginComponent },
   { path: '**', pathMatch: 'full', component: Error404Component }
