@@ -64,7 +64,7 @@ export class ViewComponent implements OnInit {
       next: (res: any) => {
         console.log(res)
         this.qr = res.qr;
-        console.log(this.qr.activated)
+
         // Se comprueba si el QR esta activado o desactivado
         if(this.qr.activated === 0){
           this.activated = false;
@@ -183,16 +183,39 @@ export class ViewComponent implements OnInit {
                       const option = {
                         title: {
                           text: `${data.values[0][data.columns.indexOf(this.op[cons.operation - 2])]} ${data.values[0][data.columns.indexOf('metric')]}`,
-                          subtext: data.values[0][data.columns.indexOf('description')],
+                          subtext: `${cons.name}: \n\n ${data.values[0][data.columns.indexOf('description')]}`,
                           left: "center",
                           top: "center",
+                          width: 2,
                           textStyle: {
                             fontSize: 30
                           },
-                          subtextStyle: {
-                            fontSize: 12
+                        },
+                        media: [{
+                          query: {
+                            maxWidth: 360,
+                          },
+                          option: {
+                            title: {
+                              subtextStyle: {
+                                fontSize: 10
+                              }
+                            }
+                          }
+                        },
+                        {
+                          query: {
+                            minWidth: 361,
+                          },
+                          option: {
+                            title: {
+                              subtextStyle: {
+                                fontSize: 15
+                              }
+                            }
                           }
                         }
+                      ]
                       }
 
                       chart.setOption(option);
@@ -212,9 +235,7 @@ export class ViewComponent implements OnInit {
               // Añadir los filtros
               if(cons.filter !== ''){
                 // Pasamos los filtros a JSON
-                console.log(cons.filters)
                 cons.filters = JSON.parse(cons.filters);
-                console.log(cons.filters)
 
                 Object.entries(cons.filters).forEach((key: any, index) => {
                   // Comprobar si tienen muchos valores una misma clave
@@ -238,7 +259,6 @@ export class ViewComponent implements OnInit {
               }
 
               body += ']}';
-              console.log(body)
               body = JSON.parse(body)
 
               // Se realiza la peticion a smartuniversity con el json creado
@@ -247,13 +267,11 @@ export class ViewComponent implements OnInit {
                   console.log(res)
                   let data = res.result;
 
-                  console.log(data.values)
-
                   // Montar el objeto de las series
 
                   // Primero se obtienen los uid presentes en los filtros
                   let ids: any;
-                  console.log(body)
+
                   body.filters.map((id: any) => {
                     if(Object.values(id)[0] === 'uid'){
                       ids = Object.values(id)[1]
@@ -285,14 +303,17 @@ export class ViewComponent implements OnInit {
 
                   const option = {
                     title: {
-                      text: cons.name
+                      text: cons.name,
+                      // textStyle: {
+                      //   ellipsis: true
+                      // },
                     },
                     tooltip: {
                       trigger: 'axis'
                     },
                     legend: {
                       data: ids,
-                      top: 22
+                      top: '10%'
                     },
                     xAxis: {
                       type: 'category',
@@ -300,6 +321,9 @@ export class ViewComponent implements OnInit {
                     },
                     yAxis: {
                       type: 'value'
+                    },
+                    grid: {
+                      top: '20%', // Espacio en la parte superior de a grafica
                     },
                     dataZoom: [
                       {
