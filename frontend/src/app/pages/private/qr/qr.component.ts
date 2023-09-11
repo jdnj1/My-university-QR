@@ -127,9 +127,8 @@ export class QrComponent implements OnInit, AfterViewInit {
         this.consults = res.consult;
 
         if(this.consults.length === 0){
-          const tdElement = this.renderer.selectRootElement( '#msg' );
-          tdElement.innerHTML = 'No has creadao ningún código QR todavía.';
-          tdElement.style.display = 'table-cell';
+          this.msgElement.nativeElement.innerHTML = 'No has creadao ningún código QR todavía.'
+          this.msgElement.nativeElement.style.display = 'table-cell';
           return;
         }
 

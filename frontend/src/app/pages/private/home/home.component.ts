@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   createQr(){
     // Comprobar si no se supera el limite
     console.log(this.user.lim_consult, this.totalQr)
-    return
+
     if(this.user.lim_consult <= this.totalQr || this.user.lim_consult === 0){
       this.qrService.createQr().subscribe({
         next: (res:any) =>{
