@@ -116,8 +116,8 @@
                 <tr>
                   <th scope="col">Nombre</th>
                   <th scope="col">Activar/Desactivar</th>
-                  <th scope="col">Editar</th>
-                  <th scope="col">Eliminar</th>
+                  <th class="text-center" scope="col">Editar</th>
+                  <th class="text-center" scope="col">Eliminar</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,8 +133,8 @@
                       </div>
                     </form>
                   </td>
-                  <td [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
-                  <td [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
+                  <td class="text-center" [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
+                  <td class="text-center" [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
                 </tr>
               </tbody>
             </table>

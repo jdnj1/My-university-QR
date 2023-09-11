@@ -41,9 +41,9 @@
                     <th scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.title' | translate}}</th>
                     <th scope="col">{{'table.onoff' | translate}}</th>
-                    <th scope="col">{{'table.print' | translate}}</th>
-                    <th scope="col">{{'table.edit' | translate}}</th>
-                    <th scope="col">{{'table.delete' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.print' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,9 +63,9 @@
                         </div>
                       </form>
                     </td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
+                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
+                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
+                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
                 </tbody>
               </table>

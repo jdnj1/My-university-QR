@@ -39,9 +39,9 @@
                 <thead>
                   <tr>
                     <th scope="col" colspan="3"><i class="bi bi-person-circle m-2"></i>Email</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Editar</th>
-                    <th scope="col">Eliminar</th>
+                    <th class="text-center" scope="col">Rol</th>
+                    <th class="text-center" scope="col">Editar</th>
+                    <th class="text-center" scope="col">Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -51,10 +51,10 @@
                   <tr *ngFor="let user of userArray; let i = index">
                     <td colspan="3" [ngClass]="{'text-primary': user.email === appUser}">{{user.email}}
                     </td>
-                    <td *ngIf="user.role === 1"><span class="badge bg-primary">admin</span></td>
-                    <td *ngIf="user.role === 0"><span class="badge bg-secondary">user</span></td>
-                    <td><button type="button" class="btn btn-primary" title="Editar código QR" (click)="updateUser(i)"><i class="bi bi-pencil-square"></i></button></td>
-                    <td><button [disabled]="user.email === appUser" type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteUser(i)"><i class="bi bi-trash"></i></button></td>
+                    <td class="text-center" *ngIf="user.role === 1"><span class="badge bg-primary">admin</span></td>
+                    <td class="text-center" *ngIf="user.role === 0"><span class="badge bg-secondary">user</span></td>
+                    <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="updateUser(i)"><i class="bi bi-pencil-square"></i></button></td>
+                    <td class="text-center"><button [disabled]="user.email === appUser" type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteUser(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
                 </tbody>
               </table>

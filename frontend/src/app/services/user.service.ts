@@ -33,6 +33,10 @@ export class UserService {
         // Se almacena el token en el localStorage del navegador
         localStorage.setItem('token', res.token);
 
+         // Se almacena tambien los datos del usuario menos su contraseña por seguridad
+         delete res.user.password;
+         localStorage.setItem('user', JSON.stringify(res.user));
+
         // Si se marca el boton recordar se guarda el email en el localStorage
         if(formData.remember){
           localStorage.setItem('email', formData.email);
