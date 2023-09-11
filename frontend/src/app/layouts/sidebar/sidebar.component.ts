@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,14 +9,20 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class SidebarComponent implements OnInit {
 
-  user: any = localStorage.getItem('user');
+  role: number = 0;
 
   constructor(
     private userService: UserService,
   ){}
 
   ngOnInit(): void {
-    this.user = JSON.parse(this.user);
+    // console.log(this.userService.getUserData())
+    // this.role = this.userService.role;
+
+    let token = localStorage.getItem('token') || '';
+    let user: any = jwt_decode(token);
+    this.role = user.role;
+
   }
 
   logout(){

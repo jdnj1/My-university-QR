@@ -6,6 +6,7 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -18,9 +19,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
 
   // Datos del usuario
-  user = JSON.parse(localStorage.getItem('user') || '');
+  user: any;
 
   codesQr: any = [];
+  totalQr: number = 0;
 
   // Qr generados
   urlQr: any = [];
@@ -47,6 +49,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
+    private userService: UserService,
     private fb: FormBuilder,
     private route: Router,
     private renderer: Renderer2
@@ -54,6 +57,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void{
     this.getQr(0);
+    this.user = this.userService.getUserData();
+    console.log(this.user)
   }
 
   ngAfterViewInit(): void {
@@ -77,6 +82,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.qrService.getQr(page).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
+        this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
           this.msgElement.nativeElement.innerHTML = 'No has creadao ningún código QR todavía.';
@@ -84,7 +90,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           return;
         }
 
-        this.page = Math.ceil(res.page.total / 10);
+        this.page = Math.ceil(this.totalQr / 10);
         console.log(this.page)
         for (let i = 0; i < this.page; i++) {
           this.pageArray.push(i+1);
@@ -124,7 +130,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   createQr(){
     // Comprobar si no se supera el limite
-    if(this.user.lim_consult <= this.codesQr.length || this.user.lim_consult === 0){
+    console.log(this.user.lim_consult, this.totalQr)
+    return
+    if(this.user.lim_consult <= this.totalQr || this.user.lim_consult === 0){
       this.qrService.createQr().subscribe({
         next: (res:any) =>{
           console.log(res);

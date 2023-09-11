@@ -10,6 +10,12 @@ import { Router } from '@angular/router';
 })
 export class UserService {
 
+  idUser: number = 0;
+  email: string = '';
+  token: string = '';
+  lim_consult: number = 0;
+  role: number = 0;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -18,12 +24,15 @@ export class UserService {
   login(formData: any){
     return this.http.post(`${environment.apiBaseUrl}/login`, formData).pipe(
       tap((res: any) =>{
+        // Se almacenan los datos del usuario en la clase
+        // this.idUser = res.user.idUser;
+        // this.email = res.user.email;
+        // this.token = res.token;
+        // this.lim_consult = res.user.lim_consult;
+        // this.role = res.user.role;
         // Se almacena el token en el localStorage del navegador
         localStorage.setItem('token', res.token);
-        // Se almacena tambien los datos del usuario menos su contraseña por seguridad
-        delete res.user.password;
-        localStorage.setItem('user', JSON.stringify(res.user));
-        console.log(formData.remember)
+
         // Si se marca el boton recordar se guarda el email en el localStorage
         if(formData.remember){
           localStorage.setItem('email', formData.email);
@@ -39,6 +48,16 @@ export class UserService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/']);
+  }
+
+  getUserData(){
+    return {
+      idUser: this.idUser,
+      email: this.email,
+      token: this.token,
+      lim_consult: this.lim_consult,
+      role: this.role
+    }
   }
 
   validateToken(){
