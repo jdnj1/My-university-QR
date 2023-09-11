@@ -17,6 +17,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   // En esta variable se almacenan los datos de la consulta a configurar
   consult: any;
 
+  placeholder: string = '';
+
   // Array donde se almacenan los filtros
   filtersArray: any = [];
 
@@ -105,6 +107,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         console.log(res);
 
         this.consult =  res.consult;
+        this.placeholder = res.consult.token;
 
         console.log(this.consult)
         // Se adaptan las fechas
@@ -117,7 +120,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         // Se rellenan los datos del formulario con los datos de la consulta
         this.firstForm = this.fb.group({
           name: [this.consult.name],
-          token: [this.consult.token],
+          token: '',
           dateFrom: [this.consult.dateFrom],
           dateTo: [this.consult.dateTo],
           filters: '',
