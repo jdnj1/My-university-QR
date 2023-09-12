@@ -192,6 +192,7 @@ const updateUsers = async( req , res = response ) => {
 
         // Extrae los campos que no cabe especificar a la hora de crear.
         let { email, password, role, lim_consult } = req.body;
+        console.log(lim_consult)
         let updateQuery = `UPDATE ${process.env.USERTABLE} SET `;
 
          // En este array se van almacenando todos los campos a actualizar
@@ -221,7 +222,7 @@ const updateUsers = async( req , res = response ) => {
                 updateFields.push(`role = '${role}'`);
             }
 
-            if(lim_consult){
+            if(lim_consult !== undefined){
                 updateFields.push(`lim_consult = ${lim_consult}`);
             }
         }
@@ -231,6 +232,7 @@ const updateUsers = async( req , res = response ) => {
         updateQuery += ` WHERE idUser=${uid}`;
         
         // Se actualiza. 
+        console.log(updateQuery)
         user = await dbConsult(updateQuery);
         
         res.status( 200 ).json( user );
