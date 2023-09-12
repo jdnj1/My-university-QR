@@ -54,15 +54,10 @@ export class UserService {
     this.router.navigate(['/']);
   }
 
-  getUserData(){
-    return {
-      idUser: this.idUser,
-      email: this.email,
-      token: this.token,
-      lim_consult: this.lim_consult,
-      role: this.role
-    }
-  }
+  // getUserData(id: any){
+  //   let user = this.getUserById(id);
+  //   console.log(user);
+  // }
 
   validateToken(){
     const token = localStorage.getItem('token') || '';

@@ -67,6 +67,9 @@ const getUserById = async( req , res ) => {
         const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${uid}`;
         const user = await dbConsult(query);
 
+        // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
+        delete user[0].password;
+
         if(user.length !== 0){
             res.status(200).json({
                 msg: 'getUsuario',

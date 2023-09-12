@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
 
   // Datos del usuario
+  idUser: number = 0;
   user: any;
 
   codesQr: any = [];
@@ -56,9 +58,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ){}
 
   ngOnInit(): void{
+    // Obtenemos los datos del usuario
+    const token = localStorage.getItem('token') || '';
+    const decoded: any = jwt_decode(token);
+    this.idUser = decoded.uid;
+    this.userService.getUserById(this.idUser).subscribe({
+      next: (res: any) => {
+        this.user = res.user;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('Error al intentar obtener los datos del usuario');
+      }
+    });
+
+    //Obtenemos los códigos QR
     this.getQr(0);
-    this.user = this.userService.getUserData();
-    console.log(this.user)
   }
 
   ngAfterViewInit(): void {
@@ -132,7 +146,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // Comprobar si no se supera el limite
     console.log(this.user.lim_consult, this.totalQr)
 
-    if(this.user.lim_consult <= this.totalQr || this.user.lim_consult === 0){
+    if(this.user.lim_consult > this.totalQr || this.user.lim_consult === 0){
       this.qrService.createQr().subscribe({
         next: (res:any) =>{
           console.log(res);
