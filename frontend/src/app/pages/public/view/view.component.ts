@@ -259,6 +259,7 @@ export class ViewComponent implements OnInit {
               }
 
               body += ']}';
+              console.log(body)
               body = JSON.parse(body)
 
               // Se realiza la peticion a smartuniversity con el json creado
@@ -291,12 +292,14 @@ export class ViewComponent implements OnInit {
                     })
                   });
 
+                  console.log(seriesData)
+
                   let dates = data.values.map((subarray: any) => subarray[data.columns.indexOf('time')]);
 
                   const div = document.getElementById(`chart${index}`);
                   const chart = echarts.init(div);
 
-                  // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+                  // Función para que se adapte el tamaño de la grafica si se cambia el tamaño de la pantalla
                   window.addEventListener('resize', function() {
                     chart.resize();
                   });

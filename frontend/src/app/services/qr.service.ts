@@ -63,5 +63,7 @@ export class QrService {
     });
   }
 
+  // Peticiones publicas para la vista de qr
+
 }
 

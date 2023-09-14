@@ -8,7 +8,7 @@ const { Router } = require('express'); // Router de Express
 const { check } = require('express-validator'); // check de Express Validator
 
 // Propio
-const {getQr, createQr, getQrById, updateQr, deleteQr} = require('../controllers/qr')
+const {getQr, createQr, getQrById, updateQr, deleteQr, viewQr} = require('../controllers/qr')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
 const {validateJWT} = require('../middleware/validate-jwt')
@@ -43,5 +43,8 @@ router.delete('/:id', [
     validateJWT,
     validateFields
 ], deleteQr); 
+
+router.get('/view/:id',
+    viewQr);
 
 module.exports = router;

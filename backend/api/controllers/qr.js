@@ -3,10 +3,12 @@
  */
 
 // === Importar
-// Propio
+
 const {dbConsult} = require('../database/db');
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
+const axios = require('axios');
+const {format} = require ('date-fns');
 
 /**
  * Devuelve todos los codigos qr de la BD.
@@ -235,5 +237,201 @@ const deleteQr = async(req, res) => {
     }
 }
 
+/**
+ * Llamada de la vista de los QR.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const viewQr = async(req, res) => {
+    // Variable con el tipo de operaciones
+    const op = [
+        "max",
+        "min",
+        "last"
+    ];
 
-module.exports = {getQr, createQr, getQrById, updateQr, deleteQr};
+    // Variable con el resultado de las llamadas
+    let results = {};
+    
+    // Se extrae el id del qr desde el path
+    const uid = req.params.id;
+    
+    try{
+        // Obtenemos el código QR
+        let query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr = ${uid}`;
+        const qr = await dbConsult(query);
+
+        // Si no se encuentra
+        if(qr.length === 0){
+            res.status(404).json({
+                msg: 'No se ha encontrado el código Qr'
+            });
+            return;
+        }
+
+        //results.push({titleQr: qr[0].description});
+        results.titleQr = qr[0].description;
+
+        // Si existe, primero se debe comprobar que el qr no este desactivado y caducado
+        if(qr[0].activated !== 1){
+            res.status(404).json({
+                msg: 'desactivado'
+            });
+            return;
+        }
+
+        const now = new Date();
+        //console.log(qr[0].date, now)
+
+        if(qr[0].date < now){
+            res.status(404).json({
+                msg: 'caducado'
+            });
+            return;
+        }
+
+        // Si todo esta correcto, obtener sus llamadas
+        query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${uid}`;
+        const consults = await dbConsult(query);
+
+
+        // Si el códgio QR no tiene llamadas
+        if(consults.length === 0){
+            res.status(404).json({
+                msg: 'El qr no tiene llamadas',
+            });
+            return;
+        }
+
+        let charts = [];
+        
+        // Se iteran todas las llamadas que tenga y se comprueba que esten activadas
+        for(let consult of consults){
+
+            if(consult.activated === 1){
+                // Se copmprueba que tipo de operacion tiene
+                if(consult.operation > 1){
+                    // Max, min, last
+
+                    // Pasamos los filtros a JSON
+                    consult.filters = JSON.parse(consult.filters);
+
+                    let data = {
+                        token: consult.token,
+                        dateFrom: '2023-05-19T05:18:38Z', //cambiar por cons.dateFrom
+                        dateTo: '2023-05-19T07:18:38Z',
+                        operation: op[consult.operation - 2],
+                        uid: Object.values(consult.filters)[0],
+                        name: Object.values(consult.filters)[1]
+                    }
+
+                    // Se realiza la peticion a Smart University
+                    let res = await axios.post(`${process.env.URLAPI}/smartuni/operation`, data);
+                    data = res.data.result;
+                    //console.log(data)
+
+                    // Rellenar el objeto con los datos de la llamada
+                    charts.push({
+                        type: consult.chart,
+                        values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
+                        name: data.values[0][data.columns.indexOf('name')],
+                        metric: data.values[0][data.columns.indexOf('metric')]
+                    });
+
+                }
+                else{
+                    // Todos los datos disponibles
+
+                    // Se comienza a montar el cuerpo de la petición
+                    let body = `{"token": "${consult.token}", "time_start": "${format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS")}Z", 
+                        "time_end": "${format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS")}Z", "filters":[`;
+
+                    // Añadir los filtros
+                    if(consult.filter !== ''){
+                        // Pasamos los filtros a JSON
+                        consult.filters = JSON.parse(consult.filters);
+
+                        Object.entries(consult.filters).forEach((key, index) => {
+                        // Comprobar si tienen muchos valores una misma clave
+                        key[1] = key[1].split(',');
+
+                        body += `{"filter": "${key[0]}", "values": [`;
+                        key[1].forEach((elem, index) => {
+                            body += `"${elem}"`;
+
+                            if(index !== key[1].length - 1){
+                            body += ','
+                            }
+                        });
+
+                        body += `]}`;
+
+                        if(index !== Object.entries(consult.filters).length - 1){
+                            body += ','
+                        }
+                        });
+                    }
+
+                    body += ']}';
+                    body = JSON.parse(body);
+                    
+
+                    // Se realiza la peticion a Smart University
+                    let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
+                    let data = res.data.result;
+
+                    // Montar el objeto de las series
+
+                    // Primero se obtienen los uid presentes en los filtros
+                    let ids;
+
+                    body.filters.map((id) => {
+                        if(Object.values(id)[0] === 'uid'){
+                            ids = Object.values(id)[1]
+                        }
+                    })
+
+                    let seriesData= [];
+                    ids.forEach((id) => {
+                        // Se filtran los arrays por cada uid y se obtienen sus valores
+                        let series = data.values.filter((array) => array[data.columns.indexOf('uid')] === id)
+                            .map((array) => array[data.columns.indexOf('value')]);
+
+                        seriesData.push({
+                            name: id,
+                            data: series
+                        })
+                    });
+                    //console.log(seriesData)
+
+                    // Rellenar el objeto con los datos de la llamada
+                    charts.push({
+                        type: consult.chart,
+                        values: seriesData,
+                        name: data.values[0][data.columns.indexOf('name')],
+                        metric: data.values[0][data.columns.indexOf('metric')]
+                    });
+                }
+            }
+        }
+
+       //console.log(JSON.stringify(results[0]))
+       results.charts = charts;
+
+        // Devuelve el objeto con toda la información de las llamadas
+        res.status(200).json({
+            msg: 'getQr',
+            res: results
+        });
+        return;
+
+    } catch(error){
+        console.error(error);
+        res.status(500).json({
+            msg: 'Error visualizar QR'
+        });
+    }
+}
+
+module.exports = {getQr, createQr, getQrById, updateQr, deleteQr, viewQr};

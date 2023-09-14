@@ -61,7 +61,7 @@ const getDataOperation = async( req , res ) => {
 
         axios.get(`${process.env.URLSU}/${token}/time_start/${dateFrom}/time_end/${dateTo}/operation/${operation}/uid/${uid}/name/${name}/getDataOperation`)
             .then((result) => {
-                console.log(result.data)
+                //console.log(result.data)
                 res.status(200).json({
                     result: result.data
                 });
