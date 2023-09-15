@@ -45,7 +45,7 @@ export class QrComponent implements OnInit, AfterViewInit {
     searchQuery: ['']
   });
 
-  buttons = false;
+  buttons = true;
   timer: any;
 
   // Variable que indica cuantas paginas deben haber
@@ -97,10 +97,10 @@ export class QrComponent implements OnInit, AfterViewInit {
 
         // Se rellenan los datos del formulario con los datos del QR
         this.dataQrForm = this.fb.group({
-          description: [{value: this.qr.description, disabled: true}],
-          tagName: [{value: this.qr.tagName, disabled: true}],
-          tagDescription: [{value: this.qr.tagDescription, disabled: true}],
-          date: [{value: this.qr.date, disabled: true}]
+          description: [this.qr.description],
+          tagName: [this.qr.tagName],
+          tagDescription: [this.qr.tagDescription],
+          date: [this.qr.date]
         });
 
         if(this.qr.activated === 1){
