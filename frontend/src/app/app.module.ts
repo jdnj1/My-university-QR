@@ -26,6 +26,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationComponent } from './layouts/translation/translation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
+import { ChartComponent } from './pages/public/chart/chart.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ChangePassComponent } from './pages/private/users/change-pass/change-pa
     CreateUserComponent,
     EditUserComponent,
     TranslationComponent,
-    ChangePassComponent
+    ChangePassComponent,
+    ChartComponent
   ],
   imports: [
     BrowserModule,

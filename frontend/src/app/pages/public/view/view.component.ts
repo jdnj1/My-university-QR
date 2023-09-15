@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewContainerRef, createComponent } from '@angular/core';
 import { QrService } from 'src/app/services/qr.service';
 import { UniversityService } from 'src/app/services/university.service';
 import { environment } from '../../../../environments/environment';
@@ -8,6 +8,8 @@ import { ConsultService } from 'src/app/services/consult.service';
 import * as echarts from 'echarts';
 import { JsonPipe } from '@angular/common';
 import { AlertService } from 'src/app/utils/alert/alert.service';
+import { QrComponent } from '../../private/qr/qr.component';
+import { ChartComponent } from '../chart/chart.component';
 
 @Component({
   selector: 'app-view',
@@ -17,6 +19,7 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
 export class ViewComponent implements OnInit,AfterViewInit {
 
   @ViewChild('container', { static: true }) containerElement!: ElementRef<HTMLElement>;
+  @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
 
   // Variable donde se va a almacenar el código QR
   qr: any;
@@ -52,16 +55,17 @@ export class ViewComponent implements OnInit,AfterViewInit {
     private consultService: ConsultService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private viewContainerRef: ViewContainerRef
   ){}
 
   ngOnInit(): void {
-
 
     // this.container = this.renderer.selectRootElement('#charts', true);
   }
 
   ngAfterViewInit(): void {
+
     this.viewQr();
   }
 
@@ -70,23 +74,29 @@ export class ViewComponent implements OnInit,AfterViewInit {
       next: (res: any) => {
         console.log(res);
         this.charts = res.res.charts;
+        this.qr = res.res.titleQr;
         console.log(this.charts)
 
         // Se itera entre las gráficas devueltas
         this.charts.forEach( (chart: any, index: any) => {
+          const chartComponent = this.containerRef.createComponent(ChartComponent)
+          //this.viewContainerRef.insert(this.containerElement)
+          chartComponent.instance.data = chart;
+          chartComponent.instance.id = index;
 
-          const div = document.createElement('div');
-          div.id = `chart${index}`;
-          div.style.minHeight = '400px';
-          div.classList.add('echart');
+          //let pru = createComponent(QrComponent, {prudiv})
+          // const div = document.createElement('div');
+          // div.id = `chart${index}`;
+          // div.style.minHeight = '400px';
+          // div.classList.add('echart');
 
-          this.containerElement.nativeElement.appendChild(div);
+          // this.containerElement.nativeElement.appendChild(div);
 
-          const graph = echarts.init(div);
+          //const graph = echarts.init(div);
 
           // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
           window.addEventListener('resize', function() {
-            graph.resize();
+            //graph.resize();
           });
 
           let option;
@@ -136,7 +146,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
                 series: chart.values
               };
 
-              graph.setOption(option);
+              //graph.setOption(option);
 
               break;
 
@@ -174,7 +184,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
                 ]
               }
 
-              graph.setOption(option);
+              //graph.setOption(option);
 
               break;
 
@@ -218,7 +228,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
                 ]
               }
 
-              graph.setOption(option);
+             //graph.setOption(option);
 
               break;
 
@@ -245,16 +255,6 @@ export class ViewComponent implements OnInit,AfterViewInit {
       next: (res: any) => {
         console.log(res)
         this.qr = res.qr;
-
-        // Se comprueba si el QR esta activado o desactivado
-        if(this.qr.activated === 0){
-          this.activated = false;
-          return;
-        }
-        // Si está activado se obtienen sus llamadas
-        else{
-          this.getConsults();
-        }
       },
       error: (err: HttpErrorResponse) => {
         console.log(err)
