@@ -251,9 +251,17 @@ const viewQr = async(req, res) => {
         "last"
     ];
 
+    // Variable con el tipo de graficas
+    const type = [
+        "line",
+        "bar",
+        "gauge",
+        "number"
+    ]
+
     // Variable con el resultado de las llamadas
     let results = {};
-    
+
     // Se extrae el id del qr desde el path
     const uid = req.params.id;
     
@@ -333,6 +341,8 @@ const viewQr = async(req, res) => {
 
                     // Rellenar el objeto con los datos de la llamada
                     charts.push({
+                        title: consult.name,
+                        description: data.values[0][data.columns.indexOf('description')],
                         type: consult.chart,
                         values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
                         name: data.values[0][data.columns.indexOf('name')],
@@ -400,15 +410,22 @@ const viewQr = async(req, res) => {
 
                         seriesData.push({
                             name: id,
-                            data: series
+                            data: series,
+                            type: type[consult.chart]
                         })
                     });
-                    //console.log(seriesData)
+                    
+                     // Se guardan las fechas
+                     let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
 
                     // Rellenar el objeto con los datos de la llamada
                     charts.push({
+                        title: consult.name,
+                        description: data.values[0][data.columns.indexOf('description')],
                         type: consult.chart,
+                        ids: ids,
                         values: seriesData,
+                        dates: dates,
                         name: data.values[0][data.columns.indexOf('name')],
                         metric: data.values[0][data.columns.indexOf('metric')]
                     });

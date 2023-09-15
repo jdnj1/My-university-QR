@@ -63,7 +63,11 @@ export class QrService {
     });
   }
 
-  // Peticiones publicas para la vista de qr
+  // Peticion publica para la vista de qr
+  viewQr(id: Number){
+
+    return this.http.get(`${environment.apiBaseUrl}/qr/view/${id}`);
+  }
 
 }
 
