@@ -54,6 +54,17 @@ export class UserService {
     this.router.navigate(['/']);
   }
 
+  isLogged(){
+    const token = localStorage.getItem('token') || '';
+    if(token === ''){
+      return false;
+    }
+    else{
+      return true;
+    }
+
+  }
+
   // getUserData(id: any){
   //   let user = this.getUserById(id);
   //   console.log(user);

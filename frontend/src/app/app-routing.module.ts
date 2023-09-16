@@ -12,6 +12,7 @@ import { UsersComponent } from './pages/private/users/users.component';
 import { CreateUserComponent } from './pages/private/users/create-user/create-user.component';
 import { EditUserComponent } from './pages/private/users/edit-user/edit-user.component';
 import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
+import { insideGuard } from './guards/inside.guard';
 
 const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
@@ -23,7 +24,7 @@ const routes: Routes = [
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard] },
   { path: 'changePass', component: ChangePassComponent, canActivate: [authGuard] },
   { path: 'view/:id', component: ViewComponent },
-  { path: '', pathMatch: 'full', component: LoginComponent },
+  { path: '', pathMatch: 'full', component: LoginComponent, canActivate: [insideGuard] },
   { path: '**', pathMatch: 'full', component: Error404Component }
 ];
 
