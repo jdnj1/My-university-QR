@@ -95,146 +95,146 @@ export class ViewComponent implements OnInit,AfterViewInit {
           //const graph = echarts.init(div);
 
           // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
-          window.addEventListener('resize', function() {
+          // window.addEventListener('resize', function() {
             //graph.resize();
-          });
+          // });
 
-          let option;
+          // let option;
 
           // Comprobar el tipo de gráfica que es
-          switch(chart.type){
-            case 0:
-              // Gráfica de lineas
-            case 1:
-              // Grafica de barras
+        //   switch(chart.type){
+        //     case 0:
+        //       // Gráfica de lineas
+        //     case 1:
+        //       // Grafica de barras
 
-              option = {
-                title: {
-                  text: chart.title,
-                  // textStyle: {
-                  //   ellipsis: true
-                  // },
-                },
-                tooltip: {
-                  trigger: 'axis'
-                },
-                legend: {
-                  data: chart.ids,
-                  top: '10%'
-                },
-                xAxis: {
-                  type: 'category',
-                  data: chart.dates
-                },
-                yAxis: {
-                  type: 'value'
-                },
-                grid: {
-                  top: '20%', // Espacio en la parte superior de a grafica
-                },
-                dataZoom: [
-                  {
-                    type: 'inside',
-                    start: 0,
-                    end: 10
-                  },
-                  {
-                    start: 0,
-                    end: 10
-                  }
-                ],
-                series: chart.values
-              };
+        //       option = {
+        //         title: {
+        //           text: chart.title,
+        //           // textStyle: {
+        //           //   ellipsis: true
+        //           // },
+        //         },
+        //         tooltip: {
+        //           trigger: 'axis'
+        //         },
+        //         legend: {
+        //           data: chart.ids,
+        //           top: '10%'
+        //         },
+        //         xAxis: {
+        //           type: 'category',
+        //           data: chart.dates
+        //         },
+        //         yAxis: {
+        //           type: 'value'
+        //         },
+        //         grid: {
+        //           top: '20%', // Espacio en la parte superior de a grafica
+        //         },
+        //         dataZoom: [
+        //           {
+        //             type: 'inside',
+        //             start: 0,
+        //             end: 10
+        //           },
+        //           {
+        //             start: 0,
+        //             end: 10
+        //           }
+        //         ],
+        //         series: chart.values
+        //       };
 
-              //graph.setOption(option);
+        //       //graph.setOption(option);
 
-              break;
+        //       break;
 
-            case 2:
-              // Gauge
-              option = {
-                tooltip: {
-                  formatter: `{a} <br/>{b} : {c}`
-                },
-                title: {
-                  text: chart.title
-                },
-                series: [
-                  {
-                    name: chart.description,
-                    type: this.type[chart.type],
-                    progress: {
-                      show: true
-                    },
-                    detail: {
-                      valueAnimation: true,
-                      fontSize: 20,
-                      formatter: '{value}'
-                    },
-                    axisLabel: {
-                      fontSize: 10
-                    },
-                    data: [
-                      {
-                        value: chart.values[0],
-                        name: chart.metric
-                      }
-                    ]
-                  }
-                ]
-              }
+        //     case 2:
+        //       // Gauge
+        //       option = {
+        //         tooltip: {
+        //           formatter: `{a} <br/>{b} : {c}`
+        //         },
+        //         title: {
+        //           text: chart.title
+        //         },
+        //         series: [
+        //           {
+        //             name: chart.description,
+        //             type: this.type[chart.type],
+        //             progress: {
+        //               show: true
+        //             },
+        //             detail: {
+        //               valueAnimation: true,
+        //               fontSize: 20,
+        //               formatter: '{value}'
+        //             },
+        //             axisLabel: {
+        //               fontSize: 10
+        //             },
+        //             data: [
+        //               {
+        //                 value: chart.values[0],
+        //                 name: chart.metric
+        //               }
+        //             ]
+        //           }
+        //         ]
+        //       }
 
-              //graph.setOption(option);
+        //       //graph.setOption(option);
 
-              break;
+        //       break;
 
-            case 3:
-              // Solo el valor
-              option = {
-                title: {
-                  text: `${chart.values[0]} ${chart.metric}`,
-                  subtext: `${chart.title}: \n\n ${chart.description}`,
-                  left: "center",
-                  top: "center",
-                  width: 2,
-                  textStyle: {
-                    fontSize: 30
-                  },
-                },
-                media: [{
-                  query: {
-                    maxWidth: 360,
-                  },
-                  option: {
-                    title: {
-                      subtextStyle: {
-                        fontSize: 10
-                      }
-                    }
-                  }
-                  },
-                  {
-                    query: {
-                      minWidth: 361,
-                    },
-                    option: {
-                      title: {
-                        subtextStyle: {
-                          fontSize: 15
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
+        //     case 3:
+        //       // Solo el valor
+        //       option = {
+        //         title: {
+        //           text: `${chart.values[0]} ${chart.metric}`,
+        //           subtext: `${chart.title}: \n\n ${chart.description}`,
+        //           left: "center",
+        //           top: "center",
+        //           width: 2,
+        //           textStyle: {
+        //             fontSize: 30
+        //           },
+        //         },
+        //         media: [{
+        //           query: {
+        //             maxWidth: 360,
+        //           },
+        //           option: {
+        //             title: {
+        //               subtextStyle: {
+        //                 fontSize: 10
+        //               }
+        //             }
+        //           }
+        //           },
+        //           {
+        //             query: {
+        //               minWidth: 361,
+        //             },
+        //             option: {
+        //               title: {
+        //                 subtextStyle: {
+        //                   fontSize: 15
+        //                 }
+        //               }
+        //             }
+        //           }
+        //         ]
+        //       }
 
-             //graph.setOption(option);
+        //      //graph.setOption(option);
 
-              break;
+        //       break;
 
-            default:
-              break;
-          }
+        //     default:
+        //       break;
+        //   }
 
 
 

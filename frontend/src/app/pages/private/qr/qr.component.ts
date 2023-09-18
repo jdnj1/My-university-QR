@@ -7,6 +7,7 @@ import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-qr',
@@ -93,7 +94,7 @@ export class QrComponent implements OnInit, AfterViewInit {
 
         //Adaptamos el formato de la fecha para poder ponerla en el input
         let date = new Date(this.qr.date);
-        this.qr.date = date.toISOString().split('T')[0];
+        this.qr.date = format(date, "yyyy-MM-dd");
 
         // Se rellenan los datos del formulario con los datos del QR
         this.dataQrForm = this.fb.group({

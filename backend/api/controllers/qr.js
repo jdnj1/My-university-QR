@@ -316,6 +316,12 @@ const viewQr = async(req, res) => {
         for(let consult of consults){
 
             if(consult.activated === 1){
+
+                // Adaptamos las fechas
+                consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+
+                consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+
                 // Se copmprueba que tipo de operacion tiene
                 if(consult.operation > 1){
                     // Max, min, last
@@ -325,8 +331,8 @@ const viewQr = async(req, res) => {
 
                     let data = {
                         token: consult.token,
-                        dateFrom: '2023-05-19T05:18:38Z', //cambiar por cons.dateFrom
-                        dateTo: '2023-05-19T07:18:38Z',
+                        dateFrom: consult.dateFrom, //cambiar por cons.dateFrom
+                        dateTo: consult.dateTo,
                         operation: op[consult.operation - 2],
                         uid: Object.values(consult.filters)[0],
                         name: Object.values(consult.filters)[1]
@@ -352,8 +358,8 @@ const viewQr = async(req, res) => {
                     // Todos los datos disponibles
 
                     // Se comienza a montar el cuerpo de la petición
-                    let body = `{"token": "${consult.token}", "time_start": "${format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS")}Z", 
-                        "time_end": "${format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS")}Z", "filters":[`;
+                    let body = `{"token": "${consult.token}", "time_start": "${consult.dateFrom}", 
+                        "time_end": "${consult.dateTo}", "filters":[`;
 
                     // Añadir los filtros
                     if(consult.filter !== ''){
