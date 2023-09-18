@@ -278,7 +278,6 @@ const viewQr = async(req, res) => {
             return;
         }
 
-        //results.push({titleQr: qr[0].description});
         results.titleQr = qr[0].description;
 
         // Si existe, primero se debe comprobar que el qr no este desactivado y caducado
@@ -290,7 +289,6 @@ const viewQr = async(req, res) => {
         }
 
         const now = new Date();
-        //console.log(qr[0].date, now)
 
         if(qr[0].date < now){
             res.status(404).json({

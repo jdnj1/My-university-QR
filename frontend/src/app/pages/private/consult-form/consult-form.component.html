@@ -152,7 +152,8 @@
               </div>
 
               <div class="d-flex justify-content-end m-2">
-                <button type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
+                <button *ngIf="!hasChanges" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
+                <button *ngIf="hasChanges" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
                 <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">Guardar</button>
               </div>
             </div>

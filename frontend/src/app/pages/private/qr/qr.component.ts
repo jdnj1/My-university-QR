@@ -364,14 +364,19 @@ export class QrComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl(`/consult/${this.consults[index].idConsult}`)
   }
 
-  pageConsult(page: any){
-    if(page !== this.numPage){
-      this.pageArray.splice(0);
+  // pageConsult(page: any){
+  //   if(page !== this.numPage){
+  //     this.pageArray.splice(0);
 
-      if(page > this.numPage) this.numPage ++;
-      else this.numPage --;
+  //     if(page > this.numPage) this.numPage ++;
+  //     else this.numPage --;
 
-      this.getConsults(page*10)
-    }
+  //     this.getConsults(page*10)
+  //   }
+  // }
+
+  recieveArray(page: any){
+    this.getConsults(page*10);
+
   }
 }

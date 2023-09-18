@@ -170,15 +170,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  pageUsers(page: any){
-    if(page !== this.numPage){
-      this.pageArray.splice(0);
+  // pageUsers(page: any){
+  //   if(page !== this.numPage){
+  //     this.pageArray.splice(0);
 
-      if(page > this.numPage) this.numPage ++;
-      else this.numPage --;
+  //     if(page > this.numPage) this.numPage ++;
+  //     else this.numPage --;
 
-      this.getUsers(page*10)
-    }
+  //     this.getUsers(page*10)
+  //   }
+  // }
+
+  recieveArray(page: any){
+    this.getUsers(page*10);
+
   }
 
 }

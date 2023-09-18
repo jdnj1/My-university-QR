@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import jwt_decode from 'jwt-decode';
+import { PageComponent } from 'src/app/layouts/pagination/page/page.component';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
   @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
+
+  @ViewChild(PageComponent) pagination!: PageComponent;
 
   // Datos del usuario
   idUser: number = 0;
@@ -96,6 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.qrService.getQr(page).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
+        console.log(this.codesQr.length)
         this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
@@ -105,7 +109,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
 
         this.page = Math.ceil(this.totalQr / 10);
-        console.log(this.page)
+
         for (let i = 0; i < this.page; i++) {
           this.pageArray.push(i+1);
         }
@@ -316,14 +320,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  pageQr(page: any){
-    if(page !== this.numPage){
-      this.pageArray.splice(0);
+  // pageQr(page: any){
+  //   if(page !== this.numPage){
+  //     this.pageArray.splice(0);
 
-      if(page > this.numPage) this.numPage ++;
-      else this.numPage --;
+  //     if(page > this.numPage) this.numPage ++;
+  //     else this.numPage --;
 
-      this.getQr(page*10)
-    }
+  //     this.getQr(page*10)
+  //   }
+  // }
+
+  recieveArray(page: any){
+    this.getQr(page*10);
+
   }
 }

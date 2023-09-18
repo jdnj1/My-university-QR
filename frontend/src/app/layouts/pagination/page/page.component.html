@@ -1,0 +1,18 @@
+<!-- Paginación -->
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [ngClass]="{'disabled': numPage === 0}">
+      <button class="page-link" aria-label="Previous" title="Anterior"(click)="pageQr(numPage - 1)">
+        <span aria-hidden="true">&laquo;</span>
+      </button>
+    </li>
+    <li class="page-item" *ngFor="let pag of pageArray; let i = index">
+      <button title="Página {{i+1}}" [ngClass]="numPage === i ? 'btn btn-primary' : 'page-link'"  (click)="pageQr(i)">{{pageArray[i]}}</button>
+    </li>
+    <li class="page-item" [ngClass]="{'disabled': numPage + 1 === page}">
+      <button class="page-link" aria-label="Next" title="Siguiente" (click)="pageQr(numPage + 1)">
+        <span aria-hidden="true">&raquo;</span>
+      </button>
+    </li>
+  </ul>
+</nav>
