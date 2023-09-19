@@ -283,8 +283,7 @@ export class QrComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success('Llamada eliminada');
 
-            // Se elimina la llamada del array
-            this.consults.splice(index, 1);
+            this.getConsults(0);
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error('Error al eliminar el código QR');
@@ -365,19 +364,25 @@ export class QrComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl(`/consult/${this.consults[index].idConsult}`)
   }
 
-  // pageConsult(page: any){
-  //   if(page !== this.numPage){
-  //     this.pageArray.splice(0);
-
-  //     if(page > this.numPage) this.numPage ++;
-  //     else this.numPage --;
-
-  //     this.getConsults(page*10)
-  //   }
-  // }
-
   recieveArray(page: any){
     this.getConsults(page*10);
+
+  }
+
+  // Funciones para ordenar las llamadas del Qr
+  down(index: any){
+    let con = this.consults.splice(index, 1)[0];
+    this.consults.splice(index + 1, 0, con);
+
+    // Hacerlo tambien con los array de disable consult y consult form
+    let dis = this.disableConsult.splice(index, 1)[0];
+    this.disableConsult.splice(index + 1, 0, dis);
+
+    let form = this.consultForm.splice(index, 1)[0];
+    this.consultForm.splice(index + 1, 0, form);
+  }
+
+  up(){
 
   }
 }

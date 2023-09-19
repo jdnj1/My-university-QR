@@ -118,14 +118,16 @@
                   <th scope="col">Activar/Desactivar</th>
                   <th class="text-center" scope="col">Editar</th>
                   <th class="text-center" scope="col">Eliminar</th>
+                  <th class="text-center" scope="col">Bajar</th>
+                  <th class="text-center" scope="col">Subir</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td colspan="4" #msg>Este código QR no tiene llamadas</td>
                 </tr>
-                <tr *ngFor="let consult of consults; let i = index" [ngClass]="{'disabled': disableConsult[i]}">
-                  <td [ngClass]="{'disabledIn': disableConsult[i]}">{{consult.name}}</td>
+                <tr *ngFor="let consult of consults; let i = index" >
+                  <td [ngClass]="{'disabled': disableConsult[i]}">{{consult.name}}</td>
                   <td>
                     <form [formGroup]="consultForm[i]">
                       <div class="form-check form-switch">
@@ -133,8 +135,10 @@
                       </div>
                     </form>
                   </td>
-                  <td class="text-center" [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
-                  <td class="text-center" [ngClass]="{'disabledIn': disableConsult[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn" title="Bajar en la lista" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn" title="Subir en la lista" (click)="up()"><i class="bi bi-arrow-up"></i></button></td>
                 </tr>
               </tbody>
             </table>

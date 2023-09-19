@@ -1,6 +1,6 @@
 .disabled{
   opacity: .5;
-  /* pointer-events: none; */
+  pointer-events: none;
 }
 
 .disabledIn{

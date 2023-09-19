@@ -225,8 +225,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success('Código QR eliminado');
 
-            // Se elimina el codigo del array
-            this.codesQr.splice(index, 1);
+            this.getQr(0);
+
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error('Error al eliminar el código QR');

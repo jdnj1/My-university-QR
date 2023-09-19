@@ -38,8 +38,8 @@
                 <thead>
                   <tr>
                     <th scope="col"><i class="bi bi-qr-code"></i></th>
-                    <th scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.title' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.onoff' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.print' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
@@ -50,12 +50,12 @@
                   <tr>
                     <td colspan="7" #msg>{{'msg.home' | translate}}</td>
                   </tr>
-                  <tr *ngFor="let qr of codesQr; let i = index" [ngClass]="{'disabled': disabledQr[i]}">
-                    <td (click)="onMouseQrEnter(i)">
+                  <tr *ngFor="let qr of codesQr; let i = index">
+                    <td (click)="onMouseQrEnter(i)" [ngClass]="{'disabled': disabledQr[i]}">
                       <qrcode style="cursor: pointer;" (qrCodeURL)="saveURL($event, i)" [qrdata]="urlQr[i]" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
                     </td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i], 'expired': expiredQr[i]}">{{qr.date}}</td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i]}">{{qr.description}}</td>
+                    <td [ngClass]="{'disabled': disabledQr[i]}">{{qr.description}}</td>
+                    <td  [ngClass]="{'disabled': disabledQr[i], 'expired': expiredQr[i]}" class="text-center">{{qr.date}}</td>
                     <td>
                       <form [formGroup]="activateForm[i]">
                         <div class="form-check form-switch">
@@ -63,9 +63,9 @@
                         </div>
                       </form>
                     </td>
-                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
-                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
-                    <td class="text-center" [ngClass]="{'disabledIn': disabledQr[i]}"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
                 </tbody>
               </table>
