@@ -54,7 +54,7 @@
                     <td (click)="onMouseQrEnter(i)">
                       <qrcode style="cursor: pointer;" (qrCodeURL)="saveURL($event, i)" [qrdata]="urlQr[i]" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
                     </td>
-                    <td [ngClass]="{'disabledIn': disabledQr[i]}">{{qr.date}}</td>
+                    <td [ngClass]="{'disabledIn': disabledQr[i], 'expired': expiredQr[i]}">{{qr.date}}</td>
                     <td [ngClass]="{'disabledIn': disabledQr[i]}">{{qr.description}}</td>
                     <td>
                       <form [formGroup]="activateForm[i]">

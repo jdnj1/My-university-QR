@@ -119,8 +119,13 @@ const createQr = async( req , res = response ) => {
     let {description, tagName, tagDescription, date} = req.body;
 
     try {
+
+        // Creamos la fecha de validez del QR
+        let date = new Date();
+        date.setDate(date.getDate() + Number(process.env.DAYS));
+        date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
         
-        const query = `INSERT INTO ${process.env.QRTABLE} (user) VALUES (${req.uid})`;
+        const query = `INSERT INTO ${process.env.QRTABLE} (date, user) VALUES ('${date}', ${req.uid})`;
 
         const qr = await dbConsult(query);
 

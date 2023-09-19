@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   lgWidth = 300;
 
   disabledQr: any = [];
+  expiredQr: any = [];
 
   public activateForm: any = [];
 
@@ -118,6 +119,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.codesQr.forEach((qr: any) => {
           let date = new Date(qr.date);
           qr.date = date.toLocaleDateString();
+
+          // Se comprueba si la fecha de validez ha caducado
+          if(date < new Date()){
+            this.expiredQr.push(true)
+          }
+          else{
+            this.expiredQr.push(false)
+          }
 
           // Almacenamos la url de cada código QR
           this.urlQr.push(`${environment.appBaseUrl}/view/${qr.idQr}`);
@@ -333,6 +342,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   recieveArray(page: any){
     this.getQr(page*10);
+
+  }
+
+  dateExpried(){
 
   }
 }
