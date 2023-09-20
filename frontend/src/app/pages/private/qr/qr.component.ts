@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
@@ -14,7 +14,7 @@ import { format } from 'date-fns';
   templateUrl: './qr.component.html',
   styleUrls: ['./qr.component.css']
 })
-export class QrComponent implements OnInit, AfterViewInit {
+export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
   @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
@@ -54,6 +54,10 @@ export class QrComponent implements OnInit, AfterViewInit {
   pageArray: Array<number> = [];
   numPage: number = 0;
 
+  // Variables para comprobar si hay cambios el formulario de configuracion
+  qrSubscription: any;
+  hasChanges: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -86,6 +90,11 @@ export class QrComponent implements OnInit, AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+    // Liberar recursos
+    this.qrSubscription.unsubscribe();
+  }
+
   getQr(){
     // Obtenemos todos los datos del QR
     this.qrService.getQrbyId(this.idQr).subscribe({
@@ -114,6 +123,11 @@ export class QrComponent implements OnInit, AfterViewInit {
             activated: [false]
           });
         }
+
+        // Nos suscribimos a los cambios que pueda tener el fomrmulario
+        this.qrSubscription = this.dataQrForm.valueChanges.subscribe( () => {
+          this.hasChanges = true;
+        });
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('No se ha podido obtener el código QR');
@@ -207,6 +221,7 @@ export class QrComponent implements OnInit, AfterViewInit {
     this.dataQrForm.get('tagDescription')?.enable();
     this.dataQrForm.get('date')?.enable();
     this.buttons = true;
+    this.hasChanges= false;
   }
 
   cancelUpdate(reset: boolean){
@@ -231,6 +246,7 @@ export class QrComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.alertService.success('QR actualizado correctamente');
         this.cancelUpdate(false);
+        this.hasChanges = false;
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al intentar actualizar el QR');

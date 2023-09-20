@@ -23,68 +23,66 @@
           <div class="card-body">
             <h5 class="card-title">Configuración del QR</h5>
             <div class="container">
-              <div class="row">
-                <div class=" col col-sm-4" style="margin: 1em;">
-                  <p class="text-center m-0">{{dataQrForm.get('tagName')?.value}}</p>
-                  <div class="d-flex align-items-center justify-content-center">
-                    <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
+              <form [formGroup]="dataQrForm">
+                <div class="row">
+                  <!-- Parte del formulario del codigo QR -->
+                  <div class="col-lg-4">
+
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h5 class="scol-form-label">Datos del QR</h5>
+                      <form [formGroup]="activateForm">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
+                        </div>
+                      </form>
+                    </div>
+                    <label for="inputName" class="form-label">Título</label>
+                    <input type="text" id="inputName" class="form-control" formControlName="description">
+
+                    <label for="inputDate" class="form-label">Fecha de validez</label>
+                    <input type="date" class="form-control" id="inputDate"
+                      formControlName="date">
                   </div>
-                  <p class="text-center small">{{dataQrForm.get('tagDescription')?.value}}</p>
-                  <div class="d-flex justify-content-around align-items-center">
-                    <form [formGroup]="activateForm">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
+
+
+                  <div class="col m-2 m-lg-0">
+                    <div class="row">
+                      <div class="col">
+
+                        <h5 class="scol-form-label">Datos de impresión</h5>
+                        <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
+                        <input type="text" class="form-control" id="inputNameTag"
+                          formControlName="tagName">
+
+                        <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
+                        <input type="text" class="form-control" id="inputDescTag"
+                          formControlName="tagDescription">
                       </div>
-                    </form>
-                    <button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button>
-                  </div>
-                </div>
-                <!-- Parte del formulario del codigo QR -->
-                <div class="col" style="margin: 1em;">
-                  <form [formGroup]="dataQrForm">
-                    <div class="container">
-                      <div class="row">
-                        <div class="col">
-                          <div class="d-flex align-items-center justify-content-sm-between">
-                            <h5 class="scol-form-label">Datos del QR</h5>
-                            <button style="margin-left: 1em;" type="button" class="btn btn-primary btn-sm d-md-none" (click)="startUpdate()" [disabled]="buttons">
-                              <i class="bi bi-pencil-square"></i></button>
-                            </div>
-                          <label for="inputName" class="form-label">Título</label>
-                          <textarea id="inputName" class="form-control" style="height: 100px; max-height: 200px;"
-                            formControlName="description"></textarea>
 
-                          <label for="inputDate" class="form-label">Fecha de validez</label>
-                          <input type="date" class="form-control" id="inputDate"
-                            formControlName="date">
+
+                      <!-- IMAGEN DEL QR -->
+                      <div class="col-lg-5">
+                        <p class="text-center m-0">{{dataQrForm.get('tagName')?.value}}</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                          <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
                         </div>
-
-                        <div class="col">
-                          <div class="d-flex align-items-center justify-content-sm-between">
-                            <h5 class="scol-form-label">Datos de impresión</h5>
-                            <button style="margin-left: 1em;" type="button" class="btn btn-primary btn-sm d-none d-md-inline" (click)="startUpdate()" [disabled]="buttons">
-                              <i class="bi bi-pencil-square"></i></button>
-                          </div>
-                          <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
-                          <input type="text" class="form-control" id="inputNameTag"
-                            formControlName="tagName">
-
-                          <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
-                          <input type="text" class="form-control" id="inputDescTag"
-                            formControlName="tagDescription">
-
-
-                        </div>
+                        <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
                       </div>
                     </div>
-                    <div class="d-flex justify-content-end" *ngIf="buttons">
-                      <button type="button" class="btn btn-danger m-2" (click)="cancelUpdate(true)">Cancelar</button>
-                      <button type="button" class="btn btn-success m-2" (click)="updateQr()">Guardar</button>
-                    </div>
-                  </form>
+                  </div>
                 </div>
+              </form>
+              <div class="d-flex justify-content-start align-items-center" *ngIf="!buttons">
+                <button type="button" class="btn btn-primary m-2" (click)="startUpdate()"><i class="bi bi-pencil-square"></i> Editar configuración</button>
+                <button type="button" class="btn btn-success" title="Imprimir código QR"><i class="bi bi-printer"></i></button>
+              </div>
+              <div class="d-flex justify-content-start" *ngIf="buttons">
+                <button type="button" class="btn btn-danger m-2" (click)="cancelUpdate(true)">Cancelar</button>
+                <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">Guardar</button>
               </div>
             </div>
+
+
           </div>
         </div>
       </div>

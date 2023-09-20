@@ -169,7 +169,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         }
 
 
-        // Nos suscribimos a los cambios que puedan tener los fomrmularios
+        // Nos suscribimos a los cambios que puedan tener los formularios
         this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
           this.hasChanges = true;
         });
