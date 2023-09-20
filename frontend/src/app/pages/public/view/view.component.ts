@@ -22,7 +22,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
 
   // Variable donde se va a almacenar el código QR
-  qr: any;
+  qr: string = '';
 
   // Se obtiene el id del QR a partir de la url
   idQr = this.route.snapshot.params['id'];
@@ -46,7 +46,8 @@ export class ViewComponent implements OnInit,AfterViewInit {
     "number"
   ]
 
-  activated: boolean = true;
+  warning: boolean = true;
+  message: string = '';
 
 
   constructor(
@@ -80,170 +81,32 @@ export class ViewComponent implements OnInit,AfterViewInit {
         // Se itera entre las gráficas devueltas
         this.charts.forEach( (chart: any, index: any) => {
           const chartComponent = this.containerRef.createComponent(ChartComponent)
-          //this.viewContainerRef.insert(this.containerElement)
           chartComponent.instance.data = chart;
           chartComponent.instance.id = index;
-
-          //let pru = createComponent(QrComponent, {prudiv})
-          // const div = document.createElement('div');
-          // div.id = `chart${index}`;
-          // div.style.minHeight = '400px';
-          // div.classList.add('echart');
-
-          // this.containerElement.nativeElement.appendChild(div);
-
-          //const graph = echarts.init(div);
-
-          // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
-          // window.addEventListener('resize', function() {
-            //graph.resize();
-          // });
-
-          // let option;
-
-          // Comprobar el tipo de gráfica que es
-        //   switch(chart.type){
-        //     case 0:
-        //       // Gráfica de lineas
-        //     case 1:
-        //       // Grafica de barras
-
-        //       option = {
-        //         title: {
-        //           text: chart.title,
-        //           // textStyle: {
-        //           //   ellipsis: true
-        //           // },
-        //         },
-        //         tooltip: {
-        //           trigger: 'axis'
-        //         },
-        //         legend: {
-        //           data: chart.ids,
-        //           top: '10%'
-        //         },
-        //         xAxis: {
-        //           type: 'category',
-        //           data: chart.dates
-        //         },
-        //         yAxis: {
-        //           type: 'value'
-        //         },
-        //         grid: {
-        //           top: '20%', // Espacio en la parte superior de a grafica
-        //         },
-        //         dataZoom: [
-        //           {
-        //             type: 'inside',
-        //             start: 0,
-        //             end: 10
-        //           },
-        //           {
-        //             start: 0,
-        //             end: 10
-        //           }
-        //         ],
-        //         series: chart.values
-        //       };
-
-        //       //graph.setOption(option);
-
-        //       break;
-
-        //     case 2:
-        //       // Gauge
-        //       option = {
-        //         tooltip: {
-        //           formatter: `{a} <br/>{b} : {c}`
-        //         },
-        //         title: {
-        //           text: chart.title
-        //         },
-        //         series: [
-        //           {
-        //             name: chart.description,
-        //             type: this.type[chart.type],
-        //             progress: {
-        //               show: true
-        //             },
-        //             detail: {
-        //               valueAnimation: true,
-        //               fontSize: 20,
-        //               formatter: '{value}'
-        //             },
-        //             axisLabel: {
-        //               fontSize: 10
-        //             },
-        //             data: [
-        //               {
-        //                 value: chart.values[0],
-        //                 name: chart.metric
-        //               }
-        //             ]
-        //           }
-        //         ]
-        //       }
-
-        //       //graph.setOption(option);
-
-        //       break;
-
-        //     case 3:
-        //       // Solo el valor
-        //       option = {
-        //         title: {
-        //           text: `${chart.values[0]} ${chart.metric}`,
-        //           subtext: `${chart.title}: \n\n ${chart.description}`,
-        //           left: "center",
-        //           top: "center",
-        //           width: 2,
-        //           textStyle: {
-        //             fontSize: 30
-        //           },
-        //         },
-        //         media: [{
-        //           query: {
-        //             maxWidth: 360,
-        //           },
-        //           option: {
-        //             title: {
-        //               subtextStyle: {
-        //                 fontSize: 10
-        //               }
-        //             }
-        //           }
-        //           },
-        //           {
-        //             query: {
-        //               minWidth: 361,
-        //             },
-        //             option: {
-        //               title: {
-        //                 subtextStyle: {
-        //                   fontSize: 15
-        //                 }
-        //               }
-        //             }
-        //           }
-        //         ]
-        //       }
-
-        //      //graph.setOption(option);
-
-        //       break;
-
-        //     default:
-        //       break;
-        //   }
-
-
-
         });
 
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Error al visualizar el códgio QR');
+        //this.alertService.error('Error al visualizar el códgio QR');
+        this.warning = true;
+
+        if(err.error.titleQr){
+          this.qr = err.error.titleQr;
+        }
+
+        if(err.error.msg === 'desactivado'){
+          this.message = environment.messNoActive;
+        }
+        else if(err.error.msg === 'No se ha encontrado el código Qr'){
+          this.message = environment.messNoExists;
+        }
+        else if(err.error.msg === 'caducado'){
+          this.message = environment.messExpired;
+        }
+        else if(err.error.msg === 'El qr no tiene llamadas'){
+          this.message = environment.messEmpty;
+        }
 
         //HACER AQUI LO DE QUE SI NO EXISTE Y TAL? ANASISISISIS
       }

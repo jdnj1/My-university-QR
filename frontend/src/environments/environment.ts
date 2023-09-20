@@ -35,7 +35,11 @@ export const environment = {
   roles: [
     "Básico",
     "Administrador"
-  ]
+  ],
+  messNoActive: "El código QR no se encuentra activo en estos momentos. Intentelo más tarde.",
+  messNoExists: "Este código QR no existe",
+  messExpired: "El código QR ha superado la fecha de validez.",
+  messEmpty: "El código QR no tiene llamadas."
 };
 
 /*

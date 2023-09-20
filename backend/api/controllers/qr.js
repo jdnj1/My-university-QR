@@ -288,7 +288,8 @@ const viewQr = async(req, res) => {
         // Si existe, primero se debe comprobar que el qr no este desactivado y caducado
         if(qr[0].activated !== 1){
             res.status(404).json({
-                msg: 'desactivado'
+                msg: 'desactivado',
+                titleQr: qr[0].description
             });
             return;
         }
@@ -297,7 +298,8 @@ const viewQr = async(req, res) => {
 
         if(qr[0].date < now){
             res.status(404).json({
-                msg: 'caducado'
+                msg: 'caducado',
+                titleQr: qr[0].description
             });
             return;
         }
@@ -311,6 +313,7 @@ const viewQr = async(req, res) => {
         if(consults.length === 0){
             res.status(404).json({
                 msg: 'El qr no tiene llamadas',
+                titleQr: qr[0].description
             });
             return;
         }
