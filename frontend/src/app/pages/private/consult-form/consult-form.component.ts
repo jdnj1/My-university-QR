@@ -243,8 +243,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       result = new Date(now.getTime() - num);
 
-      this.firstForm.get('dateFrom')?.setValue(result.toISOString());
-      this.firstForm.get('dateTo')?.setValue(now.toISOString());
+      this.firstForm.get('dateFrom')?.setValue(format(result, "yyyy-MM-dd'T'HH:mm:ss.SSS"));
+      this.firstForm.get('dateTo')?.setValue(format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS"));
     }
 
     // Montar el campo de los filtros.
