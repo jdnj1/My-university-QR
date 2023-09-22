@@ -7,6 +7,7 @@
 const {dbConsult} = require('../database/db');
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
+const {format} = require ('date-fns');
 
 /**
  * Devuelve todas las consultas que realiza un codigo qr de la BD.
@@ -34,6 +35,8 @@ const getConsult = async( req , res ) => {
         if(querySearch){
             query += ` AND name LIKE '%${querySearch}%'`
         }
+
+        query += ' ORDER BY orderConsult';
         
         // Si se envia un -1 por parametro hacer que devuelva todos las consultas del qr
         if(desde !== -1){
@@ -108,9 +111,19 @@ const createConsult = async( req , res = response ) => {
     // Por si se introducen los campos por llamada
     let {name, token, dateFrom, dateTo, filters, qrCode} = req.body;
 
-    try {
+    try {   
+
+        // Se obtienen todas las llamadas del QR para saber cuantas tiene y poder añadirle el numero del orden a la nueva
+        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${qrCode}`;
+
+        let list = await dbConsult(query);
+
+        // La fecha hasta se desplaza para que no de error de las fechas en Smart University cuando se crea por defecto
+        let date = new Date();
+        date.setDate(date.getDate() + Number(process.env.DAYS));
+        date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
         
-        const query = `INSERT INTO ${process.env.CONSULTTABLE} (qrCode) VALUES (${ qrCode })`;
+        query = `INSERT INTO ${process.env.CONSULTTABLE} (qrCode, dateTo, orderConsult) VALUES (${ qrCode }, '${ date }', ${ list.length })`;
 
         const consult = await dbConsult(query);
 
@@ -150,7 +163,7 @@ const updateConsult = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { name, token, dateFrom, dateTo, filters, chart, activated, operation} = req.body;
+        let { name, token, dateFrom, dateTo, filters, chart, activated, operation, orderConsult} = req.body;
         let updateQuery = `UPDATE ${process.env.CONSULTTABLE} SET `;
 
         // En este array se van almacenando todos los campos a actualizar
@@ -180,6 +193,9 @@ const updateConsult = async( req , res = response ) => {
         }
         if(activated === 1 || activated === 0){
             updateFields.push(`activated = '${activated}'`);
+        }
+        if(orderConsult >= 0){
+            updateFields.push(`orderConsult = ${orderConsult}`);
         }
 
         // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
@@ -234,6 +250,30 @@ const deleteConsult = async(req, res) => {
             msg: 'Error al borrar la llamada'
         });
     }
+    
+}
+
+/**
+ * Cambia el orden entre dos llamadas
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const changeOrder = async(req, res) => {
+    
+    try{
+
+        res.status(200).json({
+            msg:'Llamada eliminada',
+            qr
+        });
+    } catch(error){
+        console.error(error);
+        res.status(500).json({
+            msg: 'Error al cambiar el orden'
+        });
+    }
+    
 }
 
 module.exports = {getConsult, getConsultById, createConsult, updateConsult, deleteConsult};

@@ -393,18 +393,51 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Funciones para ordenar las llamadas del Qr
   down(index: any){
-    let con = this.consults.splice(index, 1)[0];
-    this.consults.splice(index + 1, 0, con);
+    // Se le suma +1 en el orden y al de abajo se le resta para asi intercambiar los puestos
 
-    // Hacerlo tambien con los array de disable consult y consult form
-    let dis = this.disableConsult.splice(index, 1)[0];
-    this.disableConsult.splice(index + 1, 0, dis);
+    this.consultService.updateConsult({orderConsult: index + 1}, this.consults[index].idConsult).subscribe({
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.alertService.error('Se ha producido un error al actualizar el orden')
+      }
+    });
 
-    let form = this.consultForm.splice(index, 1)[0];
-    this.consultForm.splice(index + 1, 0, form);
+    this.consultService.updateConsult({orderConsult: index}, this.consults[index + 1].idConsult).subscribe({
+      next: (res: any) => {
+        this.alertService.success("El orden se ha actualizado correctamente");
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.alertService.error('Se ha producido un error al actualizar el orden')
+      }
+    });
+
+    // Obtenemos de nuevo la lista de las llamadas
+    this.getConsults(0);
+
   }
 
-  up(){
+  up(index: any){
+    // Se le resta -1 en el orden y al de arriba se le suma para asi intercambiar los puestos
 
+    this.consultService.updateConsult({orderConsult: index - 1}, this.consults[index].idConsult).subscribe({
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.alertService.error('Se ha producido un error al actualizar el orden')
+      }
+    });
+
+    this.consultService.updateConsult({orderConsult: index}, this.consults[index - 1].idConsult).subscribe({
+      next: (res: any) => {
+        this.alertService.success("El orden se ha actualizado correctamente");
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.alertService.error('Se ha producido un error al actualizar el orden')
+      }
+    });
+
+    // Obtenemos de nuevo la lista de las llamadas
+    this.getConsults(0);
   }
 }

@@ -33,7 +33,7 @@ const getData = async( req , res ) => {
                 return;
         
             }).catch((err) => {
-                //console.log(err)
+                console.log(err)
                 res.status(400).json({
                     res: err
                 });
@@ -41,7 +41,7 @@ const getData = async( req , res ) => {
             });
 
     } catch (error) {
-        //console.error(error);
+        console.error(error);
 
         res.status(500).json({
             msg: 'Error al intentar devolver los datos'
@@ -68,7 +68,12 @@ const getDataOperation = async( req , res ) => {
                 return;
             
             }).catch((err) => {
-                console.log(err)
+                //console.log(err.response.data)
+                //if(err.response.data.result = 'Token invalido'){
+                res.status(400).json({
+                    res: err.response.data
+                });
+               // }
                 return;
             });
 
@@ -78,6 +83,8 @@ const getDataOperation = async( req , res ) => {
         res.status(500).json({
             msg: 'Error al intentar devolver los datos'
         });
+
+        return;
     }
 }
 

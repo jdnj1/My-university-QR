@@ -305,7 +305,7 @@ const viewQr = async(req, res) => {
         }
 
         // Si todo esta correcto, obtener sus llamadas
-        query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${uid}`;
+        query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${uid} ORDER BY orderConsult`;
         const consults = await dbConsult(query);
 
 
@@ -322,130 +322,145 @@ const viewQr = async(req, res) => {
         
         // Se iteran todas las llamadas que tenga y se comprueba que esten activadas
         for(let consult of consults){
+            try {
+                if(consult.activated === 1){
 
-            if(consult.activated === 1){
-
-                // Adaptamos las fechas
-                consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-
-                consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-
-                // Se copmprueba que tipo de operacion tiene
-                if(consult.operation > 1){
-                    // Max, min, last
-
-                    // Pasamos los filtros a JSON
-                    consult.filters = JSON.parse(consult.filters);
-
-                    let data = {
-                        token: consult.token,
-                        dateFrom: consult.dateFrom, //cambiar por cons.dateFrom
-                        dateTo: consult.dateTo,
-                        operation: op[consult.operation - 2],
-                        uid: Object.values(consult.filters)[0],
-                        name: Object.values(consult.filters)[1]
-                    }
-
-                    // Se realiza la peticion a Smart University
-                    let res = await axios.post(`${process.env.URLAPI}/smartuni/operation`, data);
-                    data = res.data.result;
-                    //console.log(data)
-
-                    // Rellenar el objeto con los datos de la llamada
-                    charts.push({
-                        title: consult.name,
-                        description: data.values[0][data.columns.indexOf('description')],
-                        type: consult.chart,
-                        values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
-                        name: data.values[0][data.columns.indexOf('name')],
-                        metric: data.values[0][data.columns.indexOf('metric')]
-                    });
-
-                }
-                else{
-                    // Todos los datos disponibles
-
-                    // Se comienza a montar el cuerpo de la petición
-                    let body = `{"token": "${consult.token}", "time_start": "${consult.dateFrom}", 
-                        "time_end": "${consult.dateTo}", "filters":[`;
-
-                    // Añadir los filtros
-                    if(consult.filter !== ''){
+                    // Adaptamos las fechas
+                    consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+    
+                    consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+    
+                    // Se copmprueba que tipo de operacion tiene
+                    if(consult.operation > 1){
+                        // Max, min, last
+    
                         // Pasamos los filtros a JSON
                         consult.filters = JSON.parse(consult.filters);
-
-                        Object.entries(consult.filters).forEach((key, index) => {
-                        // Comprobar si tienen muchos valores una misma clave
-                        key[1] = key[1].split(',');
-
-                        body += `{"filter": "${key[0]}", "values": [`;
-                        key[1].forEach((elem, index) => {
-                            body += `"${elem}"`;
-
-                            if(index !== key[1].length - 1){
-                            body += ','
-                            }
-                        });
-
-                        body += `]}`;
-
-                        if(index !== Object.entries(consult.filters).length - 1){
-                            body += ','
+    
+                        let data = {
+                            token: consult.token,
+                            dateFrom: consult.dateFrom, //cambiar por cons.dateFrom
+                            dateTo: consult.dateTo,
+                            operation: op[consult.operation - 2],
+                            uid: Object.values(consult.filters)[0],
+                            name: Object.values(consult.filters)[1]
                         }
+    
+                        // Se realiza la peticion a Smart University
+                        let res = await axios.post(`${process.env.URLAPI}/smartuni/operation`, data);
+                        data = res.data.result;
+                        //console.log(data)
+    
+                        // Rellenar el objeto con los datos de la llamada
+                        charts.push({
+                            title: consult.name,
+                            description: data.values[0][data.columns.indexOf('description')],
+                            type: consult.chart,
+                            values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
+                            name: data.values[0][data.columns.indexOf('name')],
+                            metric: data.values[0][data.columns.indexOf('metric')]
+                        });
+    
+                    }
+                    else{
+                        // Todos los datos disponibles
+    
+                        // Se comienza a montar el cuerpo de la petición
+                        let body = `{"token": "${consult.token}", "time_start": "${consult.dateFrom}", 
+                            "time_end": "${consult.dateTo}", "filters":[`;
+    
+                        // Añadir los filtros
+                        if(consult.filter !== ''){
+                            // Pasamos los filtros a JSON
+                            consult.filters = JSON.parse(consult.filters);
+    
+                            Object.entries(consult.filters).forEach((key, index) => {
+                            // Comprobar si tienen muchos valores una misma clave
+                            key[1] = key[1].split(',');
+    
+                            body += `{"filter": "${key[0]}", "values": [`;
+                            key[1].forEach((elem, index) => {
+                                body += `"${elem}"`;
+    
+                                if(index !== key[1].length - 1){
+                                body += ','
+                                }
+                            });
+    
+                            body += `]}`;
+    
+                            if(index !== Object.entries(consult.filters).length - 1){
+                                body += ','
+                            }
+                            });
+                        }
+    
+                        body += ']}';
+                        body = JSON.parse(body);
+                        
+    
+                        // Se realiza la peticion a Smart University
+                        let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
+                        let data = res.data.result;
+    
+                        // Montar el objeto de las series
+    
+                        // Primero se obtienen los uid presentes en los filtros
+                        let ids;
+    
+                        body.filters.map((id) => {
+                            if(Object.values(id)[0] === 'uid'){
+                                ids = Object.values(id)[1]
+                            }
+                        })
+    
+                        let seriesData= [];
+                        ids.forEach((id) => {
+                            // Se filtran los arrays por cada uid y se obtienen sus valores
+                            let series = data.values.filter((array) => array[data.columns.indexOf('uid')] === id)
+                                .map((array) => array[data.columns.indexOf('value')]);
+    
+                            seriesData.push({
+                                name: id,
+                                data: series,
+                                type: type[consult.chart]
+                            })
+                        });
+                        
+                         // Se guardan las fechas
+                         let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
+    
+                        // Rellenar el objeto con los datos de la llamada
+                        charts.push({
+                            title: consult.name,
+                            description: data.values[0][data.columns.indexOf('description')],
+                            type: consult.chart,
+                            ids: ids,
+                            values: seriesData,
+                            dates: dates,
+                            name: data.values[0][data.columns.indexOf('name')],
+                            metric: data.values[0][data.columns.indexOf('metric')]
                         });
                     }
-
-                    body += ']}';
-                    body = JSON.parse(body);
-                    
-
-                    // Se realiza la peticion a Smart University
-                    let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
-                    let data = res.data.result;
-
-                    // Montar el objeto de las series
-
-                    // Primero se obtienen los uid presentes en los filtros
-                    let ids;
-
-                    body.filters.map((id) => {
-                        if(Object.values(id)[0] === 'uid'){
-                            ids = Object.values(id)[1]
-                        }
-                    })
-
-                    let seriesData= [];
-                    ids.forEach((id) => {
-                        // Se filtran los arrays por cada uid y se obtienen sus valores
-                        let series = data.values.filter((array) => array[data.columns.indexOf('uid')] === id)
-                            .map((array) => array[data.columns.indexOf('value')]);
-
-                        seriesData.push({
-                            name: id,
-                            data: series,
-                            type: type[consult.chart]
-                        })
-                    });
-                    
-                     // Se guardan las fechas
-                     let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
-
-                    // Rellenar el objeto con los datos de la llamada
-                    charts.push({
-                        title: consult.name,
-                        description: data.values[0][data.columns.indexOf('description')],
-                        type: consult.chart,
-                        ids: ids,
-                        values: seriesData,
-                        dates: dates,
-                        name: data.values[0][data.columns.indexOf('name')],
-                        metric: data.values[0][data.columns.indexOf('metric')]
-                    });
                 }
+            } catch (error) {
+                // Si hay algun error, como que el token no es correcto, lo ignora y pasa al siguiente
+                console.log(error.response.data)
             }
+            
         }
 
        //console.log(JSON.stringify(results[0]))
+
+       // Se comprueba que por lo menos haya una llamada activa
+       if(charts.length === 0){
+        res.status(404).json({
+            msg: 'desactivadas',
+            titleQr: qr[0].description
+        });
+        return;
+       }
+
        results.charts = charts;
 
         // Devuelve el objeto con toda la información de las llamadas
@@ -456,10 +471,11 @@ const viewQr = async(req, res) => {
         return;
 
     } catch(error){
-        console.error(error);
+        //console.error(error.response.data);
         res.status(500).json({
             msg: 'Error visualizar QR'
         });
+        return
     }
 }
 

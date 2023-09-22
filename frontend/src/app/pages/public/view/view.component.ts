@@ -107,6 +107,9 @@ export class ViewComponent implements OnInit,AfterViewInit {
         else if(err.error.msg === 'El qr no tiene llamadas'){
           this.message = environment.messEmpty;
         }
+        else if(err.error.msg === 'desactivadas'){
+          this.message = environment.mess0Active;
+        }
 
         //HACER AQUI LO DE QUE SI NO EXISTE Y TAL? ANASISISISIS
       }
