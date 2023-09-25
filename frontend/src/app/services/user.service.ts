@@ -4,6 +4,7 @@ import { loginform } from '../interfaces/login-form.interface';
 import { environment } from '../../environments/environment';
 import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +65,11 @@ export class UserService {
     }
 
   }
-
+  getId(){
+    const token = localStorage.getItem('token') || '';
+    const decoded: any = jwt_decode(token);
+    return decoded.uid;
+  }
   // getUserData(id: any){
   //   let user = this.getUserById(id);
   //   console.log(user);

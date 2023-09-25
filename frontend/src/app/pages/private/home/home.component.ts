@@ -7,8 +7,7 @@ import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
-import jwt_decode from 'jwt-decode';
-import { PageComponent } from 'src/app/layouts/pagination/page/page.component';
+import { PageComponent } from 'src/app/layouts/pagination/page.component';
 
 @Component({
   selector: 'app-home',
@@ -63,9 +62,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void{
     // Obtenemos los datos del usuario
-    const token = localStorage.getItem('token') || '';
-    const decoded: any = jwt_decode(token);
-    this.idUser = decoded.uid;
+    this.idUser = this.userService.getId();
     this.userService.getUserById(this.idUser).subscribe({
       next: (res: any) => {
         this.user = res.user;
@@ -100,7 +97,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.qrService.getQr(page).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
-        console.log(this.codesQr.length)
+
         this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
@@ -222,6 +219,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.qrService.deleteQr(this.codesQr[index].idQr).subscribe({
           next: (res: any) => {
             this.alertService.success('Código QR eliminado');
+
+            this.pageArray.splice(0);
+            this.pagination.numPage = 0;
 
             this.getQr(0);
 

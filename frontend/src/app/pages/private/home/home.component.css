@@ -3,6 +3,10 @@
   pointer-events: none;
 }
 
+.qrDis{
+  opacity: .5;
+}
+
 .expired{
   color: red;
 }

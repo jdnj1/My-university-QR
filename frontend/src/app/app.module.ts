@@ -27,7 +27,7 @@ import { TranslationComponent } from './layouts/translation/translation.componen
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
 import { ChartComponent } from './pages/public/chart/chart.component';
-import { PageComponent } from './layouts/pagination/page/page.component';
+import { PageComponent } from './layouts/pagination/page.component';
 
 
 @NgModule({

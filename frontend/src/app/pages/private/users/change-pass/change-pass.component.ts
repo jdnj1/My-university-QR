@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -9,10 +9,10 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
   templateUrl: './change-pass.component.html',
   styleUrls: ['./change-pass.component.css']
 })
-export class ChangePassComponent implements OnDestroy {
+export class ChangePassComponent implements OnInit, OnDestroy {
 
   // Datos del usuario
-  user = JSON.parse(localStorage.getItem('user') || '');
+  idUser: number = 0;
 
   public formSubmit = false;
 
@@ -40,6 +40,11 @@ export class ChangePassComponent implements OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+      // Obtenemos el id del usuario a partir del token
+      this.idUser = this.userService.getId();
+  }
+
   ngOnDestroy(): void {
     // Liberar recursos
     this.formSubscription.unsubscribe();
@@ -59,13 +64,12 @@ export class ChangePassComponent implements OnDestroy {
       return;
     }
 
-    this.userService.changePassword(this.user.idUser, this.passForm.value).subscribe({
+    this.userService.changePassword(this.idUser, this.passForm.value).subscribe({
       next: (res: any) => {
         console.log(res);
         this.alertService.success('Contraseña actualizada');
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
         this.alertService.error(`Error al acutalizar la contraseña: ${err.error.msg}`);
       }
     });
