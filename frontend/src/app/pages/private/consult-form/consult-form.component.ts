@@ -127,7 +127,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           operation: [this.consult.operation],
           chart: [this.consult.chart]
         });
-
+        console.log(this.firstForm.get('chart')?.value)
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
           this.urlChart = environment.charts[0];
@@ -300,9 +300,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   selectData(){
     if(Number(this.firstForm.value.operation) > 1){
       this.filters = false;
+      this.firstForm.get('chart')?.setValue(2);
+      this.urlChart = environment.charts[2];
+
     }
     else {
       this.filters = true;
+      this.firstForm.get('chart')?.setValue(0);
+      this.urlChart = environment.charts[0];
     }
   }
 

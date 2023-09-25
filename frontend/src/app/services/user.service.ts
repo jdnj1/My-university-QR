@@ -27,7 +27,7 @@ export class UserService {
       tap((res: any) =>{
         // Se almacenan los datos del usuario en la clase
         // this.idUser = res.user.idUser;
-        // this.email = res.user.email;
+        this.email = res.user.email;
         // this.token = res.token;
         // this.lim_consult = res.user.lim_consult;
         // this.role = res.user.role;

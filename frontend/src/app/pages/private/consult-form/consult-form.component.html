@@ -86,11 +86,14 @@
                 <div class="col-sm-6">
 
                   <label class="col-form-label">Selecciona la gráfica para representar los datos</label>
-                  <select class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
-                    <option value="0" *ngIf="filters">Gráfica lineal</option>
-                    <option value="1" *ngIf="filters">Gráfica de barras</option>
-                    <option value="2" *ngIf="!filters">Gráfica de gauge</option>
-                    <option value="3" *ngIf="!filters">Solo el valor</option>
+                  <select *ngIf="filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
+                    <option value="0">Gráfica lineal</option>
+                    <option value="1">Gráfica de barras</option>
+                  </select>
+
+                  <select *ngIf="!filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
+                    <option value="2">Gráfica de gauge</option>
+                    <option value="3">Solo el valor</option>
                   </select>
                 </div>
 

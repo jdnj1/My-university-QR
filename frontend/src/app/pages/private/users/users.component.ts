@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import Swal from 'sweetalert2';
@@ -15,6 +16,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
   @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
   @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
+
+  @ViewChild(PageComponent) pagination!: PageComponent;
 
   // Array donde se almacenan los usuarios obtenidos
   userArray: any = [];
@@ -50,6 +53,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.getUsers(0);
 
     this.appUser = localStorage.getItem('email') || '';
+    console.log(this.userService.email)
   }
 
   ngAfterViewInit(): void {
@@ -114,8 +118,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success('Usuario eliminado');
 
-            // Se elimina el codigo del array
-            this.userArray.splice(index, 1);
+            this.pageArray.splice(0);
+            this.pagination.numPage = 0;
+
+            this.getUsers(0);
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error('Error al eliminar usuario');

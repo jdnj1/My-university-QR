@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import { PageComponent } from 'src/app/layouts/pagination/page.component';
 
 @Component({
   selector: 'app-qr',
@@ -18,6 +19,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
   @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
   @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
+
+  @ViewChild(PageComponent) pagination!: PageComponent;
 
   //Datos del qr
   idQr = this.route.snapshot.params['id'];
@@ -303,6 +306,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (res: any) => {
             this.alertService.success('Llamada eliminada');
 
+            this.pageArray.splice(0);
+            this.pagination.numPage = 0;
+
             this.getConsults(0);
           },
           error: (err: HttpErrorResponse) => {
@@ -409,6 +415,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.error('Se ha producido un error al actualizar el orden')
       }
     });
+    this.pageArray.splice(0);
 
     // Obtenemos de nuevo la lista de las llamadas
     this.getConsults(0);
@@ -434,6 +441,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.error('Se ha producido un error al actualizar el orden')
       }
     });
+    this.pageArray.splice(0);
 
     // Obtenemos de nuevo la lista de las llamadas
     this.getConsults(0);
