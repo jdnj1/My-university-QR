@@ -124,9 +124,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
 
-        console.log(this.qr.description)
         if(this.qr.description !== environment.defaultDes){
-          console.log("entro")
           this.cancelUpdate(false);
         }
 

@@ -20,7 +20,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
   user: any;
   idUser =  this.route.snapshot.params['id'];
   emailUser: string = 'Email del usuario';
-  localUser: string = localStorage.getItem('user') || '';
 
   // Booleano para comprobar si se realizan cambios en el formulario
   hasChanges: boolean = false;
@@ -28,7 +27,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   // Formulario para crear nuevos usuarios
   public userForm = this.fb.group({
-    email: [JSON.parse(this.localUser).email, [Validators.email]],
+    email: ['', [Validators.email]],
     password: [''],
     lim_consult:[''],
     role: [0]

@@ -30,11 +30,15 @@
 
                     <div class="d-flex align-items-center justify-content-between">
                       <h5 class="scol-form-label">Datos del QR</h5>
-                      <form [formGroup]="activateForm">
-                        <div class="form-check form-switch">
-                          <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
-                        </div>
-                      </form>
+                      <div class="d-flex align-items-center">
+                        <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">Activado</span>
+                        <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">Desactivado</span>
+                        <form [formGroup]="activateForm">
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
+                          </div>
+                        </form>
+                      </div>
                     </div>
                     <label for="inputName" class="form-label">Título</label>
                     <input type="text" id="inputName" class="form-control" formControlName="description">
