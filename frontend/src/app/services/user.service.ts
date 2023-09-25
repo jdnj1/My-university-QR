@@ -70,6 +70,12 @@ export class UserService {
     const decoded: any = jwt_decode(token);
     return decoded.uid;
   }
+
+  getRole(){
+    const token = localStorage.getItem('token') || '';
+    const decoded: any = jwt_decode(token);
+    return decoded.role;
+  }
   // getUserData(id: any){
   //   let user = this.getUserById(id);
   //   console.log(user);

@@ -16,9 +16,7 @@ export class SidebarComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    let token = localStorage.getItem('token') || '';
-    let user: any = jwt_decode(token);
-    this.role = user.role;
+    this.role = this.userService.getRole();
   }
 
   logout(){
