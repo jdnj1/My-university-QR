@@ -30,6 +30,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Llamadas del QR
   consults: any = [];
+  totalCons: number = 0;
   disableConsult: any = [];
   consultForm: any = [];
 
@@ -49,13 +50,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     searchQuery: ['']
   });
 
+  lastSearch: any;
+
   buttons = true;
   timer: any;
-
-  // Variable que indica cuantas paginas deben haber
-  page: number = 0;
-  pageArray: Array<number> = [];
-  numPage: number = 0;
 
   // Variables para comprobar si hay cambios el formulario de configuracion
   qrSubscription: any;
@@ -142,22 +140,19 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  getConsults(page: any){
+  getConsults(page: any, query?: any){
+    if(!query) query = '';
+
     // Obtenemos las llamadas del código QR.
-    this.consultService.getConsults(this.idQr, page).subscribe({
+    this.consultService.getConsults(this.idQr, page, query).subscribe({
       next: (res: any) => {
         this.consults = res.consult;
+        this.totalCons = res.page.total;
 
         if(this.consults.length === 0){
           this.msgElement.nativeElement.innerHTML = 'No has creadao ningún código QR todavía.'
           this.msgElement.nativeElement.style.display = 'table-cell';
           return;
-        }
-
-        this.page = Math.ceil(res.page.total / 10);
-        console.log(this.page)
-        for (let i = 0; i < this.page; i++) {
-          this.pageArray.push(i+1);
         }
 
         for (let i = 0; i < this.consults.length; i++) {
@@ -306,7 +301,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (res: any) => {
             this.alertService.success('Llamada eliminada');
 
-            this.pageArray.splice(0);
             this.pagination.numPage = 0;
 
             this.getConsults(0);
@@ -326,47 +320,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // Se almacena el id del código QR
-    let id: any = this.route.snapshot.params['id'];
+    this.lastSearch = this.searchForm.value.searchQuery;
 
-    this.consultService.getConsultsSearch(id ,this.searchForm.value.searchQuery).subscribe({
-      next: (res: any) =>{
-        console.log(res);
-
-        this.consults = res.consult;
-
-        if(this.consults.length === 0){
-          this.msgElement.nativeElement.innerHTML = 'No se ha encontrado ninguna llamada.';
-          this.msgElement.nativeElement.style.display = 'table-cell';
-          return;
-        }
-
-        for (let i = 0; i < this.consults.length; i++) {
-          if(this.consults[i].activated === 1){
-            this.consultForm[i] = this.fb.group({
-              activated: [true]
-            });
-
-            this.disableConsult[i] = false;
-          }
-          else{
-            this.consultForm[i] = this.fb.group({
-              activated: [false]
-            });
-
-            this.disableConsult[i] = true;
-          }
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.alertService.error('Se ha producido un error al buscar llamadas')
-      }
-    });
+    this.getConsults(0, this.lastSearch);
   }
 
   cleanSearch(){
     this.searchForm.get('searchQuery')?.setValue('');
+    this.lastSearch = '';
     this.checkSearch();
   }
 
@@ -375,7 +336,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       this.searchClearElement.nativeElement.style.display = 'none';
-      this.pageArray.splice(0);
       this.getConsults(0);
       this.msgElement.nativeElement.style.display = 'none';
     }
@@ -391,7 +351,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   recieveArray(page: any){
-    this.getConsults(page*10);
+    this.getConsults(page*10, this.lastSearch);
 
   }
 
@@ -415,7 +375,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.error('Se ha producido un error al actualizar el orden')
       }
     });
-    this.pageArray.splice(0);
 
     // Obtenemos de nuevo la lista de las llamadas
     this.getConsults(0);
@@ -441,7 +400,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.error('Se ha producido un error al actualizar el orden')
       }
     });
-    this.pageArray.splice(0);
 
     // Obtenemos de nuevo la lista de las llamadas
     this.getConsults(0);

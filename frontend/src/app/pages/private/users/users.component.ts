@@ -21,6 +21,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   // Array donde se almacenan los usuarios obtenidos
   userArray: any = [];
+  totalUsers: number = 0;
 
   // Variable para comprobar el email del usuario que esta en la lista
   appUser: string = '';
@@ -31,13 +32,11 @@ export class UsersComponent implements OnInit, AfterViewInit {
     searchQuery: ['']
   });
 
+  lastSearch: any;
+
   // Contador para la barra de búsqueda
   timer: any;
 
-  // Variable que indica cuantas paginas deben haber
-  page: number = 0;
-  pageArray: Array<number> = [];
-  numPage: number = 0;
 
   constructor(
     private userService: UserService,
@@ -73,19 +72,15 @@ export class UsersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getUsers(page: any){
+  getUsers(page: any, query?: any){
+    if(!query) query = '';
+
     // Se hace la peticion al servicio de los usuarios para obtener la lista de estos
-    this.userService.getUsers(page).subscribe({
+    this.userService.getUsers(page, query).subscribe({
       next: (res: any) => {
         console.log(res);
         this.userArray = res.users;
-
-        this.page = Math.ceil(res.page.total / 10);
-        console.log(this.page)
-        for (let i = 0; i < this.page; i++) {
-          this.pageArray.push(i+1);
-        }
-
+        this.totalUsers = res.page.total;
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -118,7 +113,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success('Usuario eliminado');
 
-            this.pageArray.splice(0);
             this.pagination.numPage = 0;
 
             this.getUsers(0);
@@ -134,29 +128,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
   // Funciones relacionadas con la barra de búsqueda
   search(){
     // Se comprueba que el fomrulario este correcto
+    console.log(this.searchForm.valid)
     if(!this.searchForm.valid){
       return;
     }
+    console.log("hokla")
 
-    this.userService.getUserSearch(this.searchForm.value.searchQuery).subscribe({
-      next: (res: any) =>{
+    this.lastSearch = this.searchForm.value.searchQuery;
 
-        this.userArray = res.users;
-
-        if(this.userArray.length === 0){
-          this.msgElement.nativeElement.innerHTML = 'No se han encontrado usuarios.';
-          this.msgElement.nativeElement.style.display = 'table-cell';
-          return;
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-      }
-    });
+    this.getUsers(0, this.lastSearch);
   }
 
   cleanSearch(){
     this.searchForm.get('searchQuery')?.setValue('');
+    this.lastSearch = '';
     this.checkSearch();
   }
 
@@ -165,7 +150,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       this.searchClearElement.nativeElement.style.display = 'none';
-      this.pageArray.splice(0);
       this.getUsers(0);
       this.msgElement.nativeElement.style.display = 'none';
     }
@@ -176,19 +160,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // pageUsers(page: any){
-  //   if(page !== this.numPage){
-  //     this.pageArray.splice(0);
-
-  //     if(page > this.numPage) this.numPage ++;
-  //     else this.numPage --;
-
-  //     this.getUsers(page*10)
-  //   }
-  // }
-
   recieveArray(page: any){
-    this.getUsers(page*10);
+    this.getUsers(page*10, this.lastSearch);
 
   }
 

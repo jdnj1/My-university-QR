@@ -110,12 +110,14 @@ export class UserService {
   }
 
   // Funciones GET, POST, PUT y DELETE de los usuarios
-  getUsers(desde: any){
+  getUsers(desde: any, query?: any){
     const token = localStorage.getItem('token') || '';
+
+    if(!query) query = '';
 
     return this.http.get(`${environment.apiBaseUrl}/users`, {
       headers: {'x-token': token},
-      params: {'desde': desde}
+      params: {'desde': desde, 'query': query}
     });
   }
 

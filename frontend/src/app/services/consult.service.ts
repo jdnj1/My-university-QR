@@ -13,29 +13,32 @@ export class ConsultService {
     private router: Router
   ) { }
 
-  getConsults(id: any, desde: any){
+  getConsults(id: any, desde: any, query?: any){
     const token = localStorage.getItem('token') || '';
+
+    if(!query) query = '';
 
     return this.http.get(`${environment.apiBaseUrl}/consult`,{
       headers: {'x-token': token},
       params: {
           'idQr': id,
-          'desde': desde
+          'desde': desde,
+          'query': query
         }
     });
   }
 
-  getConsultsSearch(id: any, query: any){
-    const token = localStorage.getItem('token') || '';
+  // getConsultsSearch(id: any, query: any){
+  //   const token = localStorage.getItem('token') || '';
 
-    return this.http.get(`${environment.apiBaseUrl}/consult`,{
-      headers: {'x-token': token},
-      params: {
-        'idQr': id,
-        'query': query
-      }
-    });
-  }
+  //   return this.http.get(`${environment.apiBaseUrl}/consult`,{
+  //     headers: {'x-token': token},
+  //     params: {
+  //       'idQr': id,
+  //       'query': query
+  //     }
+  //   });
+  // }
 
   getConsultbyId(id: any){
     const token = localStorage.getItem('token') || '';

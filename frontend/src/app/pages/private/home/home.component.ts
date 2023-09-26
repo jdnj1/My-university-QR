@@ -44,20 +44,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     searchQuery: ['']
   });
 
-  timer: any;
+  lastSearch: any;
 
-  // Variable que indica cuantas paginas deben haber
-  page: number = 0;
-  pageArray: Array<number> = [];
-  numPage: number = 0;
+  timer: any;
 
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
     private userService: UserService,
     private fb: FormBuilder,
-    private route: Router,
-    private renderer: Renderer2
+    private route: Router
   ){}
 
   ngOnInit(): void{
@@ -93,8 +89,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getQr(page: any){
-    this.qrService.getQr(page).subscribe({
+  getQr(page: any, query?: any){
+    if(!query) query = '';
+
+    this.qrService.getQr(page, query).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
 
@@ -104,12 +102,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.msgElement.nativeElement.innerHTML = 'No has creadao ningún código QR todavía.';
           this.msgElement.nativeElement.style.display = 'table-cell';
           return;
-        }
-
-        this.page = Math.ceil(this.totalQr / 10);
-
-        for (let i = 0; i < this.page; i++) {
-          this.pageArray.push(i+1);
         }
 
         // Cambiamos como se ve la fecha en el frontend
@@ -220,7 +212,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success('Código QR eliminado');
 
-            this.pageArray.splice(0);
             this.pagination.numPage = 0;
 
             this.getQr(0);
@@ -259,55 +250,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Se envia al componente de resultado de busqueda
-    //this.route.navigateByUrl(`/home/search/${this.searchForm.value.searchQuery}`);
-
-    this.qrService.getQrSearch(this.searchForm.value.searchQuery).subscribe({
-      next: (res: any) =>{
-        console.log(res);
-
-        this.codesQr = res.qr;
-
-        if(this.codesQr.length === 0){
-          this.msgElement.nativeElement.innerHTML = 'No se han encontrado códigos QR.';
-          this.msgElement.nativeElement.style.display = 'table-cell';
-          return;
-        }
-
-        // Cambiamos como se ve la fecha en el frontend
-        this.codesQr.forEach((qr: any) => {
-          let date = new Date(qr.date);
-          qr.date = date.toLocaleDateString();
-
-          // Almacenamos la url de cada código QR
-          this.urlQr.push(`${environment.appBaseUrl}/view/${qr.idQr}`);
-        });
-
-        for (let i = 0; i < this.codesQr.length; i++) {
-          if(this.codesQr[i].activated === 1){
-            this.activateForm[i] = this.fb.group({
-              activated: [true]
-            });
-
-            this.disabledQr[i] = false;
-          }
-          else{
-            this.activateForm[i] = this.fb.group({
-              activated: [false]
-            });
-
-            this.disabledQr[i] = true;
-          }
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-      }
-    });
+    this.lastSearch = this.searchForm.value.searchQuery;
+    this.getQr(0, this.lastSearch);
   }
 
   cleanSearch(){
     this.searchForm.get('searchQuery')?.setValue('');
+    this.lastSearch = '';
     this.checkSearch();
   }
 
@@ -316,7 +265,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if(this.searchForm.value.searchQuery === ''){
       // Se esconde el boton de limpiar el input
       this.searchClearElement.nativeElement.style.display = 'none';
-      this.pageArray.splice(0);
       this.getQr(0);
       this.msgElement.nativeElement.style.display = 'none';
     }
@@ -327,23 +275,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // pageQr(page: any){
-  //   if(page !== this.numPage){
-  //     this.pageArray.splice(0);
-
-  //     if(page > this.numPage) this.numPage ++;
-  //     else this.numPage --;
-
-  //     this.getQr(page*10)
-  //   }
-  // }
 
   recieveArray(page: any){
-    this.getQr(page*10);
+    this.getQr(page*10, this.lastSearch);
 
   }
 
-  dateExpried(){
-
-  }
 }

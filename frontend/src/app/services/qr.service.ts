@@ -13,23 +13,27 @@ export class QrService {
     private router: Router
   ) { }
 
-  getQr(desde: any){
+  getQr(desde: any, query?: any){
     const token = localStorage.getItem('token') || '';
+
+    if(!query){
+      query='';
+    }
 
     return this.http.get(`${environment.apiBaseUrl}/qr`,{
       headers: {'x-token': token},
-      params: {'desde': desde}
+      params: {'desde': desde, 'query': query}
     });
   }
 
-  getQrSearch(query: any){
-    const token = localStorage.getItem('token') || '';
+  // getQrSearch(query: any){
+  //   const token = localStorage.getItem('token') || '';
 
-    return this.http.get(`${environment.apiBaseUrl}/qr`,{
-      headers: {'x-token': token},
-      params: {'query': query}
-    });
-  }
+  //   return this.http.get(`${environment.apiBaseUrl}/qr`,{
+  //     headers: {'x-token': token},
+  //     params: {'query': query}
+  //   });
+  // }
 
   getQrbyId(id: any){
     const token = localStorage.getItem('token') || '';
