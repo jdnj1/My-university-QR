@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-07-2023 a las 12:58:41
+-- Tiempo de generación: 26-09-2023 a las 16:05:37
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -36,20 +36,23 @@ CREATE TABLE `consult` (
   `filters` longtext NOT NULL DEFAULT '{}',
   `operation` tinyint(4) NOT NULL DEFAULT 1,
   `chart` tinyint(4) NOT NULL DEFAULT 0,
-  `activated` int(4) NOT NULL DEFAULT 1,
-  `qrCode` int(11) NOT NULL
+  `activated` int(4) NOT NULL DEFAULT 0,
+  `qrCode` int(11) NOT NULL,
+  `orderConsult` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `consult`
 --
 
-INSERT INTO `consult` (`idConsult`, `name`, `token`, `dateFrom`, `dateTo`, `filters`, `operation`, `chart`, `activated`, `qrCode`) VALUES
-(1, 'Consumo de energía del sensor MLU00040001', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-07-24 08:22:52', '2023-07-24 08:27:52', '{\"uid\":\"MLU00040001\",\"name\":\"15m\"}', 2, 3, 1, 3),
-(2, 'Segunda llamada', '32lk4j23lk4j3lk4j', '2023-07-03 09:28:15', '2023-07-03 09:28:15', '', 1, 0, 1, 6),
-(3, 'Tercera llamada', '1312d112d1d12d12d12d12d12d12d', '2023-07-01 09:28:45', '2023-07-03 09:28:45', '', 1, 0, 1, 7),
-(6, 'Gráfica de líneas con dos sensores', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-07-06 12:21:30', '2023-07-27 12:21:30', '{\"uid\":\"MLU00040001,MLU02000002\",\"name\":\"15m\"}', 1, 0, 1, 3),
-(8, 'Gráfica de barras', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-07-05 22:00:00', '2023-07-06 22:00:00', '{\"uid\":\"MLU00080001,MLU00090001,MLU00200002\",\"name\":\"15m\"}', 1, 1, 1, 3);
+INSERT INTO `consult` (`idConsult`, `name`, `token`, `dateFrom`, `dateTo`, `filters`, `operation`, `chart`, `activated`, `qrCode`, `orderConsult`) VALUES
+(1, 'Consumo de energía del sensor MLU00040001', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-05-19 03:18:38', '2023-05-19 05:18:38', '{\"uid\":\"MLU00040001\",\"name\":\"15m\"}', 2, 3, 1, 3, 0),
+(6, 'Gráfica de líneas con dos sensores', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-07-06 12:21:30', '2023-07-27 12:21:30', '{\"uid\":\"MLU00040001,MLU02000002\",\"name\":\"15m\"}', 1, 0, 1, 3, 2),
+(8, 'Gráfica de barras', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk3NjQxOTF9.ZyZoVHLgFTwneop0pxn0yW059FUmTI92bnUIlklPHmQ', '2023-07-05 22:00:00', '2023-07-06 22:00:00', '{\"uid\":\"MLU00080001,MLU00090001,MLU00200002\",\"name\":\"15m\"}', 1, 1, 1, 3, 1),
+(35, 'Nombre de la llamada', 'Token de la llamada', '2023-09-22 11:40:20', '2023-10-07 11:40:20', '{}', 1, 0, 1, 6, 0),
+(36, 'Nombre de la llamada', 'Token de la llamada', '2023-09-22 11:40:21', '2023-10-07 11:40:21', '{}', 1, 0, 1, 6, 1),
+(37, 'Nombre de la llamada', 'Token de la llamada', '2023-09-22 11:40:22', '2023-10-07 11:40:22', '{}', 1, 0, 1, 6, 2),
+(38, 'Nombre de la llamada', 'Token de la llamada', '2023-09-22 11:44:34', '2023-10-07 11:44:34', '{}', 1, 0, 1, 6, 3);
 
 -- --------------------------------------------------------
 
@@ -63,7 +66,7 @@ CREATE TABLE `qrcode` (
   `tagName` varchar(50) NOT NULL DEFAULT 'Nombre de etiqueta',
   `tagDescription` varchar(50) NOT NULL DEFAULT 'Descripción de etiqueta',
   `date` date NOT NULL DEFAULT current_timestamp(),
-  `activated` tinyint(4) NOT NULL DEFAULT 1,
+  `activated` tinyint(4) NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -72,17 +75,8 @@ CREATE TABLE `qrcode` (
 --
 
 INSERT INTO `qrcode` (`idQr`, `description`, `tagName`, `tagDescription`, `date`, `activated`, `user`) VALUES
-(3, 'Colección de consumo electrónico', 'Primer QR.', 'Descripción del primer QR', '2023-07-05', 1, 10),
-(6, 'Se va a probar update en este código Qr', 'Postman fecha', 'prueba update', '2023-06-27', 1, 10),
-(7, 'Otro QR de prueba ', 'Qr Prueba', 'Otro Qr de prueba', '2023-07-09', 1, 4),
-(8, '\'Descripción del código QR\'', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-04', 1, 10),
-(13, 'QR con pruebas realizadas', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-05', 1, 4),
-(16, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-07', 1, 4),
-(17, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-21', 1, 4),
-(18, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-21', 1, 4),
-(19, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-21', 1, 4),
-(20, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-21', 1, 4),
-(24, 'Descripción del código QR', 'Nombre de etiqueta', 'Descripción de etiqueta', '2023-07-21', 1, 4);
+(3, 'Colección de consumo electrónico', 'Primer QR.', 'Descripción del primer QR', '2023-09-30', 1, 10),
+(6, 'Se va a probar update en este código Qr', 'Postman fecha', 'prueba update', '2023-10-01', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -105,7 +99,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`idUser`, `email`, `password`, `role`, `lim_consult`) VALUES
 (1, 'usu@gmail.com', '1234', 0, 27),
 (2, 'jd@gmail.com', '1234', 1, 10),
-(4, 'userpass@gmail.com', '$2a$10$8id1jikCrKB0EWpjbcnZiO4G6GexAZpKx5O4GoB9xt9HfQ/KwMYCi', 1, 11),
+(4, 'userpass@gmail.com', '$2a$10$8id1jikCrKB0EWpjbcnZiO4G6GexAZpKx5O4GoB9xt9HfQ/KwMYCi', 1, 0),
 (6, 'pruUpdate@gmail.com', '$2a$10$SzQSeyKmOVpkbcREOe9DZukC3YdVp6MiTDHwTy6dbWIeiQsBFCEye', 0, 10),
 (10, 'pru2@gmail.com', '$2a$10$Jhc4HiCjOXfzKuKby0gq7OgaOuJRILPLx29e7e7uulQPyEigQG..e', 0, 10),
 (14, 'formusu@gmail.com', '$2a$10$Yqf8xlmdZ91C8Erg1lxQHuibXrsrtOc2gel1TbbG1F8SBxd4o4NI2', 0, 10),
@@ -145,13 +139,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `consult`
 --
 ALTER TABLE `consult`
-  MODIFY `idConsult` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idConsult` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de la tabla `qrcode`
 --
 ALTER TABLE `qrcode`
-  MODIFY `idQr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `idQr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
