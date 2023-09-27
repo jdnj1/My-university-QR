@@ -16,7 +16,13 @@ export class SidebarComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.role = this.userService.getRole();
+
+    let id = this.userService.getId();
+    this.userService.getUserById(id).subscribe({
+      next: (res: any) =>{
+        this.role = res.user.role;
+      }
+    });
   }
 
   logout(){

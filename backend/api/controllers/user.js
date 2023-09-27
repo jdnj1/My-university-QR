@@ -179,6 +179,15 @@ const updateUsers = async( req , res = response ) => {
     const uid = req.params.id;
     
     try{
+
+        // Solo los usuarios administrador pueden editar usuarios
+        if(req.role !== 1){
+            res.status(403).json({
+                msg: 'Solo los administradores pueden editar usuarios'
+            });
+            return;
+        }
+
         // Comprueba que haya un usuario con ese ID.
         let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
         let user = await dbConsult(userQuery);
@@ -216,15 +225,21 @@ const updateUsers = async( req , res = response ) => {
             updateFields.push(`email = '${email}'`);
         }
 
-        // Los siguientes campos solo se pueden modificar por un administrador
-        if(req.role === 1){
-            if(role === 1 || role === 0){
-                updateFields.push(`role = '${role}'`);
-            }
+        if(password){
+            // Genera una cadena aleatoria.
+            const salt = bcrypt.genSaltSync();
 
-            if(lim_consult !== undefined){
-                updateFields.push(`lim_consult = ${lim_consult}`);
-            }
+            // Cifra la contrasena con la cadena.
+            password = bcrypt.hashSync(password, salt);
+            updateFields.push(`password = '${password}'`);
+        }
+
+        if(role === 1 || role === 0){
+            updateFields.push(`role = '${role}'`);
+        }
+
+        if(lim_consult !== undefined){
+            updateFields.push(`lim_consult = ${lim_consult}`);
         }
 
         // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
@@ -332,6 +347,15 @@ const deleteUser = async(req, res) => {
     const uid = req.params.id;
     
     try{
+
+        // Solo los usuarios administrador pueden eliminar usuarios
+        if(req.role !== 1){
+            res.status(403).json({
+                msg: 'Solo los administradores pueden eliminar usuarios'
+            });
+            return;
+        }
+        
         // Se comprueba que haya un usuario con ese ID.
         let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
         let user = await dbConsult(userQuery);

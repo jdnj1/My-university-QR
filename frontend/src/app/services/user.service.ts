@@ -20,23 +20,23 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) { }
+  ) {
+    this.getUserData();
+  }
 
   login(formData: any){
     return this.http.post(`${environment.apiBaseUrl}/login`, formData).pipe(
       tap((res: any) =>{
+
         // Se almacenan los datos del usuario en la clase
-        // this.idUser = res.user.idUser;
+        this.idUser = res.user.idUser;
         this.email = res.user.email;
-        // this.token = res.token;
-        // this.lim_consult = res.user.lim_consult;
-        // this.role = res.user.role;
+        this.token = res.token;
+        this.lim_consult = res.user.lim_consult;
+        this.role = res.user.role;
+
         // Se almacena el token en el localStorage del navegador
         localStorage.setItem('token', res.token);
-
-         // Se almacena tambien los datos del usuario menos su contraseña por seguridad
-         //delete res.user.password;
-         //localStorage.setItem('user', JSON.stringify(res.user));
 
         // Si se marca el boton recordar se guarda el email en el localStorage
         if(formData.remember){
@@ -65,21 +65,35 @@ export class UserService {
     }
 
   }
-  getId(){
-    const token = localStorage.getItem('token') || '';
-    const decoded: any = jwt_decode(token);
-    return decoded.uid;
+
+  getUserData(){
+    let id = this.getId();
+
+    this.getUserById(id).subscribe({
+      next: (res: any) => {
+        console.log(res)
+        // Se almacenan los datos del usuario en la clase
+        this.idUser = res.user.idUser;
+        this.email = res.user.email;
+        this.lim_consult = res.user.lim_consult;
+        this.role = res.user.role;
+      },
+      complete: () => {
+        return
+      }
+    });
   }
 
-  getRole(){
+  getId(){
     const token = localStorage.getItem('token') || '';
-    const decoded: any = jwt_decode(token);
-    return decoded.role;
+
+    if(token !== ''){
+      const decoded: any = jwt_decode(token);
+      return decoded.uid;
+    }
+    return;
+
   }
-  // getUserData(id: any){
-  //   let user = this.getUserById(id);
-  //   console.log(user);
-  // }
 
   validateToken(){
     const token = localStorage.getItem('token') || '';

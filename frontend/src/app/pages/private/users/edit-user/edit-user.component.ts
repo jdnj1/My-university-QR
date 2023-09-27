@@ -102,6 +102,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         console.log(res);
 
         this.hasChanges = false;
+        this.userService.getUserData();
         // Se redirige a la página principal
         this.router.navigateByUrl('/users-list');
       },

@@ -50,9 +50,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getUsers(0);
-
-    this.appUser = localStorage.getItem('email') || '';
-    console.log(this.userService.email)
+    this.appUser = this.userService.email;
   }
 
   ngAfterViewInit(): void {

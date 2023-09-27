@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) =
       }
 
       // Si se intenta acceder a una ruta de admins, se comprueba el rol del usuario
-      if(route.data['role'] && route.data['role'] !== auth.getRole()){
+      if(route.data['role'] && route.data['role'] !== auth.role){
         // No lleva a la pagina de login ya que el token del usuario si que es correcto
         router.navigateByUrl('');
       }
