@@ -39,9 +39,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 
   dataQrForm = this.fb.group({
-    description: ['Descripción del QR'],
-    tagName: ['Nombre de etiqueta'],
-    tagDescription: ['Descripción de etiqueta'],
+    description: [''],
+    tagName: [''],
+    tagDescription: [''],
     date: ['']
   });
 
@@ -107,12 +107,19 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qr.date = format(date, "yyyy-MM-dd");
 
         // Se rellenan los datos del formulario con los datos del QR
-        this.dataQrForm = this.fb.group({
-          description: [this.qr.description],
-          tagName: [this.qr.tagName],
-          tagDescription: [this.qr.tagDescription],
-          date: [this.qr.date]
-        });
+        if(this.qr.description !== "Descripción del código QR"){
+          this.dataQrForm.get('description')?.setValue(this.qr.description);
+        }
+
+        if(this.qr.tagName !== "Nombre de etiqueta"){
+          this.dataQrForm.get('tagName')?.setValue(this.qr.tagName);
+        }
+
+        if(this.qr.tagDescription !== "Descripción de etiqueta"){
+          this.dataQrForm.get('tagDescription')?.setValue(this.qr.tagDescription);
+        }
+
+        this.dataQrForm.get('date')?.setValue(this.qr.date);
 
         if(this.qr.activated === 1){
           this.activateForm = this.fb.group({
@@ -235,9 +242,27 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if(reset){
       // Se vuelven a poner los datos que tenian antes de acutalizar
-      this.dataQrForm.get('description')?.reset(this.qr.description);
-      this.dataQrForm.get('tagName')?.reset(this.qr.tagName);
-      this.dataQrForm.get('tagDescription')?.reset(this.qr.tagDescription);
+      if(this.qr.description !== "Descripción del código QR"){
+        this.dataQrForm.get('description')?.reset(this.qr.description);
+      }
+      else{
+        this.dataQrForm.get('description')?.setValue('');
+      }
+
+      if(this.qr.tagName !== "Nombre de etiqueta"){
+        this.dataQrForm.get('tagName')?.reset(this.qr.tagName);
+      }
+      else{
+        this.dataQrForm.get('tagName')?.setValue('');
+      }
+
+      if(this.qr.tagDescription !== "Descripción de etiqueta"){
+        this.dataQrForm.get('tagDescription')?.reset(this.qr.tagDescription);
+      }
+      else{
+        this.dataQrForm.get('tagDescription')?.setValue('');
+      }
+
       this.dataQrForm.get('date')?.reset(this.qr.date);
     }
   }

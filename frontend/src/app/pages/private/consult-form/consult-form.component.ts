@@ -17,8 +17,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   // En esta variable se almacenan los datos de la consulta a configurar
   consult: any;
 
-  placeholder: string = '';
-
   // Array donde se almacenan los filtros
   filtersArray: any = [];
 
@@ -107,7 +105,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         console.log(res);
 
         this.consult =  res.consult;
-        this.placeholder = res.consult.token;
 
         console.log(this.consult)
         // Se adaptan las fechas
@@ -118,15 +115,31 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.consult.dateTo = format(this.consult.dateTo, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         // Se rellenan los datos del formulario con los datos de la consulta
-        this.firstForm = this.fb.group({
-          name: [this.consult.name],
-          token: '',
-          dateFrom: [this.consult.dateFrom],
-          dateTo: [this.consult.dateTo],
-          filters: '',
-          operation: [this.consult.operation],
-          chart: [this.consult.chart]
-        });
+        if(this.consult.name !== "Nombre de la llamada"){
+          this.firstForm.get('name')?.setValue(this.consult.name);
+        }
+
+        if(this.consult.token !== "Token de la llamada"){
+          this.firstForm.get('token')?.setValue(this.consult.token);
+        }
+
+        this.firstForm.get('dateFrom')?.setValue(this.consult.dateFrom);
+        this.firstForm.get('dateTo')?.setValue(this.consult.dateTo);
+        this.firstForm.get('filters')?.setValue(this.consult.filters);
+        this.firstForm.get('operation')?.setValue(this.consult.operation);
+        this.firstForm.get('chart')?.setValue(this.consult.chart);
+
+
+
+        // this.firstForm = this.fb.group({
+        //   name: [this.consult.name],
+        //   token: [this.consult.token],
+        //   dateFrom: [this.consult.dateFrom],
+        //   dateTo: [this.consult.dateTo],
+        //   filters: '',
+        //   operation: [this.consult.operation],
+        //   chart: [this.consult.chart]
+        // });
         console.log(this.firstForm.get('chart')?.value)
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
