@@ -240,6 +240,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       imageHeight: 300,
       imageAlt: 'Imágen del código QR',
       showConfirmButton: false,
+      footer: `<a href="${this.urlQr[index]}" target="_blank">Visualizar QR</a>`
     })
   }
 
