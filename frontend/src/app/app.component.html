@@ -2,7 +2,7 @@
 <app-header *ngIf="header"></app-header>
 
 <!-- Reserva espacio para la barra laral -->
-<app-sidebar *ngIf="sidebar"></app-sidebar>
+<app-sidebar [role]="role" *ngIf="sidebar"></app-sidebar>
 
 <!--Reserva espacio para las alertas-->
 <div class="alert-section">

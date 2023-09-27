@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import jwt_decode from 'jwt-decode';
 
@@ -7,9 +7,9 @@ import jwt_decode from 'jwt-decode';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnChanges {
 
-  role: number = 0;
+  @Input() role: number = 0;
 
   constructor(
     private userService: UserService,
@@ -17,6 +17,15 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.getRole()
+
+  }
+
+  ngOnChanges(): void {
+    this.getRole();
+  }
+
+  getRole(){
     let id = this.userService.getId();
     this.userService.getUserById(id).subscribe({
       next: (res: any) =>{

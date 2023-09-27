@@ -3,6 +3,7 @@ import { ActivationEnd, ActivationStart, NavigationStart, Router } from '@angula
 import { Error404Component } from './pages/public/error404/error404.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewComponent } from './pages/public/view/view.component';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,12 @@ export class AppComponent {
   header: boolean = false;
   sidebar: boolean = false;
 
+  role: number = 0;
+
   constructor(
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private userService: UserService
     ){
       this.translateService.setDefaultLang('es');
     }
@@ -37,17 +41,14 @@ export class AppComponent {
           this.header = false;
           this.sidebar = false;
         }
-      }
 
-      if (event instanceof ActivationEnd ){
-        if(event.snapshot.component === Error404Component){
-          this.header = false;
-          this.sidebar = false;
+        if(event.url === '/users-list'){
+          this.role = this.userService.role;
         }
       }
 
       if (event instanceof ActivationEnd ){
-        if(event.snapshot.component === ViewComponent){
+        if(event.snapshot.component === Error404Component || event.snapshot.component === ViewComponent){
           this.header = false;
           this.sidebar = false;
         }
