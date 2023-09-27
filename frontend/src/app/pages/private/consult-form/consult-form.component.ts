@@ -59,6 +59,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     unit: ['1'],
   })
 
+  activateForm = this.fb.group({
+    activated: [false]
+  });
+
   urlChart = '';
 
   // Booleano para comprobar si se han realizado cambios en el formulario
@@ -129,6 +133,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('operation')?.setValue(this.consult.operation);
         this.firstForm.get('chart')?.setValue(this.consult.chart);
 
+        if(this.consult.activated === 1){
+          this.activateForm = this.fb.group({
+            activated: [true]
+          });
+        }
+        else{
+          this.activateForm = this.fb.group({
+            activated: [false]
+          });
+        }
+
 
 
         // this.firstForm = this.fb.group({
@@ -140,6 +155,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         //   operation: [this.consult.operation],
         //   chart: [this.consult.chart]
         // });
+
         console.log(this.firstForm.get('chart')?.value)
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
@@ -367,6 +383,30 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   cancel(){
     this.router.navigateByUrl(`codeQr/${this.consult.qrCode}`)
+  }
+
+  activateConsult(){
+    let value;
+    let msg: string;
+
+    if(!this.activateForm.value.activated){
+      value = {activated: 0};
+      msg= 'Llamada desactivada correctamente';
+    }
+    else{
+      value = {activated: 1};
+      msg= 'Llamada activada correctamente';
+    }
+
+    //actualizamos el atributo activado de la base de datos.
+    this.consultService.updateConsult(value, this.consult.idConsult).subscribe({
+      next: (res:any) =>{
+        this.alertService.success(msg);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.alertService.error('Error al acutalizar el código QR');
+      }
+    })
   }
 
 }
