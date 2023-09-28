@@ -30,12 +30,14 @@ export class ChartComponent implements AfterViewInit {
 
     const div = document.createElement('div');
     div.id = `chart${this.id}`;
-    div.style.minHeight = '400px';
+    div.style.height = '400px';
     div.classList.add('echart');
 
     this.containerElement.nativeElement.appendChild(div);
 
     const graph = echarts.init(div);
+
+
 
     // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
     window.addEventListener('resize', function() {
@@ -94,6 +96,9 @@ export class ChartComponent implements AfterViewInit {
         break;
 
       case 2:
+        div.style.height = '300px';
+        graph.resize();
+
         // Gauge
         option = {
           tooltip: {
@@ -132,6 +137,9 @@ export class ChartComponent implements AfterViewInit {
         break;
 
       case 3:
+        div.style.height = '150px';
+        graph.resize();
+
         // Solo el valor
         option = {
           title: {

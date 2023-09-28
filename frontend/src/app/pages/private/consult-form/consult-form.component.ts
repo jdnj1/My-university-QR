@@ -156,19 +156,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           });
         }
 
-
-
-        // this.firstForm = this.fb.group({
-        //   name: [this.consult.name],
-        //   token: [this.consult.token],
-        //   dateFrom: [this.consult.dateFrom],
-        //   dateTo: [this.consult.dateTo],
-        //   filters: '',
-        //   operation: [this.consult.operation],
-        //   chart: [this.consult.chart]
-        // });
-
-        console.log(this.firstForm.get('chart')?.value)
         // Se comprubeba que tipo de representacion tiene la llamada
         if(this.consult.chart === 0){
           this.urlChart = environment.charts[0];
