@@ -38,9 +38,12 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     token: ['', Validators.required],
     dateFrom: ['', Validators.required],
     dateTo: ['', Validators.required],
+    typeDate: [0 , Validators.required],
     filters: [''],
     operation:[1],
-    chart: [0]
+    chart: [0],
+    number: [0],
+    unit: [0]
   });
 
   // Form para los filtros
@@ -118,6 +121,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.consult.dateTo = new Date(this.consult.dateTo);
         this.consult.dateTo = format(this.consult.dateTo, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
+        // Se coprueba el tipo de fecha seleccionado Absoluta/Relativa
+        if(this.consult.typeDate === 0){
+          this.date = false;
+        }
+        else{
+          this.date = true;
+        }
+
         // Se rellenan los datos del formulario con los datos de la consulta
         if(this.consult.name !== "Nombre de la llamada"){
           this.firstForm.get('name')?.setValue(this.consult.name);
@@ -129,6 +140,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
         this.firstForm.get('dateFrom')?.setValue(this.consult.dateFrom);
         this.firstForm.get('dateTo')?.setValue(this.consult.dateTo);
+        this.firstForm.get('typeDate')?.setValue(this.consult.typeDate);
         this.firstForm.get('filters')?.setValue(this.consult.filters);
         this.firstForm.get('operation')?.setValue(this.consult.operation);
         this.firstForm.get('chart')?.setValue(this.consult.chart);
@@ -170,6 +182,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         else if(this.consult.chart === 3){
           this.urlChart = environment.charts[3];
         }
+
+        // Formulario de la fecha relativa
+        this.relativeForm.get('number')?.setValue(this.consult.number);
+        this.relativeForm.get('unit')?.setValue(this.consult.unit);
 
         // Pasamos los filtros a JSON si tiene
         if(this.consult.filters !== ''){
@@ -240,40 +256,16 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     }
     // En caso de que este seleccionada la fecha relativa
     else{
-      let now = new Date();
-      let result;
-      let num = this.relativeForm.get('number')?.value;
 
-      // Se pasa el numero introducido a milisegundos en todos los casos
-      switch(this.relativeForm.get('unit')?.value){
-        case '1':
-          // De segundos a milisegundos
-          num *= 1000;
-          break;
-
-        case '2':
-          // De minutos a milisegundos
-          num *= 60 * 1000;
-          break;
-
-        case '3':
-          // De horas a milisegundos
-          num *= 3600 * 1000;
-          break;
-
-        case '4':
-          // De dias a milisegundos
-          num *= 24 * 3600 * 1000
-          break;
-
-        default:
-          break;
+      // Si la cantidad a restar a la fecha actual es 0 se avisa
+      if(this.relativeForm.value.number === 0){
+        this.alertService.error("Introduce una cantitad mayor que 0");
+        return;
       }
 
-      result = new Date(now.getTime() - num);
-
-      this.firstForm.get('dateFrom')?.setValue(format(result, "yyyy-MM-dd'T'HH:mm:ss.SSS"));
-      this.firstForm.get('dateTo')?.setValue(format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS"));
+      // Se le añade tambien la cantidad y unidad de la fecha relativa si esta se ha seleccionado
+      this.firstForm.setControl('number', new FormControl(this.relativeForm.value.number));
+      this.firstForm.setControl('unit', new FormControl(this.relativeForm.value.unit));
     }
 
     // Montar el campo de los filtros.
@@ -319,11 +311,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         console.log(err);
       }
     });
-  }
-
-  changeDateTrue(){
-    this.date = !this.date;
-    console.log(this.date)
   }
 
   selectData(){
@@ -409,4 +396,13 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     })
   }
 
+  dateAbsolute(){
+    this.date = false;
+    this.firstForm.get('typeDate')?.setValue(0);
+  }
+
+  dateRelative(){
+    this.date = true;
+    this.firstForm.get('typeDate')?.setValue(1);
+  }
 }

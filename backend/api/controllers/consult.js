@@ -164,7 +164,7 @@ const updateConsult = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { name, token, dateFrom, dateTo, filters, chart, activated, operation, orderConsult} = req.body;
+        let { name, token, dateFrom, dateTo, filters, chart, activated, operation, orderConsult, typeDate, number, unit} = req.body;
         let updateQuery = `UPDATE ${process.env.CONSULTTABLE} SET `;
 
         // En este array se van almacenando todos los campos a actualizar
@@ -197,6 +197,15 @@ const updateConsult = async( req , res = response ) => {
         }
         if(orderConsult >= 0){
             updateFields.push(`orderConsult = ${orderConsult}`);
+        }
+        if(typeDate === 1 || typeDate === 0){
+            updateFields.push(`typeDate = '${typeDate}'`);
+        }
+        if(number >= 0){
+            updateFields.push(`number = ${number}`);
+        }
+        if(unit){
+            updateFields.push(`unit = ${unit}`);
         }
 
         // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno

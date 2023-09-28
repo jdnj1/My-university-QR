@@ -323,10 +323,55 @@ const viewQr = async(req, res) => {
             try {
                 if(consult.activated === 1){
 
-                    // Adaptamos las fechas
-                    consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-    
-                    consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                    // Se comprueba que tipo de fecha tiene la llamada Absoluta / Relativa
+                    // Si es la relativa se hacen los calculos
+                    if(consult.typeDate === 1){
+                        let now = new Date();
+                        let result;
+                        let num = consult.number;
+
+                        // Se pasa el numero introducido a milisegundos en todos los casos
+                        switch(consult.unit){
+                          case '1':
+                            // De segundos a milisegundos
+                            num *= 1000;
+                            break;
+
+                          case '2':
+                            // De minutos a milisegundos
+                            num *= 60 * 1000;
+                            break;
+
+                          case '3':
+                            // De horas a milisegundos
+                            num *= 3600 * 1000;
+                            break;
+
+                          case '4':
+                            // De dias a milisegundos
+                            num *= 24 * 3600 * 1000
+                            break;
+
+                          default:
+                            break;
+                        }
+
+                        result = new Date(now.getTime() - num);
+
+                        // Se establecen las fechas con el resultado de la resta
+                        consult.dateFrom = format(result, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+        
+                        consult.dateTo = format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                    }
+                    else{
+                        // Si es absoluta no hay que calcular nada
+                        // Adaptamos las fechas
+                        consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+        
+                        consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                    }
+
+                   
     
                     // Se copmprueba que tipo de operacion tiene
                     if(consult.operation > 1){
