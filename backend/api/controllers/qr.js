@@ -470,8 +470,8 @@ const viewQr = async(req, res) => {
                             })
                         });
                         
-                         // Se guardan las fechas
-                         let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
+                        // Se guardan las fechas
+                        let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
     
                         // Rellenar el objeto con los datos de la llamada
                         charts.push({
