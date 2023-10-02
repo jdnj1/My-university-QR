@@ -320,18 +320,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   addFilter(){
     this.filtersArray.push('');
-    if(this.keys.length === 0){
-      this.keys.push(`uid`);
-      // Agregamos un nuevo campo al formulario de los filtros
-      this.filterForm.addControl(`uid`, this.fb.control(''));
-    }
-    else{
-      this.keys.push(`newKey ${this.keys.length+1}`);
-      // Agregamos un nuevo campo al formulario de los filtros
-      this.filterForm.addControl(`newKey ${this.keys.length}`, this.fb.control(''));
-    }
 
+    // Busca el primer filtro que no este en la lista de filtros utilizados
+    let opt = this.options.find((key: any) => !this.keys.includes(key));
 
+    // Agregamos un nuevo campo al formulario de los filtros
+    this.filterForm.addControl(this.options[this.options.indexOf(opt)], this.fb.control(''));
+
+    this.keys.push(this.options[this.options.indexOf(opt)]);
 
   }
 

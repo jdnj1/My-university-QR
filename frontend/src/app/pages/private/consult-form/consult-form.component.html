@@ -155,7 +155,7 @@
                     <label class="form-label">Filtro {{i + 1}}</label>
                     <select class="form-select" (change)="onChange(i, key, $event)">
                       <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
-                      [disabled]="keys.includes(opt)">{{opt}}</option>
+                      [disabled]="keys.includes(opt) && opt !== keys[i]">{{opt}}</option>
                     </select>
                   </div>
                   <form [formGroup]="filterForm" class="col">

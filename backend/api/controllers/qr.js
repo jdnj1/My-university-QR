@@ -445,18 +445,31 @@ const viewQr = async(req, res) => {
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
                         let data = res.data.result;
-                        console.log(data)
+                        console.log(data.columns.length)
+                        if(data.columns.length === 0){
+                            continue;
+                        }
     
                         // Montar el objeto de las series
     
                         // Primero se obtienen los uid presentes en los filtros
-                        let ids;
-    
-                        body.filters.map((id) => {
-                            if(Object.values(id)[0] === 'uid'){
-                                ids = Object.values(id)[1]
+                        let idlist = [];
+                        data.values.map((id) => {
+                            if(id[data.columns.indexOf('uid')]){
+                                idlist.push(id[data.columns.indexOf('uid')]);
                             }
                         })
+                        // console.log(ids)
+                        // Eliminar los ids repetidos
+                        let ids = [... new Set(idlist)];
+                        console.log(ids)
+    
+                        // body.filters.map((id) => {
+                        //     if(Object.values(id)[0] === 'uid'){
+                        //         ids = Object.values(id)[1]
+                        //     }
+                        // })
+
     
                         let seriesData= [];
                         ids.forEach((id) => {
