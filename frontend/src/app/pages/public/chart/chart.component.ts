@@ -55,10 +55,7 @@ export class ChartComponent implements AfterViewInit {
 
         option = {
           title: {
-            text: this.data.title,
-            // textStyle: {
-            //   ellipsis: true
-            // },
+            text: this.data.title
           },
           tooltip: {
             trigger: 'axis'
@@ -75,7 +72,7 @@ export class ChartComponent implements AfterViewInit {
             type: 'value'
           },
           grid: {
-            top: '20%', // Espacio en la parte superior de a grafica
+            top: '20%', // Espacio en la parte superior de la grafica
           },
           dataZoom: [
             {

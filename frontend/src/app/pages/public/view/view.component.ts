@@ -5,10 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
-import * as echarts from 'echarts';
-import { JsonPipe } from '@angular/common';
 import { AlertService } from 'src/app/utils/alert/alert.service';
-import { QrComponent } from '../../private/qr/qr.component';
 import { ChartComponent } from '../chart/chart.component';
 
 @Component({
@@ -110,8 +107,6 @@ export class ViewComponent implements OnInit,AfterViewInit {
         else if(err.error.msg === 'desactivadas'){
           this.message = environment.mess0Active;
         }
-
-        //HACER AQUI LO DE QUE SI NO EXISTE Y TAL? ANASISISISIS
       }
     })
   }

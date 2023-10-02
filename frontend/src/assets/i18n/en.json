@@ -2,7 +2,7 @@
   "titulo.home": "QR Codes",
   "boton.Qr": "Add QR",
   "table.Qr": "Your QR Codes",
-  "table.date": "Validity date",
+  "table.date": "Expiration date",
   "table.title": "Title",
   "table.onoff": "Activate/Deactivate",
   "table.print": "Print",

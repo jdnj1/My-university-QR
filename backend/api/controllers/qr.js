@@ -445,6 +445,7 @@ const viewQr = async(req, res) => {
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
                         let data = res.data.result;
+                        console.log(data)
     
                         // Montar el objeto de las series
     
@@ -488,7 +489,7 @@ const viewQr = async(req, res) => {
                 }
             } catch (error) {
                 // Si hay algun error, como que el token no es correcto, lo ignora y pasa al siguiente
-                console.log(error.response.data)
+                console.log(error)
             }
             
         }
@@ -514,7 +515,7 @@ const viewQr = async(req, res) => {
         return;
 
     } catch(error){
-        //console.error(error.response.data);
+        console.error(error);
         res.status(500).json({
             msg: 'Error visualizar QR'
         });
