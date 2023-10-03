@@ -163,7 +163,7 @@ const updateQr = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { description, tagName, tagDescription, date, activated} = req.body;
+        let { description, tagName, tagDescription, date, activated, sizePrint} = req.body;
         let updateQuery = `UPDATE ${process.env.QRTABLE} SET `;
 
         // En este array se van almacenando todos los campos a actualizar
@@ -184,6 +184,9 @@ const updateQr = async( req , res = response ) => {
         }
         if( activated === 1 || activated === 0 ){
             updateFields.push(`activated = '${activated}'`);
+        }
+        if(sizePrint){
+            updateFields.push(`sizePrint = '${sizePrint}'`);
         }
 
         // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno

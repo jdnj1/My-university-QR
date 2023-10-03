@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-home',
@@ -279,6 +281,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   recieveArray(page: any){
     this.getQr(page*10, this.lastSearch);
+
+  }
+
+  generatePDF(index: any){
+    const content = `${this.imgQr[index]}`;
+
+    const data = document.getElementById('qrCode');
+    const doc = new jsPDF('p', 'pt', 'a7');
+
+    const x = doc.internal.pageSize.width / 2
+
+    html2canvas(data!).then((canvas) => {
+      const img = canvas.toDataURL('image/PNG');
+
+      const imgProp = doc.getImageProperties(img);
+
+      const x = doc.internal.pageSize.width / 2 - imgProp.width / 2;
+      const y = doc.internal.pageSize.height / 2 - imgProp.height / 2;
+
+      doc.addImage(img, 'PNG', x, y, imgProp.width, imgProp.height, undefined, 'FAST');
+      doc.save('prueba.pdf');
+
+    });
 
   }
 

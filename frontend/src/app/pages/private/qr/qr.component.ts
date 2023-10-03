@@ -9,6 +9,8 @@ import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-qr',
@@ -42,7 +44,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     description: [''],
     tagName: [''],
     tagDescription: [''],
-    date: ['']
+    date: [''],
+    sizePrint: ['']
   });
 
   // Form de búsqueda de QR
@@ -120,6 +123,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.dataQrForm.get('date')?.setValue(this.qr.date);
+
+        this.dataQrForm.get('sizePrint')?.setValue(this.qr.sizePrint);
 
         if(this.qr.activated === 1){
           this.activateForm = this.fb.group({
@@ -229,6 +234,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataQrForm.get('tagName')?.enable();
     this.dataQrForm.get('tagDescription')?.enable();
     this.dataQrForm.get('date')?.enable();
+    this.dataQrForm.get('sizePrint')?.enable();
     this.buttons = true;
     this.hasChanges= false;
   }
@@ -238,6 +244,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataQrForm.get('tagName')?.disable();
     this.dataQrForm.get('tagDescription')?.disable();
     this.dataQrForm.get('date')?.disable();
+    this.dataQrForm.get('sizePrint')?.disable();
     this.buttons = false;
 
     if(reset){
@@ -264,6 +271,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.dataQrForm.get('date')?.reset(this.qr.date);
+
+      this.dataQrForm.get('sizePrint')?.reset(this.qr.sizePrint);
     }
   }
 
@@ -428,5 +437,30 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Obtenemos de nuevo la lista de las llamadas
     this.getConsults(0);
+  }
+
+  generatePDF(){
+
+    const data = document.getElementById('qrCode');
+    const doc = new jsPDF('p', 'pt', this.qr.sizePrint);
+
+    html2canvas(data!).then((canvas) => {
+      const img = canvas.toDataURL('image/PNG');
+      const imgProp = doc.getImageProperties(img);
+      const width = doc.internal.pageSize.getWidth();
+      const height = doc.internal.pageSize.getHeight();
+
+      console.log(width, doc.internal.pageSize.width, imgProp.width)
+
+
+      const x = doc.internal.pageSize.width / 2 + imgProp.width / 2;
+      const y = doc.internal.pageSize.height / 2 + imgProp.height / 2;
+
+      console.log(x, y)
+
+      doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
+      doc.save('prueba.pdf');
+    })
+
   }
 }
