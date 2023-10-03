@@ -204,7 +204,7 @@ const updateConsult = async( req , res = response ) => {
         if(number >= 0){
             updateFields.push(`number = ${number}`);
         }
-        if(unit){
+        if(unit >= 1){
             updateFields.push(`unit = ${unit}`);
         }
 
@@ -258,29 +258,6 @@ const deleteConsult = async(req, res) => {
         console.error(error);
         res.status(500).json({
             msg: 'Error al borrar la llamada'
-        });
-    }
-    
-}
-
-/**
- * Cambia el orden entre dos llamadas
- * 
- * @param {*} req Peticion del cliente.
- * @param {*} res Respuesta a enviar por el servidor.
- */
-const changeOrder = async(req, res) => {
-    
-    try{
-
-        res.status(200).json({
-            msg:'Llamada eliminada',
-            qr
-        });
-    } catch(error){
-        console.error(error);
-        res.status(500).json({
-            msg: 'Error al cambiar el orden'
         });
     }
     

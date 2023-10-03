@@ -262,6 +262,9 @@ const viewQr = async(req, res) => {
         "number"
     ]
 
+    //Array que almacena la cantidad a multiplicar para pasar a milisegundos segun la unidad
+    const time = [1000, 60000, 360000, 86400000];
+
     // Variable con el resultado de las llamadas
     let results = {};
 
@@ -330,31 +333,8 @@ const viewQr = async(req, res) => {
                         let result;
                         let num = consult.number;
 
-                        // Se pasa el numero introducido a milisegundos en todos los casos
-                        switch(consult.unit){
-                          case '1':
-                            // De segundos a milisegundos
-                            num *= 1000;
-                            break;
-
-                          case '2':
-                            // De minutos a milisegundos
-                            num *= 60 * 1000;
-                            break;
-
-                          case '3':
-                            // De horas a milisegundos
-                            num *= 3600 * 1000;
-                            break;
-
-                          case '4':
-                            // De dias a milisegundos
-                            num *= 24 * 3600 * 1000
-                            break;
-
-                          default:
-                            break;
-                        }
+                        // Se pasa el numero introducido a milisegundos
+                        num *= time[consult.unit - 1];
 
                         result = new Date(now.getTime() - num);
 
