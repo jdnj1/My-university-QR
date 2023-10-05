@@ -231,9 +231,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // Función para guardar las url de los qr generados para usarlos en el mensaje modal
   saveURL(event: any, index: any){
-    console.log(event)
     this.imgQr[index] = event.changingThisBreaksApplicationSecurity;
-    //this.width = 60;
   }
 
   // Funcion para que se pueda ver el QR más grande cuando se pone el raton encima

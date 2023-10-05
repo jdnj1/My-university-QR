@@ -375,7 +375,6 @@ const viewQr = async(req, res) => {
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/operation`, data);
                         data = res.data.result;
-                        //console.log(data)
     
                         // Rellenar el objeto con los datos de la llamada
                         charts.push({
@@ -428,7 +427,7 @@ const viewQr = async(req, res) => {
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
                         let data = res.data.result;
-                        console.log(data.columns.length)
+                        //console.log(data.columns.length)
                         if(data.columns.length === 0){
                             continue;
                         }
@@ -445,7 +444,7 @@ const viewQr = async(req, res) => {
                         // console.log(ids)
                         // Eliminar los ids repetidos
                         let ids = [... new Set(idlist)];
-                        console.log(ids)
+                        //console.log(ids)
     
                         // body.filters.map((id) => {
                         //     if(Object.values(id)[0] === 'uid'){
@@ -485,7 +484,7 @@ const viewQr = async(req, res) => {
                 }
             } catch (error) {
                 // Si hay algun error, como que el token no es correcto, lo ignora y pasa al siguiente
-                console.log(error)
+                console.log(error.response.data)
             }
             
         }
