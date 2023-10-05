@@ -1,0 +1,29 @@
+PORT=3000
+HOST=localhost
+DATABASE=qr_app
+USER=root
+PASSWORD=
+
+# Tablas base de datos
+USERTABLE=user
+QRTABLE=qrcode
+CONSULTTABLE=consult
+
+## JWT
+# Secreto
+JWTSECRET=82i44Ç$$$&jsjsJKS23hjdfdw2844irkfsdb%&$%vksldWEDEVFG
+# Duracion
+JWTEXPIRE=24h
+
+
+# Maximo de documentos por pagina.
+DOCPAG=10
+
+# URL API propia
+URLAPI=http://localhost:3000/api
+
+# URL OpenApi de SmartUniversity
+URLSU=https://openapi.smartua.es
+
+# Dias que se le suman a la fecha now() para la fecha de validez
+DAYS=15

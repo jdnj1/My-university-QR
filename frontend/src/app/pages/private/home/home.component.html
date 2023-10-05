@@ -53,7 +53,7 @@
                   <tr *ngFor="let qr of codesQr; let i = index">
                     <td (click)="onMouseQrEnter(i)" [ngClass]="{'': disabledQr[i]}">
                       <qrcode id="qrCode{{i}}" style="cursor: pointer; display: none;" (qrCodeURL)="saveURL($event, i)" [qrdata]="urlQr[i]" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
-                      <img src="{{imgQr[i]}}" alt="Código QR" style="width: 60px;">
+                      <img src="{{imgQr[i]}}" alt="Código QR" style="width: 60px; cursor: pointer;">
                     </td>
                     <td [ngClass]="{'disabled': disabledQr[i]}">{{qr.description}}</td>
                     <td  [ngClass]="{'disabled': disabledQr[i], 'expired': expiredQr[i]}" class="text-center">{{qr.date}}</td>
