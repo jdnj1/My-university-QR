@@ -53,26 +53,34 @@
                     <div class="row">
                       <h5 class="scol-form-label">Datos de impresión</h5>
                       <div class="col">
+                        <div class="row">
+                          <div class="col-6">
 
-                        <!-- <h5 class="scol-form-label">Datos de impresión</h5> -->
-                        <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
-                        <input type="text" class="form-control" id="inputNameTag"
-                          formControlName="tagName"  placeholder="Nombre de etiqueta">
+                            <!-- <h5 class="scol-form-label">Datos de impresión</h5> -->
+                            <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
+                            <input type="text" class="form-control" id="inputNameTag"
+                              formControlName="tagName"  placeholder="Nombre de etiqueta">
 
-                        <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
-                        <input type="text" class="form-control" id="inputDescTag"
-                          formControlName="tagDescription"  placeholder="Descripción de etiqueta">
-                      </div>
 
-                      <div class="col">
-                        <label for="inputNameTag" class="form-label">Tamaño impresión</label>
-                        <select class="form-select" aria-label="Default select example" formControlName="sizePrint">
-                          <option value="a4">A4</option>
-                          <option value="a5">A5</option>
-                          <option value="a6">A6</option>
-                          <option value="a7">A7</option>
-                        </select>
+                          </div>
 
+                          <div class="col-6">
+                            <label for="inputNameTag" class="form-label">Tamaño impresión</label>
+                            <select class="form-select" aria-label="Default select example" formControlName="sizePrint">
+                              <option value="a4">A4</option>
+                              <option value="a5">A5</option>
+                              <option value="a6">A6</option>
+                              <option value="a7">A7</option>
+                            </select>
+
+                          </div>
+
+                          <div class="col">
+                            <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
+                            <input type="text" class="form-control" id="inputDescTag"
+                              formControlName="tagDescription"  placeholder="Descripción de etiqueta">
+                          </div>
+                        </div>
                       </div>
 
 

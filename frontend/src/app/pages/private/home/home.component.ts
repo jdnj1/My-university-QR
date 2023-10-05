@@ -10,6 +10,7 @@ import { UserService } from 'src/app/services/user.service';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { he } from 'date-fns/locale';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Qr generados
   urlQr: any = [];
   imgQr: any = [];
-  width = 60;
+  width = 256;
   lgWidth = 300;
 
   disabledQr: any = [];
@@ -55,7 +56,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private userService: UserService,
     private fb: FormBuilder,
-    private route: Router
+    private route: Router,
+    private renderer: Renderer2
   ){}
 
   ngOnInit(): void{
@@ -229,8 +231,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // Función para guardar las url de los qr generados para usarlos en el mensaje modal
   saveURL(event: any, index: any){
+    console.log(event)
     this.imgQr[index] = event.changingThisBreaksApplicationSecurity;
-
+    //this.width = 60;
   }
 
   // Funcion para que se pueda ver el QR más grande cuando se pone el raton encima
@@ -238,8 +241,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     Swal.fire({
       title: 'Código QR',
       imageUrl: this.imgQr[index],
-      imageWidth: 300,
-      imageHeight: 300,
       imageAlt: 'Imágen del código QR',
       showConfirmButton: false,
       footer: `<a href="${this.urlQr[index]}" target="_blank">Visualizar QR</a>`
@@ -284,27 +285,92 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   }
 
+
+
   generatePDF(index: any){
-    const content = `${this.imgQr[index]}`;
 
-    const data = document.getElementById('qrCode');
-    const doc = new jsPDF('p', 'pt', 'a7');
+    const qr = document.getElementById('print');
 
-    const x = doc.internal.pageSize.width / 2
+    const doc = new jsPDF('p', 'pt', this.codesQr[index].sizePrint);
 
-    html2canvas(data!).then((canvas) => {
+
+    html2canvas(qr!).then((canvas) => {
+      qr?.remove();
       const img = canvas.toDataURL('image/PNG');
+
 
       const imgProp = doc.getImageProperties(img);
 
-      const x = doc.internal.pageSize.width / 2 - imgProp.width / 2;
-      const y = doc.internal.pageSize.height / 2 - imgProp.height / 2;
+      const width = doc.internal.pageSize.getWidth();
+      const height = doc.internal.pageSize.getHeight();
 
-      doc.addImage(img, 'PNG', x, y, imgProp.width, imgProp.height, undefined, 'FAST');
-      doc.save('prueba.pdf');
+      console.log(width, height)
+      console.log(imgProp.width, imgProp.height)
+
+
+      doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
+      doc.save(`${this.codesQr[index].description}.pdf`);
 
     });
 
+  }
+
+  generateQR(index: any){
+    Swal.fire({
+      title: 'Descargar código QR ',
+      html: `<div id="print"><p class="text-center fw-bold m-0">${this.codesQr[index].tagName}</p>` +
+      `<div id="contqr" class="d-flex align-items-center justify-content-center">` +
+        `<img id="imgqr" src="${this.imgQr[index]}" style="width: 256px;">` +
+      `</div>` +
+      `<p class="text-center small m-0">${this.codesQr[index].tagDescription}</p>` +
+    `</div>`,
+      footer: `El tamaño seleccionado es ${this.codesQr[index].sizePrint.toUpperCase()}`,
+      showConfirmButton: true,
+      confirmButtonText: 'Descargar PDF',
+      confirmButtonColor: 'green',
+      showCancelButton: true,
+      cancelButtonColor: '#dc3545',
+      reverseButtons: true
+    }).then((result) => {
+      if(result.isConfirmed){
+        document.body.appendChild(Swal.getHtmlContainer() as Node)
+        const print= document.getElementById('print');
+        print!.style.clipPath = 'inset(0 100% 0 0)';
+        print!.style.width = '300px'
+        this.width = 60;
+
+        this.generatePDF(index);
+      }
+    });
+    // const divf = document.createElement('div');
+    // divf.id = 'print';
+
+    // const tag = document.createElement('p');
+    // tag.classList.add("text-center", "fw-bold", "m-0");
+    // const tagText = document.createTextNode(this.codesQr[index].tagName);
+    // tag.appendChild(tagText);
+
+    // divf.appendChild(tag);
+
+    // const divs = document.createElement('div');
+    // divs.classList.add("d-flex", "align-items-cente", "justify-content-center");
+
+    // const img = document.createElement('img');
+    // img.setAttribute('src', this.imgQr[index]);
+    // img.style.width = '256px';
+
+
+    // divs.appendChild(img);
+    // divf.appendChild(divs);
+
+    // const tagDes = document.createElement('p');
+    // tagDes.classList.add("text-center", "small", "m-0");
+    // const tagDesText = document.createTextNode(this.codesQr[index].tagDescription)
+    // tagDes.appendChild(tagDesText);
+
+    // divf.appendChild(tagDes);
+
+    // return divf;
   }
 
 }

@@ -283,6 +283,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.success('QR actualizado correctamente');
         this.cancelUpdate(false);
         this.hasChanges = false;
+        this.getQr();
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al intentar actualizar el QR');
@@ -459,7 +460,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log(x, y)
 
       doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
-      doc.save('prueba.pdf');
+      doc.save(`${this.qr.description}.pdf`);
     })
 
   }
