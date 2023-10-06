@@ -53,9 +53,7 @@ export class ChartComponent implements AfterViewInit {
     // Formatear las fechas para cambiar la forma en la que se muestran
     this.data.dates.forEach((date: any, index: any) => {
       this.data.dates[index]=format(new Date(date), "dd/MM/yyyy'-'kk:mm")
-      console.log(date)
     });
-    console.log(this.data.dates)
 
     // Comprobar el tipo de gráfica que es
     switch(this.data.type){
