@@ -31,7 +31,7 @@ export class ChartComponent implements AfterViewInit {
 
     const div = document.createElement('div');
     div.id = `chart${this.id}`;
-    div.style.height = '400px';
+    div.style.height = '350px';
     div.classList.add('echart');
 
     this.containerElement.nativeElement.appendChild(div);
@@ -45,15 +45,17 @@ export class ChartComponent implements AfterViewInit {
       graph.resize();
     });
 
+    let grid = Math.trunc(this.data.ids.length / 2) * 20;
+    if(grid === 0) grid = 20;
+
+    //console.log(this.data.dates)
+
+    for (let i = 0; i < this.data.dates.length; i++){
+      this.data.dates[i] = this.data.dates[i].slice(0, -1);
+      this.data.dates[i] = format(new Date(this.data.dates[i]), "Pp");
+    }
+
     let option;
-
-    let pru = this.data.ids.length % 2 + 10;
-    console.log(pru)
-
-    // Formatear las fechas para cambiar la forma en la que se muestran
-    this.data.dates.forEach((date: any, index: any) => {
-      this.data.dates[index]=format(new Date(date), "dd/MM/yyyy'-'kk:mm")
-    });
 
     // Comprobar el tipo de gráfica que es
     switch(this.data.type){
@@ -61,8 +63,6 @@ export class ChartComponent implements AfterViewInit {
         // Gráfica de lineas
       case 1:
         // Grafica de barras
-        div.style.height = '350px';
-        graph.resize();
 
         option = {
           title: {
@@ -83,7 +83,7 @@ export class ChartComponent implements AfterViewInit {
             type: 'value'
           },
           grid: {
-            top: '30%', // Espacio en la parte superior de la grafica
+            top: `${grid}%`, // Espacio en la parte superior de la grafica
           },
           dataZoom: [
             {

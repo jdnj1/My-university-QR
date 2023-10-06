@@ -266,7 +266,7 @@ const viewQr = async(req, res) => {
     ]
 
     //Array que almacena la cantidad a multiplicar para pasar a milisegundos segun la unidad
-    const time = [1000, 60000, 360000, 86400000];
+    const time = [1000, 60000, 3600000, 86400000];
 
     // Variable con el resultado de las llamadas
     let results = {};
@@ -365,7 +365,7 @@ const viewQr = async(req, res) => {
     
                         let data = {
                             token: consult.token,
-                            dateFrom: consult.dateFrom, //cambiar por cons.dateFrom
+                            dateFrom: consult.dateFrom,
                             dateTo: consult.dateTo,
                             operation: op[consult.operation - 2],
                             uid: Object.values(consult.filters)[0],
@@ -422,12 +422,11 @@ const viewQr = async(req, res) => {
     
                         body += ']}';
                         body = JSON.parse(body);
-                        
     
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
                         let data = res.data.result;
-                        //console.log(data.columns.length)
+                        console.log(data.columns.length)
                         if(data.columns.length === 0){
                             continue;
                         }
