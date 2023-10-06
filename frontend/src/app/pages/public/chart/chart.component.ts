@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { format } from 'date-fns';
 import * as echarts from 'echarts';
 
 @Component({
@@ -46,12 +47,24 @@ export class ChartComponent implements AfterViewInit {
 
     let option;
 
+    let pru = this.data.ids.length % 2 + 10;
+    console.log(pru)
+
+    // Formatear las fechas para cambiar la forma en la que se muestran
+    this.data.dates.forEach((date: any, index: any) => {
+      this.data.dates[index]=format(new Date(date), "dd/MM/yyyy'-'kk:mm")
+      console.log(date)
+    });
+    console.log(this.data.dates)
+
     // Comprobar el tipo de gráfica que es
     switch(this.data.type){
       case 0:
         // Gráfica de lineas
       case 1:
         // Grafica de barras
+        div.style.height = '350px';
+        graph.resize();
 
         option = {
           title: {
@@ -72,7 +85,7 @@ export class ChartComponent implements AfterViewInit {
             type: 'value'
           },
           grid: {
-            top: '20%', // Espacio en la parte superior de la grafica
+            top: '30%', // Espacio en la parte superior de la grafica
           },
           dataZoom: [
             {

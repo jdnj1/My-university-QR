@@ -67,21 +67,25 @@ export class UserService {
   }
 
   getUserData(){
+    const token = localStorage.getItem('token') || '';
     let id = this.getId();
 
-    this.getUserById(id).subscribe({
-      next: (res: any) => {
-        console.log(res)
-        // Se almacenan los datos del usuario en la clase
-        this.idUser = res.user.idUser;
-        this.email = res.user.email;
-        this.lim_consult = res.user.lim_consult;
-        this.role = res.user.role;
-      },
-      complete: () => {
-        return
-      }
-    });
+    if(token !== ''){
+
+      this.getUserById(id).subscribe({
+        next: (res: any) => {
+          console.log(res)
+          // Se almacenan los datos del usuario en la clase
+          this.idUser = res.user.idUser;
+          this.email = res.user.email;
+          this.lim_consult = res.user.lim_consult;
+          this.role = res.user.role;
+        },
+        complete: () => {
+          return
+        }
+      });
+    }
   }
 
   getId(){
