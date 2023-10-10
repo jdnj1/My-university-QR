@@ -48,6 +48,8 @@ export class ChartComponent implements AfterViewInit {
     let grid = Math.trunc(this.data.ids.length / 2) * 20;
     if(grid === 0) grid = 20;
 
+    //let grid = 20;
+
     //console.log(this.data.dates)
 
     for (let i = 0; i < this.data.dates.length; i++){
@@ -63,6 +65,11 @@ export class ChartComponent implements AfterViewInit {
         // Gráfica de lineas
       case 1:
         // Grafica de barras
+
+        // let pru = 350 + grid
+        // div.style.height = `${pru}px`;
+        // console.log( pru)
+        // graph.resize();
 
         option = {
           title: {
