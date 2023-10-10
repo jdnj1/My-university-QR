@@ -23,8 +23,8 @@
             <div class="d-flex align-items-center justify-content-start">
               <h5 class="card-title">Formulario de configuración</h5>
               <div class="d-flex align-items-center">
-                <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activado</span>
-                <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivado</span>
+                <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activada</span>
+                <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivada</span>
                 <form [formGroup]="activateForm">
                   <div class="form-check form-switch">
                     <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateConsult()">
