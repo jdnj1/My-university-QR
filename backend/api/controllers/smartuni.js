@@ -24,7 +24,7 @@ const getData = async( req , res ) => {
         // Eliminamos el token de la llamada del cuerpo de la peticion antes de enviarselo a SmartUniversity
         delete req.body.token;
 
-        axios.post(`${process.env.URLSU}/${token}/getData`, req.body)
+        axios.post(`${process.env.URLSU}/data/${token}`, req.body)
             .then((result) => {
                 //console.log(result.data)
                 res.status(200).json({
@@ -59,7 +59,7 @@ const getDataOperation = async( req , res ) => {
     try {
         let {token, dateFrom, dateTo, operation, uid, name} = req.body;
 
-        axios.get(`${process.env.URLSU}/${token}/time_start/${dateFrom}/time_end/${dateTo}/operation/${operation}/uid/${uid}/name/${name}/getDataOperation`)
+        axios.get(`${process.env.URLSU}/data/operation/${token}/time_start/${dateFrom}/time_end/${dateTo}/${operation}/uid/${uid}/name/${name}`)
             .then((result) => {
                 //console.log(result.data)
                 res.status(200).json({

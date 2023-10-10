@@ -45,16 +45,21 @@ export class ChartComponent implements AfterViewInit {
       graph.resize();
     });
 
-    let grid = Math.trunc(this.data.ids.length / 2) * 20;
-    if(grid === 0) grid = 20;
+    let grid;
+    if(this.data.ids){
+      grid = Math.trunc(this.data.ids.length / 2) * 20;
+      if(grid === 0) grid = 20;
+    }
 
     //let grid = 20;
 
     //console.log(this.data.dates)
 
-    for (let i = 0; i < this.data.dates.length; i++){
-      this.data.dates[i] = this.data.dates[i].slice(0, -1);
-      this.data.dates[i] = format(new Date(this.data.dates[i]), "Pp");
+    if(this.data.dates){
+      for (let i = 0; i < this.data.dates.length; i++){
+        this.data.dates[i] = this.data.dates[i].slice(0, -1);
+        this.data.dates[i] = format(new Date(this.data.dates[i]), "Pp");
+      }
     }
 
     let option;
