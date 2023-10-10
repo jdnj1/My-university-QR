@@ -137,9 +137,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
 
-        if(this.qr.description !== environment.defaultDes){
-          this.cancelUpdate(false);
-        }
+        // if(this.qr.description !== environment.defaultDes){
+        //   this.cancelUpdate(false);
+        // }
 
         // Nos suscribimos a los cambios que pueda tener el fomrmulario
         this.qrSubscription = this.dataQrForm.valueChanges.subscribe( () => {
@@ -281,9 +281,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
       next: (res: any) => {
         this.alertService.success('QR actualizado correctamente');
-        this.cancelUpdate(false);
         this.hasChanges = false;
-        this.getQr();
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error('Error al intentar actualizar el QR');
@@ -463,5 +461,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       doc.save(`${this.qr.description}.pdf`);
     })
 
+  }
+
+  cancel(){
+    this.router.navigateByUrl(`home`)
   }
 }

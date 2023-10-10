@@ -51,8 +51,8 @@
 
                   <div class="col m-2 m-lg-0">
                     <div class="row">
-                      <h5 class="scol-form-label">Datos de impresión</h5>
                       <div class="col">
+                        <h5 class="scol-form-label">Datos de impresión</h5>
                         <div class="row">
                           <div class="col-6">
 
@@ -80,30 +80,37 @@
                             <input type="text" class="form-control" id="inputDescTag"
                               formControlName="tagDescription"  placeholder="Descripción de etiqueta">
                           </div>
+
+                          <div class="d-flex justify-content-end  mt-4 mb-4">
+                            <button *ngIf="!hasChanges" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
+                            <button *ngIf="hasChanges" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
+                            <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">Guardar</button>
+
+                          </div>
+
                         </div>
                       </div>
 
 
                       <!-- IMAGEN DEL QR -->
-                      <div id="qrCode" class="col-lg-5">
-                        <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
-                        <div class="d-flex align-items-center justify-content-center">
-                          <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
+                      <div class="col-lg-5">
+                        <div id="qrCode">
+                          <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
+                          <div class="d-flex align-items-center justify-content-center">
+                            <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
+                          </div>
+                          <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
                         </div>
-                        <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
+                        <div class="d-flex justify-content-center m-2">
+                          <button type="button" class="btn btn-success" title="Imprimir código QR" (click)="generatePDF()"><i class="bi bi-printer"></i> Descargar Código QR</button>
+                        </div>
                       </div>
+
+
                     </div>
                   </div>
                 </div>
               </form>
-              <div class="d-flex justify-content-start align-items-center" *ngIf="!buttons">
-                <button type="button" class="btn btn-primary m-2" (click)="startUpdate()"><i class="bi bi-pencil-square"></i> Editar configuración</button>
-                <button type="button" class="btn btn-success" title="Imprimir código QR" (click)="generatePDF()"><i class="bi bi-printer"></i></button>
-              </div>
-              <div class="d-flex justify-content-start" *ngIf="buttons">
-                <button type="button" class="btn btn-danger m-2" (click)="cancelUpdate(true)">Cancelar</button>
-                <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">Guardar</button>
-              </div>
             </div>
 
 
