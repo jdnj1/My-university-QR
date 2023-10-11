@@ -43,6 +43,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
     "number"
   ]
 
+  loading: boolean = true;
   warning: boolean = true;
   message: string = '';
 
@@ -71,6 +72,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
     this.qrService.viewQr(this.idQr).subscribe({
       next: (res: any) => {
         console.log(res);
+        this.loading = false;
         this.charts = res.res.charts;
         this.qr = res.res.titleQr;
         console.log(this.charts)
@@ -87,6 +89,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
         console.log(err);
         //this.alertService.error('Error al visualizar el códgio QR');
         this.warning = true;
+        this.loading = false;
 
         if(err.error.titleQr){
           this.qr = err.error.titleQr;
