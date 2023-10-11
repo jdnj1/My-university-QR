@@ -157,20 +157,25 @@ export class ChartComponent implements AfterViewInit {
         break;
 
       case 3:
-        div.style.height = '150px';
+        div.style.height = '200px';
         graph.resize();
 
         // Solo el valor
         option = {
           title: {
-            text: `${this.data.values[0]} ${this.data.metric}`,
-            subtext: `${this.data.title}: \n\n ${this.data.description}`,
+            text: `Máximo: ${this.data.values[0]} ${this.data.metric}\n`,
+            subtext: `\n${this.data.title}: \n\n ${this.data.description}`,
             left: "center",
             top: "center",
-            width: 2,
             textStyle: {
-              fontSize: 30
+              fontSize: 30,
+              width: 350,
+              overflow: 'break',
             },
+            subtextStyle: {
+              width: 550,
+              overflow: 'break',
+            }
           },
           media: [{
             query: {

@@ -44,7 +44,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   ]
 
   loading: boolean = true;
-  warning: boolean = true;
+  warning: boolean = false;
   message: string = '';
 
 
@@ -87,9 +87,9 @@ export class ViewComponent implements OnInit,AfterViewInit {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        //this.alertService.error('Error al visualizar el códgio QR');
-        this.warning = true;
         this.loading = false;
+        this.warning = true;
+        console.log(this.loading)
 
         if(err.error.titleQr){
           this.qr = err.error.titleQr;
