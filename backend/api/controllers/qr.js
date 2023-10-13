@@ -114,16 +114,46 @@ const createQr = async( req , res = response ) => {
     // predetermindados para que se cambien. Por ejemplo descriptiom = Qr de prueba
 
     // Por si se introducen los campos por llamada
-    let {description, tagName, tagDescription, date} = req.body;
+    let {description, tagName, tagDescription, date, sizePrint} = req.body;
 
     try {
+        // En este array se van almacenando todos los campos a insertar
+        let createFields = [];
 
-        // Creamos la fecha de validez del QR
-        let date = new Date();
-        date.setDate(date.getDate() + Number(process.env.DAYS));
-        date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
-        
-        const query = `INSERT INTO ${process.env.QRTABLE} (date, user) VALUES ('${date}', ${req.uid})`;
+        // En este array se van almacenando todos los calores de los campos a insertar
+        let valueFields = [];
+
+        if(description){
+            createFields.push(`description`);
+            valueFields.push(`'${description}'`);
+        }
+        if(tagName){
+            createFields.push(`tagName`);
+            valueFields.push(`'${tagName}'`);
+        }
+        if(tagDescription){
+            createFields.push(`tagDescription`);
+            valueFields.push(`'${tagDescription}'`);
+        }
+        if(sizePrint){
+            createFields.push(`sizePrint`);
+            valueFields.push(`'${sizePrint}'`);
+        }
+
+        // Creamos la fecha de validez del QR si no se ha enviado ninguna por el cuerpo
+        if(!date){
+            date = new Date();
+            date.setDate(date.getDate() + Number(process.env.DAYS));
+            date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        }
+
+        createFields.push(`date`);
+        valueFields.push(`'${date}'`);
+
+        createFields.push(`user`);
+        valueFields.push(req.uid); 
+
+        const query = `INSERT INTO ${process.env.QRTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
 
         const qr = await dbConsult(query);
 

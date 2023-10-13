@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { QrService } from 'src/app/services/qr.service';
@@ -18,9 +18,9 @@ import html2canvas from 'html2canvas';
   styleUrls: ['./qr.component.css']
 })
 export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('searchClear', { static: true }) searchClearElement!: ElementRef<HTMLElement>;
-  @ViewChild('msg', { static: true }) msgElement!: ElementRef<HTMLElement>;
-  @ViewChild('searchField', { static: true }) searchFieldElement!: ElementRef<HTMLElement>;
+  @ViewChild('searchClear') searchClearElement!: ElementRef<HTMLElement>;
+  @ViewChild('msg') msgElement!: ElementRef<HTMLElement>;
+  @ViewChild('searchField') searchFieldElement!: ElementRef<HTMLElement>;
 
   @ViewChild(PageComponent) pagination!: PageComponent;
 
@@ -29,6 +29,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
   width = 256;
   qr: any;
+
+  create: boolean = this.idQr === '0'? true : false;
+  formSubmit: boolean = false;
 
   // Llamadas del QR
   consults: any = [];
@@ -69,34 +72,60 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     private consultService: ConsultService,
     private alertService: AlertService,
     private router: Router,
-    private renderer: Renderer2
   ){}
 
   ngOnInit(): void {
-    this.getQr();
-    this.getConsults(0);
+    // Si el id de la ruta es 0 es porque se va a crear un nuevo codigo QR
+    if(!this.create){
+      this.getData();
+    }
+    else{
+      this.dataQrForm = this.fb.group({
+        description: ['', Validators.required],
+        tagName: [''],
+        tagDescription: [''],
+        date: ['', Validators.required],
+        sizePrint: ['a4']
+      });
+
+      // Nos suscribimos a los cambios que pueda tener el fomrmulario
+      this.qrSubscription = this.dataQrForm.valueChanges.subscribe( () => {
+        this.hasChanges = true;
+      });
+    }
   }
 
   ngAfterViewInit(): void {
-    this.searchClearElement.nativeElement.style.display = 'none';
-    this.msgElement.nativeElement.style.display = 'none';
+    if(!this.create){
+      this.searchClearElement.nativeElement.style.display = 'none';
+      this.msgElement.nativeElement.style.display = 'none';
 
-    // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
-    this.searchFieldElement.nativeElement.addEventListener('keyup', () =>{
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() =>{
-        this.search();
-      }, 1000)
-    });
+      // Eventos para hacer que la busqueda se haga al pasar un tiempo solo y no hacer una peticion cada vez que se intriduce una letra
+      this.searchFieldElement.nativeElement.addEventListener('keyup', () =>{
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() =>{
+          this.search();
+        }, 1000)
+      });
 
-    this.searchFieldElement.nativeElement.addEventListener('keydown', () =>{
-      clearTimeout(this.timer);
-    });
+      this.searchFieldElement.nativeElement.addEventListener('keydown', () =>{
+        clearTimeout(this.timer);
+      });
+    }
   }
 
   ngOnDestroy(): void {
     // Liberar recursos
     this.qrSubscription.unsubscribe();
+  }
+
+  getData(){
+    this.getQr();
+    this.getConsults(0);
+  }
+
+  campoValido(campo: string){
+    return this.dataQrForm.get(campo)?.valid || !this.formSubmit;
   }
 
   getQr(){
@@ -110,17 +139,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qr.date = format(date, "yyyy-MM-dd");
 
         // Se rellenan los datos del formulario con los datos del QR
-        if(this.qr.description !== "Descripción del código QR"){
-          this.dataQrForm.get('description')?.setValue(this.qr.description);
-        }
+        this.dataQrForm.get('description')?.setValue(this.qr.description);
 
-        if(this.qr.tagName !== "Nombre de etiqueta"){
-          this.dataQrForm.get('tagName')?.setValue(this.qr.tagName);
-        }
+        this.dataQrForm.get('tagName')?.setValue(this.qr.tagName);
 
-        if(this.qr.tagDescription !== "Descripción de etiqueta"){
-          this.dataQrForm.get('tagDescription')?.setValue(this.qr.tagDescription);
-        }
+        this.dataQrForm.get('tagDescription')?.setValue(this.qr.tagDescription);
 
         this.dataQrForm.get('date')?.setValue(this.qr.date);
 
@@ -137,11 +160,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
 
-        // if(this.qr.description !== environment.defaultDes){
-        //   this.cancelUpdate(false);
-        // }
-
-        // Nos suscribimos a los cambios que pueda tener el fomrmulario
+        // Nos suscribimos a los cambios que pueda tener el formulario
         this.qrSubscription = this.dataQrForm.valueChanges.subscribe( () => {
           this.hasChanges = true;
         });
@@ -229,65 +248,47 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  startUpdate(){
-    this.dataQrForm.get('description')?.enable();
-    this.dataQrForm.get('tagName')?.enable();
-    this.dataQrForm.get('tagDescription')?.enable();
-    this.dataQrForm.get('date')?.enable();
-    this.dataQrForm.get('sizePrint')?.enable();
-    this.buttons = true;
-    this.hasChanges= false;
-  }
-
-  cancelUpdate(reset: boolean){
-    this.dataQrForm.get('description')?.disable();
-    this.dataQrForm.get('tagName')?.disable();
-    this.dataQrForm.get('tagDescription')?.disable();
-    this.dataQrForm.get('date')?.disable();
-    this.dataQrForm.get('sizePrint')?.disable();
-    this.buttons = false;
-
-    if(reset){
-      // Se vuelven a poner los datos que tenian antes de acutalizar
-      if(this.qr.description !== "Descripción del código QR"){
-        this.dataQrForm.get('description')?.reset(this.qr.description);
-      }
-      else{
-        this.dataQrForm.get('description')?.setValue('');
-      }
-
-      if(this.qr.tagName !== "Nombre de etiqueta"){
-        this.dataQrForm.get('tagName')?.reset(this.qr.tagName);
-      }
-      else{
-        this.dataQrForm.get('tagName')?.setValue('');
-      }
-
-      if(this.qr.tagDescription !== "Descripción de etiqueta"){
-        this.dataQrForm.get('tagDescription')?.reset(this.qr.tagDescription);
-      }
-      else{
-        this.dataQrForm.get('tagDescription')?.setValue('');
-      }
-
-      this.dataQrForm.get('date')?.reset(this.qr.date);
-
-      this.dataQrForm.get('sizePrint')?.reset(this.qr.sizePrint);
-    }
-  }
-
   updateQr(){
-    // Se acutaliza el qr con los datos introducidos
-    this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
-      next: (res: any) => {
-        this.alertService.success('QR actualizado correctamente');
-        this.hasChanges = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al intentar actualizar el QR');
-        console.log(err)
+    // Se comprueba si se esta creando un qr
+    if(this.create){
+      this.formSubmit = true;
+      // Se crea el qr si el formulario no tiene errores
+      if (!this.dataQrForm.valid) {
+        console.log(this.dataQrForm);
+        return;
       }
-    })
+
+      this.qrService.createQr(this.dataQrForm.value).subscribe({
+        next: (res:any) =>{
+          console.log(res);
+          this.alertService.success("Código QR generado correctamente");
+          this.idQr = res.qr.insertId;
+          this.urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
+          this.create = false;
+          this.hasChanges = false;
+          this.qrSubscription.unsubscribe();
+          this.getData();
+          this.router.navigateByUrl(`codeQr/${this.idQr}`);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.error('Error al crear el código QR');
+          console.log(err)
+        }
+      });
+    }
+    else{
+      // Se acutaliza el qr con los datos introducidos
+      this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
+        next: (res: any) => {
+          this.alertService.success('QR actualizado correctamente');
+          this.hasChanges = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.error('Error al intentar actualizar el QR');
+          console.log(err)
+        }
+      });
+    }
   }
 
 

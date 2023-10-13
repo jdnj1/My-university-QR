@@ -43,10 +43,10 @@ export class QrService {
     });
   }
 
-  createQr(){
+  createQr(formData: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/qr`, {}, {
+    return this.http.post(`${environment.apiBaseUrl}/qr`, formData, {
       headers: {'x-token': token}
     });
   }

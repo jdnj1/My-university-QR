@@ -21,7 +21,8 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Configuración del QR</h5>
+            <h5 *ngIf="!create" class="card-title">Configuración del QR</h5>
+            <h5 *ngIf="create" class="card-title">Rellene los datos del nuevo QR</h5>
             <div class="container">
               <form [formGroup]="dataQrForm">
                 <div class="row">
@@ -30,7 +31,7 @@
 
                     <div class="d-flex align-items-center justify-content-between">
                       <h5 class="scol-form-label">Datos del QR</h5>
-                      <div class="d-flex align-items-center">
+                      <div *ngIf="!create" class="d-flex align-items-center">
                         <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">Activado</span>
                         <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">Desactivado</span>
                         <form [formGroup]="activateForm">
@@ -40,12 +41,14 @@
                         </form>
                       </div>
                     </div>
-                    <label for="inputName" class="form-label">Título</label>
-                    <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="Descripción del QR">
+                    <label for="inputName" class="form-label">Título<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                    <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="Título del QR">
+                    <div class="text-danger" *ngIf="!campoValido('description')">Por favor introduce un título al código QR.</div>
 
-                    <label for="inputDate" class="form-label">Fecha de validez</label>
+                    <label for="inputDate" class="form-label">Fecha de validez<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                     <input type="date" class="form-control" id="inputDate"
                       formControlName="date">
+                    <div class="text-danger" *ngIf="!campoValido('date')">Por favor introduce una fecha de validez.</div>
                   </div>
 
 
@@ -66,8 +69,8 @@
 
                           <div class="col-6">
                             <label for="inputNameTag" class="form-label">Tamaño impresión</label>
-                            <select class="form-select" aria-label="Default select example" formControlName="sizePrint">
-                              <option value="a4">A4</option>
+                            <select class="form-select" formControlName="sizePrint">
+                              <option value="a4" selected>A4</option>
                               <option value="a5">A5</option>
                               <option value="a6">A6</option>
                               <option value="a7">A7</option>
@@ -82,8 +85,8 @@
                           </div>
 
                           <div class="d-flex justify-content-end  mt-4 mb-4">
-                            <button *ngIf="!hasChanges" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
-                            <button *ngIf="hasChanges" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
+                            <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
+                            <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
                             <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">Guardar</button>
 
                           </div>
@@ -93,7 +96,7 @@
 
 
                       <!-- IMAGEN DEL QR -->
-                      <div class="col-lg-5">
+                      <div *ngIf="!create" class="col-lg-5">
                         <div id="qrCode">
                           <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
                           <div class="d-flex align-items-center justify-content-center">
@@ -102,7 +105,7 @@
                           <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
                         </div>
                         <div class="d-flex justify-content-center m-2">
-                          <button type="button" class="btn btn-success" title="Imprimir código QR" (click)="generatePDF()"><i class="bi bi-printer"></i> Descargar Código QR</button>
+                          <button [disabled]="create" type="button" class="btn btn-success" title="Imprimir código QR" (click)="generatePDF()"><i class="bi bi-printer"></i> Descargar Código QR</button>
                         </div>
                       </div>
 
@@ -120,7 +123,7 @@
     </div>
   </section>
 
-  <section class="section dashboard">
+  <section *ngIf="!create" class="section dashboard">
     <div class="row">
       <div class="card">
         <div class="card-body">
@@ -137,7 +140,7 @@
               </form>
             </div>
             <!-- Botón para añadir nuevas llamadas -->
-            <button type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> Añadir Llamada</button>
+            <button [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> Añadir Llamada</button>
           </div>
           <div class="table-responsive">
             <table class="table">
@@ -153,7 +156,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="4" #msg>Este código QR no tiene llamadas</td>
+                  <td colspan="7" #msg>Este código QR no tiene llamadas</td>
                 </tr>
                 <tr *ngFor="let consult of consults; let i = index" >
                   <td [ngClass]="{'disabled': disableConsult[i]}">{{consult.name}}</td>

@@ -15,7 +15,7 @@ import { ChartComponent } from '../chart/chart.component';
 })
 export class ViewComponent implements OnInit,AfterViewInit {
 
-  @ViewChild('container', { static: true }) containerElement!: ElementRef<HTMLElement>;
+  @ViewChild('container') containerElement!: ElementRef<HTMLElement>;
   @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
 
   // Variable donde se va a almacenar el código QR

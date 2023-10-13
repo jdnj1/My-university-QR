@@ -151,17 +151,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   createQr(){
     // Comprobar si no se supera el limite
     if(this.user.lim_consult > this.totalQr || this.user.lim_consult === 0){
-      this.qrService.createQr().subscribe({
-        next: (res:any) =>{
-          console.log(res);
-          this.alertService.success("Código QR generado correctamente");
-          this.route.navigateByUrl(`/codeQr/${res.qr.insertId}`);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.alertService.error('Error al crear el código QR');
-          console.log(err)
-        }
-      });
+      this.route.navigateByUrl('codeQr/0');
+      // this.qrService.createQr().subscribe({
+      //   next: (res:any) =>{
+      //     console.log(res);
+      //     this.alertService.success("Código QR generado correctamente");
+      //     this.route.navigateByUrl(`/codeQr/${res.qr.insertId}`);
+      //   },
+      //   error: (err: HttpErrorResponse) => {
+      //     this.alertService.error('Error al crear el código QR');
+      //     console.log(err)
+      //   }
+      // });
     }
     else{
       this.alertService.error('Ha superado el límite de codigos QR que se pueden crear en esta cuenta');
