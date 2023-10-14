@@ -110,7 +110,7 @@ const createConsult = async( req , res = response ) => {
     // predetermindados para que se cambien. Por ejemplo name = Nombre de la llamda
 
     // Por si se introducen los campos por llamada
-    let {name, token, dateFrom, dateTo, filters, qrCode} = req.body;
+    let {name, token, typeDate, dateFrom, dateTo, number, unit, filters, operation, chart, qrCode} = req.body;
 
     try {   
 
@@ -119,12 +119,71 @@ const createConsult = async( req , res = response ) => {
 
         let list = await dbConsult(query);
 
-        // La fecha hasta se desplaza para que no de error de las fechas en Smart University cuando se crea por defecto
-        let date = new Date();
-        date.setDate(date.getDate() + Number(process.env.DAYS));
-        date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
-        
-        query = `INSERT INTO ${process.env.CONSULTTABLE} (qrCode, dateTo, orderConsult) VALUES (${ qrCode }, '${ date }', ${ list.length })`;
+        // En este array se van almacenando todos los campos a insertar
+        let createFields = [];
+
+        // En este array se van almacenando todos los calores de los campos a insertar
+        let valueFields = [];
+
+        if(name){
+            createFields.push('name');
+            valueFields.push(`'${name}'`);
+        }
+        if(token){
+            createFields.push('token');
+            valueFields.push(`'${token}'`);
+        }
+        if(typeDate === 1 || typeDate === 0){
+            createFields.push('typeDate');
+            valueFields.push(`'${typeDate}'`);
+        }
+
+        //Comprobar que la fecha hasta no sea anterior a la fecha desde
+        if(dateFrom && dateTo){
+            if(dateFrom >= dateTo){
+                res.status(400).json({
+                msg: "La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'"
+                });
+
+                return;
+            }
+
+            createFields.push('dateFrom');
+            valueFields.push(`'${dateFrom}'`);
+
+            createFields.push('dateTo');
+            valueFields.push(`'${dateTo}'`);
+        }
+
+        if(number >= 0){
+            createFields.push('number');
+            valueFields.push(`${number}`);
+        }
+        if(unit >= 1){
+            createFields.push('unit');
+            valueFields.push(`${unit}`);
+        }
+        if(filters){
+            createFields.push('filters');
+            valueFields.push(`'${filters}'`);
+        }
+        if(chart){
+            createFields.push('chart');
+            valueFields.push(`${chart}`);
+        }
+        if(operation){
+            createFields.push('operation');
+            valueFields.push(`${operation}`);
+        }
+
+        createFields.push('qrCode');
+        valueFields.push(`${qrCode}`);
+
+        createFields.push('orderConsult');
+        valueFields.push(`${list.length}`);
+
+
+        query = `INSERT INTO ${process.env.CONSULTTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
 
         const consult = await dbConsult(query);
 

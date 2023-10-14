@@ -14,6 +14,10 @@ import { format } from 'date-fns';
 })
 export class ConsultFormComponent implements OnInit, OnDestroy {
 
+  //Obtenemos el id del QR y de la llamada a partir de la url
+  idQr = this.route.snapshot.params['idQr'];
+  idCon = this.route.snapshot.params['idCon'];
+
   // En esta variable se almacenan los datos de la consulta a configurar
   consult: any;
 
@@ -34,16 +38,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
    // Form de la primera parte
    firstForm = this.fb.group({
-    name: ['', Validators.required],
+    name: [''],
     token: ['', Validators.required],
-    dateFrom: ['', Validators.required],
-    dateTo: ['', Validators.required],
+    dateFrom: [''],
+    dateTo: [''],
     typeDate: [0 , Validators.required],
     filters: [''],
     operation:[1],
     chart: [0],
     number: [0],
-    unit: [0]
+    unit: [1],
+    qrCode: [this.idQr]
   });
 
   // Form para los filtros
@@ -56,23 +61,21 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     name: ['', Validators.required]
   });
 
-  // Form para las fechas relativas
-  relativeForm: FormGroup = this.fb.group({
-    number: [0],
-    unit: ['1'],
-  })
-
   activateForm = this.fb.group({
     activated: [false]
   });
 
-  urlChart = '';
+  urlChart = environment.charts[0];
 
   // Booleano para comprobar si se han realizado cambios en el formulario
   hasChanges: Boolean = false;
 
+  // Booleano para indicar si se va a crear una nueva llamada
+  create: boolean = this.idCon === '0'? true : false;
+
+  formSubmit: boolean = false;
+
   firstFormSubscription: any;
-  relativeFormSubscription: any;
   filterFormSubscription: any;
   operationFormSubscription: any;
 
@@ -88,8 +91,23 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getConsult();
+    if(!this.create){
+      this.getConsult();
+    }
+    else{
+      // Nos suscribimos a los cambios que puedan tener los formularios
+      this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
+        this.hasChanges = true;
+      });
 
+      this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
+        this.hasChanges = true;
+      });
+
+      this.operationFormSubscription = this.operationForm.valueChanges.subscribe(() => {
+        this.hasChanges = true;
+      });
+    }
     // Se almacenan las opciones de filtro en el array
     this.options = environment.filters;
   }
@@ -97,17 +115,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Liberar recursos
     this.firstFormSubscription.unsubscribe();
-    this.relativeFormSubscription.unsubscribe();
     this.filterFormSubscription.unsubscribe();
     this.operationFormSubscription.unsubscribe();
   }
 
-  getConsult(){
-    // Se obtienen los datos de la consulta de la base de datos a partir de la id de la url
-    // Se almacena el id de la consulta
-    let id: any = this.route.snapshot.params['id'];
+  campoValido(campo: string){
+    return this.firstForm.get(campo)?.valid || !this.formSubmit;
+  }
 
-    this.consultService.getConsultbyId(id).subscribe({
+  getConsult(){
+
+    this.consultService.getConsultbyId(this.idCon).subscribe({
       next: (res: any) => {
         console.log(res);
 
@@ -144,6 +162,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('filters')?.setValue(this.consult.filters);
         this.firstForm.get('operation')?.setValue(this.consult.operation);
         this.firstForm.get('chart')?.setValue(this.consult.chart);
+        this.firstForm.get('number')?.setValue(this.consult.number);
+        this.firstForm.get('unit')?.setValue(this.consult.unit);
 
         if(this.consult.activated === 1){
           this.activateForm = this.fb.group({
@@ -169,10 +189,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         else if(this.consult.chart === 3){
           this.urlChart = environment.charts[3];
         }
-
-        // Formulario de la fecha relativa
-        this.relativeForm.get('number')?.setValue(this.consult.number);
-        this.relativeForm.get('unit')?.setValue(this.consult.unit);
 
         // Pasamos los filtros a JSON si tiene
         if(this.consult.filters !== ''){
@@ -206,10 +222,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.hasChanges = true;
         });
 
-        this.relativeFormSubscription = this.relativeForm.valueChanges.subscribe(() => {
-          this.hasChanges = true;
-        });
-
         this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
           this.hasChanges = true;
         });
@@ -232,27 +244,29 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     if(!this.date){
       // Comprobar que la fecha hasta no sea anterior a la fecha desde
       let dateFrom = this.firstForm.get('dateFrom')?.value;
-      let dateTo = this.firstForm!.get('dateTo')?.value;
+      let dateTo = this.firstForm.get('dateTo')?.value;
 
-      if(dateFrom != null && dateFrom != undefined && dateTo != null && dateTo != undefined){
+      console.log(dateFrom, dateTo)
+
+      if(dateFrom !== null && dateFrom !== undefined && dateFrom !== '' && dateTo !== null && dateTo !== undefined && dateTo !== ''){
         if(dateFrom >= dateTo){
           this.alertService.error("La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'");
           return;
         }
+      }
+      else{
+        this.alertService.error("Introduce un rango de fechas correcto.");
+        return;
       }
     }
     // En caso de que este seleccionada la fecha relativa
     else{
 
       // Si la cantidad a restar a la fecha actual es 0 se avisa
-      if(this.relativeForm.value.number === 0){
+      if(this.firstForm.value.number === 0){
         this.alertService.error("Introduce una cantitad mayor que 0");
         return;
       }
-
-      // Se le añade tambien la cantidad y unidad de la fecha relativa si esta se ha seleccionado
-      this.firstForm.setControl('number', new FormControl(this.relativeForm.value.number));
-      this.firstForm.setControl('unit', new FormControl(this.relativeForm.value.unit));
     }
 
     // Montar el campo de los filtros.
@@ -288,16 +302,51 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
 
-    this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
-      next: (res: any) => {
-        this.alertService.success('Llamada actualizada correctamente');
-        this.hasChanges = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al acutalizar la llamada')
-        console.log(err);
+    // Se comprueba si se va a crear o a editar una llamada
+    if(this.create){
+
+      this.formSubmit = true;
+      // Se crea el qr si el formulario no tiene errores
+      if (!this.firstForm.valid) {
+        return;
       }
-    });
+      // Se crea
+      console.log(this.firstForm.value)
+      this.consultService.createConsult(this.firstForm.value).subscribe({
+        next: (res: any) => {
+          this.idCon = res.consult.insertId;
+          this.hasChanges = false;
+          this.create = false;
+
+          // Liberar recursos
+          this.firstFormSubscription.unsubscribe();
+          this.filterFormSubscription.unsubscribe();
+          this.operationFormSubscription.unsubscribe();
+
+          this.getConsult();
+          this.router.navigateByUrl(`consult/${this.idQr}/${this.idCon}`);
+          this.alertService.success('Llamada creada correctamente');
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.error('Error al acutalizar la llamada')
+          console.log(err);
+        }
+      });
+    }
+    else{
+      // Se edita
+      this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
+        next: (res: any) => {
+          this.alertService.success('Llamada actualizada correctamente');
+          this.hasChanges = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.error('Error al acutalizar la llamada')
+          console.log(err);
+        }
+      });
+    }
+
   }
 
   selectData(){
@@ -352,7 +401,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   cancel(){
-    this.router.navigateByUrl(`codeQr/${this.consult.qrCode}`)
+    this.router.navigateByUrl(`codeQr/${this.idQr}`)
   }
 
   activateConsult(){

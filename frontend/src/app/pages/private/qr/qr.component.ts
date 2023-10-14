@@ -210,17 +210,18 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   createConsult(){
-    this.consultService.createConsult({qrCode: this.idQr}).subscribe({
-      next: (res:any) =>{
-        console.log(res);
-        this.alertService.success("Llamada generada correctamente");
-        this.router.navigateByUrl(`/consult/${res.consult.insertId}`);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al crear la llamada');
-        console.log(err)
-      }
-    });
+    this.router.navigateByUrl(`consult/${this.idQr}/0`);
+    // this.consultService.createConsult({qrCode: this.idQr}).subscribe({
+    //   next: (res:any) =>{
+    //     console.log(res);
+    //     this.alertService.success("Llamada generada correctamente");
+    //     this.router.navigateByUrl(`/consult/${res.consult.insertId}`);
+    //   },
+    //   error: (err: HttpErrorResponse) => {
+    //     this.alertService.error('Error al crear la llamada');
+    //     console.log(err)
+    //   }
+    // });
   }
 
 
@@ -254,14 +255,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       this.formSubmit = true;
       // Se crea el qr si el formulario no tiene errores
       if (!this.dataQrForm.valid) {
-        console.log(this.dataQrForm);
         return;
       }
 
       this.qrService.createQr(this.dataQrForm.value).subscribe({
         next: (res:any) =>{
-          console.log(res);
-          this.alertService.success("Código QR generado correctamente");
           this.idQr = res.qr.insertId;
           this.urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
           this.create = false;
@@ -269,6 +267,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.qrSubscription.unsubscribe();
           this.getData();
           this.router.navigateByUrl(`codeQr/${this.idQr}`);
+          this.alertService.success("Código QR generado correctamente");
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error('Error al crear el código QR');
@@ -381,7 +380,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goConsult(index: any){
-    this.router.navigateByUrl(`/consult/${this.consults[index].idConsult}`)
+    this.router.navigateByUrl(`/consult/${this.idQr}/${this.consults[index].idConsult}`)
   }
 
   recieveArray(page: any){

@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard] },
-  { path: 'consult/:id', component: ConsultFormComponent, canActivate: [authGuard] },
+  { path: 'consult/:idQr/:idCon', component: ConsultFormComponent, canActivate: [authGuard] },
   { path: 'users-list', component: UsersComponent, canActivate: [authGuard], data: {role: 1} },
   { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard], data: {role: 1} },
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard], data: {role: 1} },

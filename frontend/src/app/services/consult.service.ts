@@ -48,10 +48,10 @@ export class ConsultService {
     });
   }
 
-  createConsult(id: any){
+  createConsult(formData: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.post(`${environment.apiBaseUrl}/consult`, id, {
+    return this.http.post(`${environment.apiBaseUrl}/consult`, formData, {
       headers: {'x-token': token}
     });
   }

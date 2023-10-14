@@ -22,7 +22,7 @@
 
             <div class="d-flex align-items-center justify-content-start">
               <h5 class="card-title">Formulario de configuración</h5>
-              <div class="d-flex align-items-center">
+              <div *ngIf="!create" class="d-flex align-items-center">
                 <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activada</span>
                 <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivada</span>
                 <form [formGroup]="activateForm">
@@ -45,6 +45,7 @@
                   <!-- <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult"> -->
                   <textarea id="tokenConsult" class="form-control" style="height: 65px; max-height: 65px;"
                             formControlName="token" placeholder="Token de la llamada"></textarea>
+                  <div class="text-danger" *ngIf="!campoValido('token')">Por favor introduce el token de la llamada.</div>
                 </div>
 
                 <div class="col-12 mb-5">
@@ -77,7 +78,7 @@
                       </div>
                     </div>
                     <div class="{{date? 'tab-pane fade show active' : 'tab-pane fade'}}" id="bordered-justified-contact" role="tabpanel" aria-labelledby="relative-tab">
-                      <form class="row" [formGroup]="relativeForm">
+                      <div class="row">
                         <div class="col-sm-6">
                           <label for="relative" class="col-form-label">Cantidad</label>
                           <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
@@ -91,7 +92,7 @@
                             <option value="4">Dias</option>
                           </select>
                         </div>
-                      </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -168,8 +169,8 @@
               </div>
 
               <div class="d-flex justify-content-end m-2">
-                <button *ngIf="!hasChanges" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
-                <button *ngIf="hasChanges" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
+                <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
+                <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
                 <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">Guardar</button>
               </div>
             </div>
