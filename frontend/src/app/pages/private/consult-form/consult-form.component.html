@@ -21,7 +21,9 @@
           <div class="row">
 
             <div class="d-flex align-items-center justify-content-start">
-              <h5 class="card-title">Formulario de configuración</h5>
+              <h5 *ngIf="!create && !duplicate" class="card-title">Formulario de configuración</h5>
+              <h5 *ngIf="create" class="card-title">Rellene el fomurlario de coniguración para crear la llamada</h5>
+              <h5 *ngIf="duplicate" class="card-title">Crear llaamda a partir de una copia</h5>
               <div *ngIf="!create" class="d-flex align-items-center">
                 <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activada</span>
                 <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivada</span>

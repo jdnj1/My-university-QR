@@ -73,6 +73,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   // Booleano para indicar si se va a crear una nueva llamada
   create: boolean = this.idCon === '0'? true : false;
 
+  // Booleano para indicar si se va a duplicar una llamada
+  duplicate: boolean = this.idQr === '0'? true : false;
+
   formSubmit: boolean = false;
 
   firstFormSubscription: any;
@@ -110,6 +113,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     }
     // Se almacenan las opciones de filtro en el array
     this.options = environment.filters;
+
+    if(this.duplicate) this.hasChanges = true;
   }
 
   ngOnDestroy(): void {
@@ -148,14 +153,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         }
 
         // Se rellenan los datos del formulario con los datos de la consulta
-        if(this.consult.name !== "Nombre de la llamada"){
+        if(this.duplicate){
+          this.firstForm.get('name')?.setValue(`${this.consult.name } (copia)`);
+        }
+        else{
           this.firstForm.get('name')?.setValue(this.consult.name);
         }
 
-        if(this.consult.token !== "Token de la llamada"){
-          this.firstForm.get('token')?.setValue(this.consult.token);
-        }
-
+        this.firstForm.get('token')?.setValue(this.consult.token);
         this.firstForm.get('dateFrom')?.setValue(this.consult.dateFrom);
         this.firstForm.get('dateTo')?.setValue(this.consult.dateTo);
         this.firstForm.get('typeDate')?.setValue(this.consult.typeDate);
@@ -164,6 +169,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('chart')?.setValue(this.consult.chart);
         this.firstForm.get('number')?.setValue(this.consult.number);
         this.firstForm.get('unit')?.setValue(this.consult.unit);
+        this.firstForm.get('qrCode')?.setValue(this.consult.qrCode);
 
         if(this.consult.activated === 1){
           this.activateForm = this.fb.group({
@@ -302,8 +308,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
 
-    // Se comprueba si se va a crear o a editar una llamada
-    if(this.create){
+    // Se comprueba si se va a crear, duplicar o a editar una llamada
+    if(this.create || this.duplicate){
 
       this.formSubmit = true;
       // Se crea el qr si el formulario no tiene errores
@@ -317,6 +323,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.idCon = res.consult.insertId;
           this.hasChanges = false;
           this.create = false;
+          this.duplicate = false;
 
           // Liberar recursos
           this.firstFormSubscription.unsubscribe();
@@ -401,7 +408,13 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   cancel(){
-    this.router.navigateByUrl(`codeQr/${this.idQr}`)
+    if(this.duplicate){
+      this.router.navigateByUrl(`codeQr/${this.consult.qrCode}`)
+    }
+    else{
+      this.router.navigateByUrl(`codeQr/${this.idQr}`)
+    }
+
   }
 
   activateConsult(){
