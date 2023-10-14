@@ -323,7 +323,12 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.idCon = res.consult.insertId;
           this.hasChanges = false;
           this.create = false;
-          this.duplicate = false;
+
+          if(this.duplicate){
+            this.duplicate = false;
+            this.idQr = this.consult.qrCode;
+          }
+
 
           // Liberar recursos
           this.firstFormSubscription.unsubscribe();
