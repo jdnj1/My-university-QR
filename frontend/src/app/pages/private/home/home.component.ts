@@ -11,6 +11,8 @@ import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { he } from 'date-fns/locale';
+import { PrintService } from 'src/app/services/print.service';
+import { qr } from 'src/app/interfaces/qr.interface';
 
 @Component({
   selector: 'app-home',
@@ -28,12 +30,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   idUser: number = 0;
   user: any;
 
-  codesQr: any = [];
+  codesQr: qr[] = [];
   totalQr: number = 0;
 
   // Qr generados
-  urlQr: any = [];
-  imgQr: any = [];
+  urlQr: string[] = [];
+  imgQr: string[] = [];
   width = 256;
   lgWidth = 300;
 
@@ -51,13 +53,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   timer: any;
 
+  // Booleano para indicar si se estan impriemiendo los qr de la lista seleccionada
+  print: Boolean = false;
+
   constructor(
     private qrService: QrService,
     private alertService: AlertService,
     private userService: UserService,
     private fb: FormBuilder,
     private route: Router,
-    private renderer: Renderer2
+    private printService: PrintService
   ){}
 
   ngOnInit(): void{
@@ -109,7 +114,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
 
         // Cambiamos como se ve la fecha en el frontend
-        this.codesQr.forEach((qr: any) => {
+        this.codesQr.forEach((qr: qr, index: number) => {
           let date = new Date(qr.date);
           qr.date = date.toLocaleDateString();
 
@@ -122,7 +127,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           }
 
           // Almacenamos la url de cada código QR
-          this.urlQr.push(`${environment.appBaseUrl}/view/${qr.idQr}`);
+          this.urlQr[index] = `${environment.appBaseUrl}/view/${qr.idQr}`;
         });
 
         for (let i = 0; i < this.codesQr.length; i++) {
@@ -152,17 +157,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // Comprobar si no se supera el limite
     if(this.user.lim_consult > this.totalQr || this.user.lim_consult === 0){
       this.route.navigateByUrl('codeQr/0');
-      // this.qrService.createQr().subscribe({
-      //   next: (res:any) =>{
-      //     console.log(res);
-      //     this.alertService.success("Código QR generado correctamente");
-      //     this.route.navigateByUrl(`/codeQr/${res.qr.insertId}`);
-      //   },
-      //   error: (err: HttpErrorResponse) => {
-      //     this.alertService.error('Error al crear el código QR');
-      //     console.log(err)
-      //   }
-      // });
     }
     else{
       this.alertService.error('Ha superado el límite de codigos QR que se pueden crear en esta cuenta');
@@ -170,11 +164,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   }
 
-  editQr(index: any){
+  editQr(index: number){
     this.route.navigateByUrl(`codeQr/${this.codesQr[index].idQr}`)
   }
 
-  activateQr(index: any){
+  activateQr(index: number){
     let value;
     let msg: string;
 
@@ -200,7 +194,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   }
 
-  deleteQr(index: any){
+  deleteQr(index: number){
     // Se lanza un mensaje modal para que el usuario confirme si quiere borrar el codigo QR
     Swal.fire({
       icon: 'warning',
@@ -231,7 +225,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   // Función para guardar las url de los qr generados para usarlos en el mensaje modal
-  saveURL(event: any, index: any){
+  saveURL(event: any, index: number){
     this.imgQr[index] = event.changingThisBreaksApplicationSecurity;
   }
 
@@ -286,7 +280,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 
 
-  generatePDF(index: any){
+  generatePDF(index: number){
 
     const qr = document.getElementById('print');
 
@@ -314,7 +308,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   }
 
-  generateQR(index: any){
+  generateQR(index: number){
     Swal.fire({
       title: 'Descargar código QR ',
       html: `<div id="print"><p class="text-center fw-bold m-0">${this.codesQr[index].tagName}</p>` +
@@ -340,35 +334,121 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.generatePDF(index);
       }
     });
-    // const divf = document.createElement('div');
-    // divf.id = 'print';
+  }
 
-    // const tag = document.createElement('p');
-    // tag.classList.add("text-center", "fw-bold", "m-0");
-    // const tagText = document.createTextNode(this.codesQr[index].tagName);
-    // tag.appendChild(tagText);
+  addList(index: number){
+    this.printService.pushCode(this.codesQr[index], this.imgQr[index]);
+  }
 
-    // divf.appendChild(tag);
+  removeList(index: number){
+    this.printService.removeCode(this.codesQr[index], this.imgQr[index]);
+  }
 
-    // const divs = document.createElement('div');
-    // divs.classList.add("d-flex", "align-items-cente", "justify-content-center");
+  isCode(index: number){
+    return this.printService.isCode(this.codesQr[index]);
+  }
 
-    // const img = document.createElement('img');
-    // img.setAttribute('src', this.imgQr[index]);
-    // img.style.width = '256px';
+  listCode(){
+    return this.printService.listCode();
+  }
+
+  listImg(){
+    return this.printService.imgCode();
+  }
+
+  async printList(){
+    this.print = true
+    const doc = new jsPDF('p', 'pt', 'a4');
+    let list = this.listCode();
+    let listImg = this.listImg();
+
+    for(let i = 0; i < list.length; i++){
+      let codeQR = list[i];
+      let imgQR = listImg[i];
+
+      let div = this.codes(codeQR, imgQR);
+
+      document.body.append(div);
+
+      await html2canvas(div).then((canvas) => {
+        div.remove();
+        const img = canvas.toDataURL('image/PNG');
 
 
-    // divs.appendChild(img);
-    // divf.appendChild(divs);
+        const imgProp = doc.getImageProperties(img);
 
-    // const tagDes = document.createElement('p');
-    // tagDes.classList.add("text-center", "small", "m-0");
-    // const tagDesText = document.createTextNode(this.codesQr[index].tagDescription)
-    // tagDes.appendChild(tagDesText);
+        const width = doc.internal.pageSize.getWidth();
+        const height = doc.internal.pageSize.getHeight();
 
-    // divf.appendChild(tagDes);
+        console.log((width-2*28)/2, height)
+        console.log(imgProp.width, imgProp.height)
 
-    // return divf;
+        // Se calcula el tamaño de las img para que quepan 4 en un a4 con un margen de 10mm =~ 28pt
+        const margin = 28;
+
+        const imgWidth = (width - 2 * margin) / 2;
+        const imgHeight = (height - 2 * margin) / 2;
+
+        // Se obtiene la posicion x/y que de cada img teniendo en cuenta el margen
+        const index =  i % 4;
+
+        const col = index % 2;
+        const row = Math.floor(index / 2);
+
+        const x = margin + col * imgWidth;
+        const y = margin + row * imgHeight;
+
+        if(i % 4 === 0 && i !== 0){
+          doc.addPage();
+        }
+
+
+        //console.log(imgProp.width * index, imgProp.height * index)
+        doc.addImage(img, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
+        //w269 h392
+
+      });
+
+    }
+    this.print = false;
+    //window.open(doc.output('bloburl'));
+    doc.save(`varios.pdf`);
+  }
+
+  codes(qr: any, im: string){
+    const divf = document.createElement('div');
+    divf.id = 'print';
+
+    const tag = document.createElement('p');
+    tag.classList.add("text-center", "fw-bold", "m-0");
+    const tagText = document.createTextNode(qr.tagName);
+    tag.appendChild(tagText);
+
+    divf.appendChild(tag);
+
+    const divs = document.createElement('div');
+    divs.classList.add("d-flex", "align-items-cente", "justify-content-center");
+
+    const img = document.createElement('img');
+    img.setAttribute('src', im);
+    //img.style.width = '256px';
+
+
+    divs.appendChild(img);
+    divf.appendChild(divs);
+
+    const tagDes = document.createElement('p');
+    tagDes.classList.add("text-center", "small", "m-0");
+    const tagDesText = document.createTextNode(qr.tagDescription)
+    tagDes.appendChild(tagDesText);
+
+    divf.appendChild(tagDes);
+
+    divf.style.clipPath = 'inset(0 100% 0 0)';
+    divf.style.width = '269pt';
+    divf.style.height = '392pt';
+
+    return divf;
   }
 
 }

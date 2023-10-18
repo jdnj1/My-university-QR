@@ -32,7 +32,14 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{'table.Qr' | translate}}</h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title">{{'table.Qr' | translate}}</h5>
+              <button *ngIf="!print" [disabled]="listCode().length === 0" type="button" class="btn btn-success" title="Imprimir código QR" (click)="printList()"><i class="bi bi-printer"></i> {{'boton.Print' | translate}}</button>
+              <button *ngIf="print" disabled type="button" class="btn btn-success" title="Cargando...">
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                 {{'spinner' | translate}}
+              </button>
+            </div>
             <div class="table-responsive">
               <table class="table">
                 <thead>
@@ -42,13 +49,14 @@
                     <th class="text-center" scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.onoff' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.print' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.addprint' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="7" #msg>{{'msg.home' | translate}}</td>
+                    <td colspan="8" #msg>{{'msg.home' | translate}}</td>
                   </tr>
                   <tr *ngFor="let qr of codesQr; let i = index">
                     <td (click)="onMouseQrEnter(i)" [ngClass]="{'': disabledQr[i]}">
@@ -65,6 +73,8 @@
                       </form>
                     </td>
                     <td class="text-center"><button type="button" class="btn btn-success" title="Imprimir código QR" (click)="generateQR(i)"><i class="bi bi-printer"></i></button></td>
+                    <td *ngIf="!isCode(i)" class="text-center"><button type="button" class="btn btn-success" title="Añadir código QR a la lista de imprimir" (click)="addList(i)"><i class="bi bi-patch-plus"></i></button></td>
+                    <td *ngIf="isCode(i)" class="text-center"><button type="button" class="btn btn-danger" title="Eliminar código QR a la lista de imprimir" (click)="removeList(i)"><i class="bi bi-patch-minus"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
