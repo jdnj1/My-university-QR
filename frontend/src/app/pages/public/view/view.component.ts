@@ -113,4 +113,20 @@ export class ViewComponent implements OnInit,AfterViewInit {
       }
     })
   }
+
+  // Funcion que permite compartir las gráficas desde el móvil
+  share(){
+    const shareData = {
+      title: "Visualizador gráfico accesible para Smart University",
+      text: this.qr,
+      url: `${environment.appBaseUrl}/view/${this.idQr}`
+    }
+
+
+      navigator.share(shareData)
+        .then(() => console.log("Compartido"))
+        .catch(error => console.log(`Error al compartir: ${error}`))
+
+
+  }
 }

@@ -37,7 +37,7 @@ export const environment = {
     "Administrador"
   ],
   //Mensaje si el QR no esta activado
-  messNoActive: "El código QR no se encuentra activo en estos momentos. Intentelo más tarde.",
+  messNoActive: "El código QR no se encuentra activo en estos momentos. Inténtelo más tarde.",
   //Mensaje si el QR no tiene ninguna llamada activa (tambien se obtiene si todas las llamadas no estan configuradas correctamente)
   mess0Active: "El código QR no tiene ninguna llamada activa o no estan configuradas correctamente en estos momentos.",
   //Mensaje si el QR no existe

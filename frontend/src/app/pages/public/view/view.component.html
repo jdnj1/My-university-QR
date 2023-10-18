@@ -14,6 +14,7 @@
       <div>
         <h1>{{this.qr}}</h1>
       </div>
+      <button *ngIf="!warning" (click)="share()" class="btn btn-success rounded-pill"><i class="bi bi-share-fill"></i></button>
     </div>
   </div>
 
