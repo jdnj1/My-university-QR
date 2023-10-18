@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard], canDeactivate: [(component: QrComponent) => !component.hasChanges] },
   { path: 'consult/:idQr/:idCon', component: ConsultFormComponent, canActivate: [authGuard], canDeactivate: [(component: ConsultFormComponent) => !component.hasChanges] },
   { path: 'users-list', component: UsersComponent, canActivate: [authGuard], data: {role: 1} },
-  { path: 'create-user', component: ConsultFormComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [(component: ConsultFormComponent) => !component.hasChanges] },
+  { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [(component: CreateUserComponent) => !component.hasChanges] },
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [(component: EditUserComponent) => !component.hasChanges]},
   { path: 'changePass', component: ChangePassComponent, canActivate: [authGuard] },
   { path: 'view/:id', component: ViewComponent },
