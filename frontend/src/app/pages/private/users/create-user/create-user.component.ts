@@ -1,16 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css']
 })
-export class CreateUserComponent implements OnDestroy {
+export class CreateUserComponent implements OnInit, OnDestroy {
   public formSubmit = false;
 
   // Booleano para comprobar si han habido cambios en el formulario
@@ -37,6 +38,10 @@ export class CreateUserComponent implements OnDestroy {
     this.formSubscription = this.userForm.valueChanges.subscribe(newValue => {
       this.hasChanges = true;
     });
+  }
+
+  ngOnInit(): void {
+    this.checkExit();
   }
 
   ngOnDestroy(): void {
@@ -77,6 +82,31 @@ export class CreateUserComponent implements OnDestroy {
 
   cancel(){
     this.router.navigateByUrl('users-list');
+  }
+
+  checkExit(){
+    this.router.events.subscribe((event: any) => {
+      if(event instanceof NavigationStart && this.hasChanges){
+        Swal.fire({
+          icon: "warning",
+          title: "¡Cambios sin guardar!",
+          text: "¿Desea continuar sin guardar los cambios?",
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#198754',
+          reverseButtons: true
+        }).then((result) => {
+          if(result.isConfirmed){
+            this.hasChanges = false;
+            this.router.navigateByUrl(event.url);
+          }
+          else{
+            return;
+          }
+        })
+      }
+    });
   }
 
 }

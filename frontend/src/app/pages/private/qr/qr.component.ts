@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -75,6 +75,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   ){}
 
   ngOnInit(): void {
+    this.checkExit();
     // Si el id de la ruta es 0 es porque se va a crear un nuevo codigo QR
     if(!this.create){
       this.getData();
@@ -469,5 +470,30 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   cancel(){
     this.router.navigateByUrl(`home`)
+  }
+
+  checkExit(){
+    this.router.events.subscribe((event: any) => {
+      if(event instanceof NavigationStart && this.hasChanges){
+        Swal.fire({
+          icon: "warning",
+          title: "¡Cambios sin guardar!",
+          text: "¿Desea continuar sin guardar los cambios?",
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#198754',
+          reverseButtons: true
+        }).then((result) => {
+          if(result.isConfirmed){
+            this.hasChanges = false;
+            this.router.navigateByUrl(event.url);
+          }
+          else{
+            return;
+          }
+        })
+      }
+    });
   }
 }

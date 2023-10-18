@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, UrlTree } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import { format } from 'date-fns';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-consult-form',
@@ -94,6 +95,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.checkExit();
+
     if(!this.create){
       this.getConsult();
     }
@@ -454,5 +457,30 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   dateRelative(){
     this.date = true;
     this.firstForm.get('typeDate')?.setValue(1);
+  }
+
+  checkExit(){
+    this.router.events.subscribe((event: any) => {
+      if(event instanceof NavigationStart && this.hasChanges){
+        Swal.fire({
+          icon: "warning",
+          title: "¡Cambios sin guardar!",
+          text: "¿Desea continuar sin guardar los cambios?",
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#198754',
+          reverseButtons: true
+        }).then((result) => {
+          if(result.isConfirmed){
+            this.hasChanges = false;
+            this.router.navigateByUrl(event.url);
+          }
+          else{
+            return;
+          }
+        })
+      }
+    });
   }
 }

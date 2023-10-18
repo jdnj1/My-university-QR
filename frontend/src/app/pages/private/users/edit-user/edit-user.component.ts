@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -51,6 +51,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.checkExit();
     this.getUserById();
   }
 
@@ -121,17 +122,29 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('users-list');
   }
 
-  pru(): Promise<any>{
-   return Swal.fire({
-      icon: 'warning',
-      title: 'Hay cambios sin guardar',
-      text: '¿Está seguro que desea salir sin guardar los cambios?',
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#dc3545',
-      reverseButtons: true
-    })
+  checkExit(){
+    this.router.events.subscribe((event: any) => {
+      if(event instanceof NavigationStart && this.hasChanges){
+        Swal.fire({
+          icon: "warning",
+          title: "¡Cambios sin guardar!",
+          text: "¿Desea continuar sin guardar los cambios?",
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#198754',
+          reverseButtons: true
+        }).then((result) => {
+          if(result.isConfirmed){
+            this.hasChanges = false;
+            this.router.navigateByUrl(event.url);
+          }
+          else{
+            return;
+          }
+        })
+      }
+    });
   }
 
 }
