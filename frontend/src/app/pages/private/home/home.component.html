@@ -34,7 +34,9 @@
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="card-title">{{'table.Qr' | translate}}</h5>
-              <button *ngIf="!print" [disabled]="listCode().length === 0" type="button" class="btn btn-success" title="Imprimir código QR" (click)="printList()"><i class="bi bi-printer"></i> {{'boton.Print' | translate}}</button>
+              <button *ngIf="!print" [disabled]="listCode().length === 0" type="button" class="btn btn-success" title="Imprimir código QR" (click)="printList()">
+                <i class="bi bi-printer"></i> {{'boton.Print' | translate}} <span class="badge bg-white text-success">{{listCode().length}}</span>
+              </button>
               <button *ngIf="print" disabled type="button" class="btn btn-success" title="Cargando...">
                 <span class="spinner-border spinner-border-sm" role="status"></span>
                  {{'spinner' | translate}}
