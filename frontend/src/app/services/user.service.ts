@@ -17,6 +17,8 @@ export class UserService {
   lim_consult: number = 0;
   role: number = 0;
 
+  isLogout: boolean = false;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -50,9 +52,11 @@ export class UserService {
   }
 
   logout(){
+    this.isLogout = true;
     localStorage.removeItem('token');
     //localStorage.removeItem('user');
     this.router.navigate(['/']);
+    this.isLogout = false;
   }
 
   isLogged(){

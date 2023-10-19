@@ -41,7 +41,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.checkExit();
+    console.log(this.hasChanges)
+    //this.checkExit();
   }
 
   ngOnDestroy(): void {
@@ -84,29 +85,29 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('users-list');
   }
 
-  checkExit(){
-    this.router.events.subscribe((event: any) => {
-      if(event instanceof NavigationStart && this.hasChanges){
-        Swal.fire({
-          icon: "warning",
-          title: "¡Cambios sin guardar!",
-          text: "¿Desea continuar sin guardar los cambios?",
-          showCancelButton: true,
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Confirmar',
-          confirmButtonColor: '#198754',
-          reverseButtons: true
-        }).then((result) => {
-          if(result.isConfirmed){
-            this.hasChanges = false;
-            this.router.navigateByUrl(event.url);
-          }
-          else{
-            return;
-          }
-        })
-      }
-    });
+  async checkExit(){
+    let res = true;
+    if(this.hasChanges){
+      await Swal.fire({
+        icon: "warning",
+        title: "¡Cambios sin guardar!",
+        text: "¿Desea continuar sin guardar los cambios?",
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        confirmButtonColor: '#198754',
+        reverseButtons: true
+      }).then((result) => {
+        if(result.isConfirmed){
+          res = true;
+        }
+        else{
+          res = false;
+        }
+      })
+    }
+
+    return res;
   }
 
 }

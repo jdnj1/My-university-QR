@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-qr',
@@ -72,10 +73,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     private consultService: ConsultService,
     private alertService: AlertService,
     private router: Router,
+    private userService: UserService
   ){}
 
   ngOnInit(): void {
-    this.checkExit();
     // Si el id de la ruta es 0 es porque se va a crear un nuevo codigo QR
     if(!this.create){
       this.getData();
@@ -118,6 +119,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     // Liberar recursos
     this.qrSubscription.unsubscribe();
+
   }
 
   getData(){
@@ -212,17 +214,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createConsult(){
     this.router.navigateByUrl(`consult/${this.idQr}/0`);
-    // this.consultService.createConsult({qrCode: this.idQr}).subscribe({
-    //   next: (res:any) =>{
-    //     console.log(res);
-    //     this.alertService.success("Llamada generada correctamente");
-    //     this.router.navigateByUrl(`/consult/${res.consult.insertId}`);
-    //   },
-    //   error: (err: HttpErrorResponse) => {
-    //     this.alertService.error('Error al crear la llamada');
-    //     console.log(err)
-    //   }
-    // });
   }
 
 
@@ -472,28 +463,28 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigateByUrl(`home`)
   }
 
-  checkExit(){
-    this.router.events.subscribe((event: any) => {
-      if(event instanceof NavigationStart && this.hasChanges){
-        Swal.fire({
-          icon: "warning",
-          title: "¡Cambios sin guardar!",
-          text: "¿Desea continuar sin guardar los cambios?",
-          showCancelButton: true,
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Confirmar',
-          confirmButtonColor: '#198754',
-          reverseButtons: true
-        }).then((result) => {
-          if(result.isConfirmed){
-            this.hasChanges = false;
-            this.router.navigateByUrl(event.url);
-          }
-          else{
-            return;
-          }
-        })
-      }
-    });
+  async checkExit(){
+    let res = true;
+    if(this.hasChanges){
+      await Swal.fire({
+        icon: "warning",
+        title: "¡Cambios sin guardar!",
+        text: "¿Desea continuar sin guardar los cambios?",
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        confirmButtonColor: '#198754',
+        reverseButtons: true
+      }).then((result) => {
+        if(result.isConfirmed){
+          res = true;
+        }
+        else{
+          res = false;
+        }
+      })
+    }
+
+    return res;
   }
 }

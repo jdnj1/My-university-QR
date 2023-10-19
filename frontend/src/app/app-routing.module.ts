@@ -13,15 +13,16 @@ import { CreateUserComponent } from './pages/private/users/create-user/create-us
 import { EditUserComponent } from './pages/private/users/edit-user/edit-user.component';
 import { ChangePassComponent } from './pages/private/users/change-pass/change-pass.component';
 import { insideGuard } from './guards/inside.guard';
+import { changesGuard } from './guards/changes.guard';
 
 const routes: Routes = [
   { path: 'auth', component: AuthLayoutComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
-  { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard], canDeactivate: [(component: QrComponent) => !component.hasChanges] },
-  { path: 'consult/:idQr/:idCon', component: ConsultFormComponent, canActivate: [authGuard], canDeactivate: [(component: ConsultFormComponent) => !component.hasChanges] },
+  { path: 'codeQr/:id', component: QrComponent, canActivate: [authGuard], canDeactivate: [changesGuard] },
+  { path: 'consult/:idQr/:idCon', component: ConsultFormComponent, canActivate: [authGuard], canDeactivate: [changesGuard] },
   { path: 'users-list', component: UsersComponent, canActivate: [authGuard], data: {role: 1} },
-  { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [(component: CreateUserComponent) => !component.hasChanges] },
-  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [(component: EditUserComponent) => !component.hasChanges]},
+  { path: 'create-user', component: CreateUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [changesGuard]},
+  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [authGuard], data: {role: 1}, canDeactivate: [changesGuard]},
   { path: 'changePass', component: ChangePassComponent, canActivate: [authGuard] },
   { path: 'view/:id', component: ViewComponent },
   { path: '', pathMatch: 'full', component: LoginComponent, canActivate: [insideGuard] },
