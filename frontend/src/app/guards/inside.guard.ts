@@ -7,9 +7,12 @@ export const insideGuard: CanActivateFn = (route, state) => {
   const auth = inject(UserService);
   const router = inject(Router);
 
-  if(auth.isLogged()){
+  if(auth.isLogged() && !auth.getLogging()){
     router.navigateByUrl('/home');
     return false;
+  }
+  else if(auth.getLogging()){
+    auth.logout();
   }
   return true;
 };

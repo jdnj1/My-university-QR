@@ -114,7 +114,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
     })
   }
 
-  // Funcion que permite compartir las gráficas desde el móvil
+  // Funcion que permite compartir las gráficas
   share(){
     const shareData = {
       title: "Visualizador gráfico accesible para Smart University",
@@ -123,9 +123,9 @@ export class ViewComponent implements OnInit,AfterViewInit {
     }
 
 
-      navigator.share(shareData)
-        .then(() => console.log("Compartido"))
-        .catch(error => console.log(`Error al compartir: ${error}`))
+    navigator.share(shareData)
+      .then(() => console.log("Compartido"))
+      .catch(error => console.log(`Error al compartir: ${error}`))
 
 
   }

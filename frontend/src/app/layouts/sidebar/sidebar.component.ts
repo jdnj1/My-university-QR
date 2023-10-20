@@ -35,7 +35,7 @@ export class SidebarComponent implements OnInit, OnChanges {
   }
 
   logout(){
-    this.userService.logout();
+    this.userService.loggingOut();
   }
 
 }
