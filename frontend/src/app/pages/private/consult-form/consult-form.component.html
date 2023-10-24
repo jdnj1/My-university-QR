@@ -23,8 +23,8 @@
             <div class="d-flex align-items-center justify-content-start">
               <h5 *ngIf="!create && !duplicate" class="card-title">Formulario de configuración</h5>
               <h5 *ngIf="create" class="card-title">Rellene el fomurlario de coniguración para crear la llamada</h5>
-              <h5 *ngIf="duplicate" class="card-title">Crear llaamda a partir de una copia</h5>
-              <div *ngIf="!create" class="d-flex align-items-center">
+              <h5 *ngIf="duplicate" class="card-title">Crear llamada a partir de una copia</h5>
+              <div *ngIf="!create && !duplicate" class="d-flex align-items-center">
                 <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activada</span>
                 <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivada</span>
                 <form [formGroup]="activateForm">
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="col-12 mb-5">
-                  <label for="tokenConsult" class="col-form-label">Token</label>
+                  <label for="tokenConsult" class="col-form-label">Token<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                   <!-- <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult"> -->
                   <textarea id="tokenConsult" class="form-control" style="height: 65px; max-height: 65px;"
                             formControlName="token" placeholder="Token de la llamada"></textarea>
@@ -70,11 +70,11 @@
                     <div class="{{!date? 'tab-pane fade show active' : 'tab-pane fade'}}" id="bordered-justified-home" role="tabpanel" aria-labelledby="absolute-tab">
                       <div class="row">
                         <div class="col-sm-6">
-                          <label for="dateFrom" class="col-form-label">Desde</label>
+                          <label for="dateFrom" class="col-form-label">Desde<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
                         </div>
                         <div class="col-sm-6">
-                          <label for="dateTo" class="col-form-label">Hasta</label>
+                          <label for="dateTo" class="col-form-label">Hasta<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
                         </div>
                       </div>
@@ -82,11 +82,11 @@
                     <div class="{{date? 'tab-pane fade show active' : 'tab-pane fade'}}" id="bordered-justified-contact" role="tabpanel" aria-labelledby="relative-tab">
                       <div class="row">
                         <div class="col-sm-6">
-                          <label for="relative" class="col-form-label">Cantidad</label>
+                          <label for="relative" class="col-form-label">Cantidad<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
                         </div>
                         <div class="col-sm-6">
-                          <label class="col-form-label">Unidad de tiempo</label>
+                          <label class="col-form-label">Unidad de tiempo<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <select class="form-select" aria-label="Default select example" formControlName="unit">
                             <option value="1" selected>Segundos</option>
                             <option value="2">Minutos</option>

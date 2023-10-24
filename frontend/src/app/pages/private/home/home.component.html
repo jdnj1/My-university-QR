@@ -50,9 +50,9 @@
                     <th scope="col">{{'table.title' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.onoff' | translate}}</th>
+                    <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.print' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.addprint' | translate}}</th>
-                    <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
                   </tr>
                 </thead>
@@ -74,10 +74,10 @@
                         </div>
                       </form>
                     </td>
+                    <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-success" title="Imprimir código QR" (click)="generateQR(i)"><i class="bi bi-printer"></i></button></td>
                     <td *ngIf="!isCode(i)" class="text-center"><button type="button" class="btn btn-success" title="Añadir código QR a la lista de imprimir" (click)="addList(i)"><i class="bi bi-patch-plus"></i></button></td>
                     <td *ngIf="isCode(i)" class="text-center"><button type="button" class="btn btn-danger" title="Eliminar código QR a la lista de imprimir" (click)="removeList(i)"><i class="bi bi-patch-minus"></i></button></td>
-                    <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteQr(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
                 </tbody>

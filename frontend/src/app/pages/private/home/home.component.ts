@@ -328,7 +328,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if(result.isConfirmed){
         document.body.appendChild(Swal.getHtmlContainer() as Node)
         const print = document.getElementById('print');
-        print!.style.clipPath = 'inset(0 100% 0 0)';
+        print!.style.clipPath = 'circle(0px)';
         print!.style.width = '300px'
 
         this.generatePDF(index);

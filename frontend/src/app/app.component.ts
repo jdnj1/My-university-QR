@@ -31,7 +31,7 @@ export class AppComponent {
     // Comprobamos si tenemos que renderrizar los componentes
     this.router.events.subscribe( ( event: any ) => {
       //console.log(event)
-      if( event instanceof NavigationEnd ){
+      if( event instanceof NavigationStart ){
         //console.log(event)
         if(event.url !== '/'){
           this.header = true;
@@ -48,12 +48,14 @@ export class AppComponent {
       }
 
       if (event instanceof ActivationEnd ){
+        console.log(event)
         if(event.snapshot.component === Error404Component || event.snapshot.component === ViewComponent){
           this.header = false;
           this.sidebar = false;
         }
       }
     });
+
   }
 
 }
