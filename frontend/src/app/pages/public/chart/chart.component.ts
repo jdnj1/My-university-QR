@@ -45,15 +45,13 @@ export class ChartComponent implements AfterViewInit {
       graph.resize();
     });
 
-    let grid;
-    if(this.data.ids){
-      grid = Math.trunc(this.data.ids.length / 2) * 20;
-      if(grid === 0) grid = 20;
-    }
+    // let grid = 0;
+    // if(this.data.ids){
+    //   grid = Math.round(this.data.ids.length / 2) * 10;
+    // }
+    // console.log(grid)
 
     //let grid = 20;
-
-    //console.log(this.data.dates)
 
     if(this.data.dates){
       for (let i = 0; i < this.data.dates.length; i++){
@@ -85,7 +83,9 @@ export class ChartComponent implements AfterViewInit {
           },
           legend: {
             data: this.data.ids,
-            top: '10%'
+            top: '10%',
+            type: 'scroll',
+            pageButtonPosition: 'start'
           },
           xAxis: {
             type: 'category',
@@ -95,7 +95,7 @@ export class ChartComponent implements AfterViewInit {
             type: 'value'
           },
           grid: {
-            top: `${grid}%`, // Espacio en la parte superior de la grafica
+            top: '20%', // Espacio en la parte superior de la grafica
           },
           dataZoom: [
             {
