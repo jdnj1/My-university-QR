@@ -41,17 +41,17 @@ export class AppComponent {
           this.header = false;
           this.sidebar = false;
         }
-
-        if(event.url === '/users-list'){
-          this.role = this.userService.role;
-        }
       }
 
       if (event instanceof ActivationEnd ){
-        console.log(event)
         if(event.snapshot.component === Error404Component || event.snapshot.component === ViewComponent){
           this.header = false;
           this.sidebar = false;
+        }
+        else{
+          if(this.userService.idUser === 0){
+            this.userService.getUserData();
+          }
         }
       }
     });

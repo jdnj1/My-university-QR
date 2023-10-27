@@ -7,9 +7,9 @@ import jwt_decode from 'jwt-decode';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit, OnChanges {
+export class SidebarComponent implements OnInit {
 
-  @Input() role: number = 0;
+  role: number = 0;
 
   constructor(
     private userService: UserService,
@@ -17,22 +17,25 @@ export class SidebarComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    this.getRole()
-
-  }
-
-  ngOnChanges(): void {
-    this.getRole();
-  }
-
-  getRole(){
-    let id = this.userService.getId();
-    this.userService.getUserById(id).subscribe({
-      next: (res: any) =>{
-        this.role = res.user.role;
-      }
+    this.userService.roleSub.subscribe((role: number) => {
+      this.role = role;
     });
+
   }
+
+  // ngOnChanges(): void {
+  //   //this.getRole();
+  //   console.log('cambio')
+  // }
+
+  // getRole(){
+  //   let id = this.userService.getId();
+  //   this.userService.getUserById(id).subscribe({
+  //     next: (res: any) =>{
+  //       this.role = res.user.role;
+  //     }
+  //   });
+  // }
 
   logout(){
     this.userService.loggingOut();

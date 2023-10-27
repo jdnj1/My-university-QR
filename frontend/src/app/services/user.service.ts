@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { loginform } from '../interfaces/login-form.interface';
 import { environment } from '../../environments/environment';
-import { catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
 
@@ -16,15 +16,14 @@ export class UserService {
   token: string = '';
   lim_consult: number = 0;
   role: number = 0;
+  roleSub = new BehaviorSubject(0);
 
   private isLogout: boolean = false;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) {
-    this.getUserData();
-  }
+  ) {}
 
   login(formData: any){
     return this.http.post(`${environment.apiBaseUrl}/login`, formData).pipe(
@@ -36,6 +35,7 @@ export class UserService {
         this.token = res.token;
         this.lim_consult = res.user.lim_consult;
         this.role = res.user.role;
+        this.roleSub.next(res.user.role);
 
         // Se almacena el token en el localStorage del navegador
         localStorage.setItem('token', res.token);
@@ -92,9 +92,7 @@ export class UserService {
           this.email = res.user.email;
           this.lim_consult = res.user.lim_consult;
           this.role = res.user.role;
-        },
-        complete: () => {
-          return
+          this.roleSub.next(res.user.role);
         }
       });
     }

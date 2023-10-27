@@ -247,7 +247,6 @@ const updateUsers = async( req , res = response ) => {
         updateQuery += ` WHERE idUser=${uid}`;
         
         // Se actualiza. 
-        console.log(updateQuery)
         user = await dbConsult(updateQuery);
         
         res.status( 200 ).json( user );
