@@ -86,7 +86,6 @@ export class UserService {
 
       this.getUserById(id).subscribe({
         next: (res: any) => {
-          console.log(res)
           // Se almacenan los datos del usuario en la clase
           this.idUser = res.user.idUser;
           this.email = res.user.email;
