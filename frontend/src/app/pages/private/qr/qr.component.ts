@@ -447,12 +447,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
       console.log(width, doc.internal.pageSize.width, imgProp.width)
 
-
-      const x = doc.internal.pageSize.width / 2 + imgProp.width / 2;
-      const y = doc.internal.pageSize.height / 2 + imgProp.height / 2;
-
-      console.log(x, y)
-
       doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
       doc.save(`${this.qr.description}.pdf`);
     })

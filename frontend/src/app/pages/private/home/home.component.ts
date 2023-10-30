@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 import { he } from 'date-fns/locale';
 import { PrintService } from 'src/app/services/print.service';
 import { qr } from 'src/app/interfaces/qr.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -62,7 +63,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private fb: FormBuilder,
     private route: Router,
-    private printService: PrintService
+    private printService: PrintService,
+    private translateService: TranslateService
   ){}
 
   ngOnInit(): void{
@@ -73,7 +75,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.user = res.user;
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al intentar obtener los datos del usuario');
+        this.alertService.error(this.translateService.instant('alert.user.error'));
       }
     });
 
@@ -148,7 +150,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('No se ha podido obtener el listado de códigos QR');
+        this.alertService.error(this.translateService.instant('alert.qr.list.error'));
       }
     });
   }
@@ -159,7 +161,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.route.navigateByUrl('codeQr/0');
     }
     else{
-      this.alertService.error('Ha superado el límite de codigos QR que se pueden crear en esta cuenta');
+      this.alertService.error(this.translateService.instant('alert.user.limit'));
     }
 
   }
@@ -175,12 +177,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if(!this.activateForm[index].value.activated){
       this.disabledQr[index] = true;
       value = {activated: 0};
-      msg= 'Código QR desactivado correctamente';
+      msg= this.translateService.instant('alert.qr.deactivated');
     }
     else{
       this.disabledQr[index] = false;
       value = {activated: 1};
-      msg= 'Código QR activado correctamente';
+      msg= this.translateService.instant('alert.qr.activated');
     }
 
     //actualizamos el atributo activado de la base de datos.
@@ -189,7 +191,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.alertService.success(msg);
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al acutalizar el código QR');
+        this.alertService.error(this.translateService.instant('alert.qr.update.error'));
       }
     })
   }
@@ -198,18 +200,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // Se lanza un mensaje modal para que el usuario confirme si quiere borrar el codigo QR
     Swal.fire({
       icon: 'warning',
-      title: 'Eliminar código QR',
-      text: 'Va a eliminar este código QR. Esta acción no se puede revertir.',
+      title: this.translateService.instant('home.modal.delete.title'),
+      text: this.translateService.instant('home.modal.delete.text'),
       showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Eliminar',
+      cancelButtonText: this.translateService.instant('button.cancel'),
+      confirmButtonText: this.translateService.instant('button.delete'),
       confirmButtonColor: '#dc3545',
       reverseButtons: true
     }).then((result) => {
       if(result.isConfirmed){
         this.qrService.deleteQr(this.codesQr[index].idQr).subscribe({
           next: (res: any) => {
-            this.alertService.success('Código QR eliminado');
+            this.alertService.success(this.translateService.instant('alert.qr.delete.success'));
 
             this.pagination.numPage = 0;
 
@@ -217,7 +219,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
           },
           error: (err: HttpErrorResponse) => {
-            this.alertService.error('Error al eliminar el código QR');
+            this.alertService.error(this.translateService.instant('alert.qr.delete.error'));
           }
         })
       }
@@ -444,7 +446,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     divf.appendChild(tagDes);
 
-    divf.style.clipPath = 'inset(0 100% 0 0)';
+    divf.style.clipPath = 'circle(0px)';
     divf.style.width = '269pt';
     divf.style.height = '392pt';
 
