@@ -50,12 +50,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
   constructor(
     private qrService: QrService,
-    private uniService: UniversityService,
-    private consultService: ConsultService,
     private route: ActivatedRoute,
-    private renderer: Renderer2,
-    private alertService: AlertService,
-    private viewContainerRef: ViewContainerRef
   ){}
 
   ngOnInit(): void {

@@ -312,19 +312,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   generateQR(index: number){
     Swal.fire({
-      title: 'Descargar código QR ',
+      title: this.translateService.instant('home.tooltip.download'),
       html: `<div id="print"><p class="text-center fw-bold m-0">${this.codesQr[index].tagName}</p>` +
       `<div id="contqr" class="d-flex align-items-center justify-content-center">` +
         `<img id="imgqr" src="${this.imgQr[index]}" style="width: 256px;">` +
       `</div>` +
       `<p class="text-center small m-0">${this.codesQr[index].tagDescription}</p>` +
     `</div>`,
-      footer: `El tamaño seleccionado es ${this.codesQr[index].sizePrint.toUpperCase()}`,
+      footer: `${this.translateService.instant('print.size')} ${this.codesQr[index].sizePrint.toUpperCase()}`,
       showConfirmButton: true,
-      confirmButtonText: 'Descargar PDF',
+      confirmButtonText: this.translateService.instant('button.pdf'),
       confirmButtonColor: 'green',
       showCancelButton: true,
       cancelButtonColor: '#dc3545',
+      cancelButtonText: this.translateService.instant('button.cancel'),
       reverseButtons: true
     }).then((result) => {
       if(result.isConfirmed){

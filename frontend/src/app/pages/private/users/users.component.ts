@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -43,7 +44,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private fb: FormBuilder,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ){
 
   }
@@ -98,25 +100,25 @@ export class UsersComponent implements OnInit, AfterViewInit {
     // Se lanza un mensaje modal para que el usuario confirme si quiere eliminar al usuario seleccionado
     Swal.fire({
       icon: 'warning',
-      title: 'Eliminar usuario',
-      text: 'Va a eliminar a este usuario. Esta acción no se puede revertir.',
+      title: this.translateService.instant('user.delete.title'),
+      text: this.translateService.instant('user.delete.text'),
       showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Eliminar',
+      cancelButtonText: this.translateService.instant('button.cancel'),
+      confirmButtonText: this.translateService.instant('button.delete'),
       confirmButtonColor: '#dc3545',
       reverseButtons: true
     }).then((result) => {
       if(result.isConfirmed){
         this.userService.deleteUser(this.userArray[index].idUser).subscribe({
           next: (res: any) => {
-            this.alertService.success('Usuario eliminado');
+            this.alertService.success(this.translateService.instant('alert.user.delete'));
 
             this.pagination.numPage = 0;
 
             this.getUsers(0);
           },
           error: (err: HttpErrorResponse) => {
-            this.alertService.error('Error al eliminar usuario');
+            this.alertService.error(this.translateService.instant('alert.user.delete.error'));
           }
         })
       }
@@ -130,7 +132,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if(!this.searchForm.valid){
       return;
     }
-    console.log("hokla")
 
     this.lastSearch = this.searchForm.value.searchQuery;
 

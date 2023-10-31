@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-consult-form',
@@ -85,11 +86,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private renderer: Renderer2,
     private consultService: ConsultService,
     private route: ActivatedRoute,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ){
 
   }
@@ -241,7 +242,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Error al obtener la llamada');
+        this.alertService.error(this.translateService.instant('alert.cons.get'));
       }
     });
   }
@@ -258,12 +259,12 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       if(dateFrom !== null && dateFrom !== undefined && dateFrom !== '' && dateTo !== null && dateTo !== undefined && dateTo !== ''){
         if(dateFrom >= dateTo){
-          this.alertService.error("La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'");
+          this.alertService.error(this.translateService.instant('alert.cons.dates'));
           return;
         }
       }
       else{
-        this.alertService.error("Introduce un rango de fechas correcto.");
+        this.alertService.error(this.translateService.instant('alert.cons.date.error'));
         return;
       }
     }
@@ -272,7 +273,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       // Si la cantidad a restar a la fecha actual es 0 se avisa
       if(this.firstForm.value.number === 0){
-        this.alertService.error("Introduce una cantitad mayor que 0");
+        this.alertService.error(this.translateService.instant('alert.cons.quant'));
         return;
       }
     }
@@ -284,7 +285,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       // Se comprueba que se hayan introducido los campos necesarios
       if(!this.operationForm.valid){
-        this.alertService.error("Los campos UID y Magnitud deben tener un valor");
+        this.alertService.error(this.translateService.instant('alert.cons.field'));
         return;
       }
 
@@ -339,10 +340,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
           this.getConsult();
           this.router.navigateByUrl(`consult/${this.idQr}/${this.idCon}`);
-          this.alertService.success('Llamada creada correctamente');
+          this.alertService.success(this.translateService.instant('alert.cons.create'));
         },
         error: (err: HttpErrorResponse) => {
-          this.alertService.error('Error al acutalizar la llamada')
+          this.alertService.error(this.translateService.instant('alert.cons.update.error'));
           console.log(err);
         }
       });
@@ -351,11 +352,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       // Se edita
       this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
         next: (res: any) => {
-          this.alertService.success('Llamada actualizada correctamente');
+          this.alertService.success(this.translateService.instant('alert.cons.update'));
           this.hasChanges = false;
         },
         error: (err: HttpErrorResponse) => {
-          this.alertService.error('Error al acutalizar la llamada')
+          this.alertService.error(this.translateService.instant('alert.cons.update.error'));
           console.log(err);
         }
       });
@@ -430,11 +431,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
     if(!this.activateForm.value.activated){
       value = {activated: 0};
-      msg= 'Llamada desactivada correctamente';
+      msg= this.translateService.instant('alert.cons.deactivated');
     }
     else{
       value = {activated: 1};
-      msg= 'Llamada activada correctamente';
+      msg= this.translateService.instant('alert.cons.activated');
     }
 
     //actualizamos el atributo activado de la base de datos.
@@ -443,7 +444,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.alertService.success(msg);
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al acutalizar el código QR');
+        this.alertService.error(this.translateService.instant('alert.qr.update.error'));
       }
     })
   }
@@ -463,11 +464,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     if(this.hasChanges){
       await Swal.fire({
         icon: "warning",
-        title: "¡Cambios sin guardar!",
-        text: "¿Desea continuar sin guardar los cambios?",
+        title: this.translateService.instant('change.modal.title'),
+        text: this.translateService.instant('change.modal.text'),
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
+        cancelButtonText: this.translateService.instant('button.cancel'),
+        confirmButtonText: this.translateService.instant('button.confirm'),
         confirmButtonColor: '#198754',
         reverseButtons: true
       }).then((result) => {

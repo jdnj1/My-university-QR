@@ -5,18 +5,18 @@
   <div class="pagetitle">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h1>Lista de usuarios</h1>
+        <h1>{{'user.title' | translate}}</h1>
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
-            <li class="breadcrumb-item active">Gestión de usuarios</li>
+            <li class="breadcrumb-item"><a routerLink="/home">{{'bread.home' | translate}}</a></li>
+            <li class="breadcrumb-item active">{{'bread.user' | translate}}</li>
           </ol>
         </nav>
       </div>
       <!-- barra de busqueda de los usuarios -->
       <div class="search-bar">
         <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
-          <input #searchField type="text" name="query" placeholder="Buscar usuarios..." title="Buscar usuarios" formControlName="searchQuery" (input)="checkSearch()">
+          <input #searchField type="text" name="query" placeholder="{{'user.search' | translate}}..." title="{{'user.search' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
           <button type="submit" title="Search"><i class="bi bi-search"></i></button>
           <button id="searchClearButton" type="reset" (click)="cleanSearch()">
             <i #searchClear class="bi bi-x-lg"></i>
@@ -24,7 +24,7 @@
         </form>
       </div>
       <!-- Boton para añadir nuevos codigos QR -->
-      <button type="button" class="btn btn-primary" (click)="createUser()"><i class="bi bi-person-fill-add"></i> Crear nuevo usuario</button>
+      <button type="button" class="btn btn-primary" (click)="createUser()"><i class="bi bi-person-fill-add"></i> {{'user.add' | translate}}</button>
     </div>
   </div>
 
@@ -33,28 +33,28 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Usuarios</h5>
+            <h5 class="card-title">{{'user.table.title' | translate}}</h5>
             <div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col" colspan="3"><i class="bi bi-person-circle m-2"></i>Email</th>
-                    <th class="text-center" scope="col">Rol</th>
-                    <th class="text-center" scope="col">Editar</th>
-                    <th class="text-center" scope="col">Eliminar</th>
+                    <th scope="col" colspan="3"><i class="bi bi-person-circle m-2"></i>{{'user.table.email' | translate}}</th>
+                    <th class="text-center" scope="col">{{'user.table.role' | translate}}</th>
+                    <th class="text-center" scope="col">{{'user.table.edit' | translate}}</th>
+                    <th class="text-center" scope="col">{{'user.table.delete' | translate}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="5" #msg>No se ha obtenido ningún usuario</td>
+                    <td colspan="5" #msg>{{'msg.user' | translate}}</td>
                   </tr>
                   <tr *ngFor="let user of userArray; let i = index">
                     <td colspan="3" [ngClass]="{'text-primary': user.email === appUser}">{{user.email}}
                     </td>
                     <td class="text-center" *ngIf="user.role === 1"><span class="badge bg-primary">admin</span></td>
                     <td class="text-center" *ngIf="user.role === 0"><span class="badge bg-secondary">user</span></td>
-                    <td class="text-center"><button type="button" class="btn btn-primary" title="Editar código QR" (click)="updateUser(i)"><i class="bi bi-pencil-square"></i></button></td>
-                    <td class="text-center"><button [disabled]="user.email === appUser" type="button" class="btn btn-danger" title="Eliminar códig QR" (click)="deleteUser(i)"><i class="bi bi-trash"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-primary" title="{{'user.table.edit.tooltip' | translate}}" (click)="updateUser(i)"><i class="bi bi-pencil-square"></i></button></td>
+                    <td class="text-center"><button [disabled]="user.email === appUser" type="button" class="btn btn-danger" title="{{'user.table.delete.tooltip' | translate}}" (click)="deleteUser(i)"><i class="bi bi-trash"></i></button></td>
                   </tr>
                 </tbody>
               </table>

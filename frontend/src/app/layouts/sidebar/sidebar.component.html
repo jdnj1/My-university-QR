@@ -2,35 +2,35 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
-    <li class="nav-heading">Gestión</li>
+    <li class="nav-heading">{{'sidebar.management' | translate}}</li>
 
     <li class="nav-item">
       <a class="nav-link" routerLink="/home" routerLinkActive="active">
         <i class="bi bi-qr-code"></i>
-        <span>Gestión de los códigos QR</span>
+        <span>{{'sidebar.qr' | translate}}</span>
       </a>
     </li>
 
     <li class="nav-item" *ngIf="role === 1">
       <a class="nav-link" routerLink="/users-list" routerLinkActive="active">
         <i class="bi bi-people-fill"></i>
-        <span>Gestión de los usuarios</span>
+        <span>{{'sidebar.user' | translate}}</span>
       </a>
     </li>
 
-    <li class="nav-heading">Perfil</li>
+    <li class="nav-heading">{{'sidebar.profile' | translate}}</li>
 
     <li class="nav-item">
       <a class="nav-link" routerLink="/changePass" routerLinkActive="active">
         <i class="bi bi-key-fill"></i>
-        <span>Cambiar contraseña</span>
+        <span>{{'sidebar.pass' | translate}}</span>
       </a>
     </li><!-- End Profile Page Nav -->
 
     <li class="nav-item">
       <a class="nav-link collapsed micursor" (click)="logout()">
         <i class="bi bi-box-arrow-right"></i>
-        <span>Cerrar sesión</span>
+        <span>{{'sidebar.logout' | translate}}</span>
       </a>
     </li>
   </ul>

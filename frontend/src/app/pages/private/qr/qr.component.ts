@@ -12,6 +12,7 @@ import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UserService } from 'src/app/services/user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-qr',
@@ -73,6 +74,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     private consultService: ConsultService,
     private alertService: AlertService,
     private router: Router,
+    private translateService: TranslateService,
     private userService: UserService
   ){}
 
@@ -169,7 +171,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('No se ha podido obtener el código QR');
+        this.alertService.error(this.translateService.instant('alert.qr.get'));
       }
     });
   }
@@ -207,7 +209,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error("No se ha podido obtener las llamadas obtener las llamadas")
+        this.alertService.error(this.translateService.instant('alert.cons.list'))
       }
     })
   }
@@ -223,11 +225,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if(!this.activateForm.value.activated){
       value = {activated: 0};
-      msg= 'Código QR desactivado correctamente';
+      msg= this.translateService.instant('alert.qr.deactivated');
     }
     else{
       value = {activated: 1};
-      msg= 'Código QR activado correctamente';
+      msg= this.translateService.instant('alert.qr.activated');
     }
 
     //actualizamos el atributo activado de la base de datos.
@@ -236,7 +238,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.success(msg);
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al acutalizar el código QR');
+        this.alertService.error(this.translateService.instant('alert.qr.update.error'));
       }
     })
   }
@@ -259,11 +261,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.qrSubscription.unsubscribe();
           this.getData();
           this.router.navigateByUrl(`codeQr/${this.idQr}`);
-          this.alertService.success("Código QR generado correctamente");
+          this.alertService.success(this.translateService.instant('alert.qr.create'));
         },
         error: (err: HttpErrorResponse) => {
-          this.alertService.error('Error al crear el código QR');
-          console.log(err)
+          this.alertService.error(this.translateService.instant('alert.qr.create.error'));
         }
       });
     }
@@ -271,12 +272,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       // Se acutaliza el qr con los datos introducidos
       this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
         next: (res: any) => {
-          this.alertService.success('QR actualizado correctamente');
+          this.alertService.success(this.translateService.instant('alert.qr.update'));
           this.hasChanges = false;
         },
         error: (err: HttpErrorResponse) => {
-          this.alertService.error('Error al intentar actualizar el QR');
-          console.log(err)
+          this.alertService.error(this.translateService.instant('alert.qr.update.error'));
         }
       });
     }
@@ -290,12 +290,12 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     if(!this.consultForm[index].value.activated){
       this.disableConsult[index] = true;
       value = {activated: 0};
-      msg= 'Llamada desactivada correctamente';
+      msg= this.translateService.instant('alert.cons.deactivated');
     }
     else{
       this.disableConsult[index] = false;
       value = {activated: 1};
-      msg= 'Llamada activada correctamente';
+      msg= this.translateService.instant('alert.cons.activated');
     }
 
     //actualizamos el atributo activado de la base de datos.
@@ -304,7 +304,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.success(msg);
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al acutalizar la llamada');
+        this.alertService.error(this.translateService.instant('alert.cons.update.error'));
       }
     });
   }
@@ -313,25 +313,25 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
      // Se lanza un mensaje modal para que el usuario confirme si quiere la llamada
      Swal.fire({
       icon: 'warning',
-      title: 'Eliminar llamada',
-      text: 'Va a eliminar esta llamada del código QR. Esta acción no se puede revertir.',
+      title: this.translateService.instant('qr.modal.delete.title'),
+      text: this.translateService.instant('qr.modal.delete.text'),
       showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Eliminar',
+      cancelButtonText: this.translateService.instant('button.cancel'),
+      confirmButtonText: this.translateService.instant('button.delete'),
       confirmButtonColor: '#dc3545',
       reverseButtons: true
     }).then((result) => {
       if(result.isConfirmed){
         this.consultService.deleteConsult(this.consults[index].idConsult).subscribe({
           next: (res: any) => {
-            this.alertService.success('Llamada eliminada');
+            this.alertService.success(this.translateService.instant('alert.cons.delete'));
 
             this.pagination.numPage = 0;
 
             this.getConsults(0);
           },
           error: (err: HttpErrorResponse) => {
-            this.alertService.error('Error al eliminar el código QR');
+            this.alertService.error(this.translateService.instant('alert.cons.delete.error'));
           }
         })
       }
@@ -391,17 +391,17 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consultService.updateConsult({orderConsult: index + 1}, this.consults[index].idConsult).subscribe({
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Se ha producido un error al actualizar el orden')
+        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
 
     this.consultService.updateConsult({orderConsult: index}, this.consults[index + 1].idConsult).subscribe({
       next: (res: any) => {
-        this.alertService.success("El orden se ha actualizado correctamente");
+        this.alertService.success((this.translateService.instant('alert.cons.order')));
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Se ha producido un error al actualizar el orden')
+        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
 
@@ -416,17 +416,17 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consultService.updateConsult({orderConsult: index - 1}, this.consults[index].idConsult).subscribe({
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Se ha producido un error al actualizar el orden')
+        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
 
     this.consultService.updateConsult({orderConsult: index}, this.consults[index - 1].idConsult).subscribe({
       next: (res: any) => {
-        this.alertService.success("El orden se ha actualizado correctamente");
+        this.alertService.success(this.translateService.instant('alert.cons.order'));
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Se ha producido un error al actualizar el orden')
+        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
 
@@ -462,11 +462,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     if(this.hasChanges){
       await Swal.fire({
         icon: "warning",
-        title: "¡Cambios sin guardar!",
-        text: "¿Desea continuar sin guardar los cambios?",
+        title: this.translateService.instant('change.modal.title'),
+        text: this.translateService.instant('change.modal.text'),
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
+        cancelButtonText: this.translateService.instant('button.cancel'),
+        confirmButtonText: this.translateService.instant('button.confirm'),
         confirmButtonColor: '#198754',
         reverseButtons: true
       }).then((result) => {

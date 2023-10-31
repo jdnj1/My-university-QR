@@ -7,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-user',
@@ -44,7 +45,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     private router: Router,
     private alertService: AlertService,
     private route: ActivatedRoute,
-    private renderer: Renderer2
+    private translateService: TranslateService
 
   ){
 
@@ -77,7 +78,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.alertService.error('Error al intentar actualizar el usuario')
+        this.alertService.error(this.translateService.instant('alert.user.update.error'))
       }
     });
   }
@@ -107,8 +108,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/users-list');
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err)
-        this.alertService.error('Error al actualizar al usuario');
+        this.alertService.error(this.translateService.instant('alert.user.update.error'));
       }
     });
   }
@@ -126,11 +126,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
     if(this.hasChanges){
       await Swal.fire({
         icon: "warning",
-        title: "¡Cambios sin guardar!",
-        text: "¿Desea continuar sin guardar los cambios?",
+        title: this.translateService.instant('change.modal.title'),
+        text: this.translateService.instant('change.modal.text'),
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
+        cancelButtonText: this.translateService.instant('button.cancel'),
+        confirmButtonText: this.translateService.instant('button.confirm'),
         confirmButtonColor: '#198754',
         reverseButtons: true
       }).then((result) => {

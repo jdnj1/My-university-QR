@@ -3,12 +3,12 @@
   <div class="pagetitle">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h1>Configuración de la llamada</h1>
+        <h1>{{'cons.title' | translate}}</h1>
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
-            <li class="breadcrumb-item"><a routerLink="/codeQr/{{consult? consult.qrCode : ''}}">Configuración de código QR</a></li>
-            <li class="breadcrumb-item active">Configuración la llamada</li>
+            <li class="breadcrumb-item"><a routerLink="/home">{{'bread.home' | translate}}</a></li>
+            <li class="breadcrumb-item"><a routerLink="/codeQr/{{consult? consult.qrCode : ''}}">{{'bread.qr' | translate}}</a></li>
+            <li class="breadcrumb-item active">{{'bread.cons' | translate}}</li>
           </ol>
         </nav>
       </div>
@@ -21,12 +21,12 @@
           <div class="row">
 
             <div class="d-flex align-items-center justify-content-start">
-              <h5 *ngIf="!create && !duplicate" class="card-title">Formulario de configuración</h5>
-              <h5 *ngIf="create" class="card-title">Rellene el fomurlario de coniguración para crear la llamada</h5>
-              <h5 *ngIf="duplicate" class="card-title">Crear llamada a partir de una copia</h5>
+              <h5 *ngIf="!create && !duplicate" class="card-title">{{'cons.form' | translate}}</h5>
+              <h5 *ngIf="create" class="card-title">{{'cons.new' | translate}}</h5>
+              <h5 *ngIf="duplicate" class="card-title">{{'cons.duplicate' | translate}}</h5>
               <div *ngIf="!create && !duplicate" class="d-flex align-items-center">
-                <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">Activada</span>
-                <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">Desactivada</span>
+                <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em; margin-left: 1em">{{'badge.activated' | translate}}</span>
+                <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em; margin-left: 1em">{{'badge.deactivated' | translate}}</span>
                 <form [formGroup]="activateForm">
                   <div class="form-check form-switch">
                     <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateConsult()">
@@ -38,16 +38,16 @@
             <div class="col-lg-6">
               <div class="row g-3" >
                 <div class="col-12">
-                  <label for="nameConsult" class="col-form-label">Nombre</label>
-                  <input type="text" name="name" class="form-control" formControlName="name" id="nameConsult" placeholder="Nombre de la llamada">
+                  <label for="nameConsult" class="col-form-label">{{'cons.form.name' | translate}}</label>
+                  <input type="text" name="name" class="form-control" formControlName="name" id="nameConsult" placeholder="{{'cons.form.name.placeholder' | translate}}">
                 </div>
 
                 <div class="col-12 mb-5">
                   <label for="tokenConsult" class="col-form-label">Token<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                   <!-- <input type="text" name="token" class="form-control" formControlName="token" id="tokenConsult"> -->
                   <textarea id="tokenConsult" class="form-control" style="height: 65px; max-height: 65px;"
-                            formControlName="token" placeholder="Token de la llamada"></textarea>
-                  <div class="text-danger" *ngIf="!campoValido('token')">Por favor introduce el token de la llamada.</div>
+                            formControlName="token" placeholder="{{'cons.form.token.placeholder' | translate}}"></textarea>
+                  <div class="text-danger" *ngIf="!campoValido('token')">{{'cons.form.token.error' | translate}}</div>
                 </div>
 
                 <div class="col-12 mb-5">
@@ -56,13 +56,13 @@
                     <li class="nav-item flex-fill" role="presentation">
                       <button class="{{!date? 'nav-link w-100 active' : 'nav-link w-100'}}" id="absolute-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" (click)="dateAbsolute()">
                         <i class="bi bi-calendar"></i>
-                        <span class="d-none d-sm-inline m-1">Fecha absoluta</span>
+                        <span class="d-none d-sm-inline m-1">{{'cons.form.dateAbs' | translate}}</span>
                       </button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
                       <button class="{{date? 'nav-link w-100 active' : 'nav-link w-100'}}" id="relative-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" (click)="dateRelative()">
                         <i class="bi bi-stopwatch"></i>
-                        <span class="d-none d-sm-inline m-1">Fecha relativa</span>
+                        <span class="d-none d-sm-inline m-1">{{'cons.form.dateRel' | translate}}</span>
                       </button>
                     </li>
                   </ul>
@@ -70,11 +70,11 @@
                     <div class="{{!date? 'tab-pane fade show active' : 'tab-pane fade'}}" id="bordered-justified-home" role="tabpanel" aria-labelledby="absolute-tab">
                       <div class="row">
                         <div class="col-sm-6">
-                          <label for="dateFrom" class="col-form-label">Desde<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                          <label for="dateFrom" class="col-form-label">{{'cons.form.abs.from' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="datetime-local" class="form-control" id="dateFrom" formControlName="dateFrom">
                         </div>
                         <div class="col-sm-6">
-                          <label for="dateTo" class="col-form-label">Hasta<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                          <label for="dateTo" class="col-form-label">{{'cons.form.abs.to' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="datetime-local" class="form-control" id="dateTo" formControlName="dateTo">
                         </div>
                       </div>
@@ -82,16 +82,16 @@
                     <div class="{{date? 'tab-pane fade show active' : 'tab-pane fade'}}" id="bordered-justified-contact" role="tabpanel" aria-labelledby="relative-tab">
                       <div class="row">
                         <div class="col-sm-6">
-                          <label for="relative" class="col-form-label">Cantidad<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                          <label for="relative" class="col-form-label">{{'cons.form.rel.quantity' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
                         </div>
                         <div class="col-sm-6">
-                          <label class="col-form-label">Unidad de tiempo<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                          <label class="col-form-label">{{'cons.form.rel.unit' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                           <select class="form-select" aria-label="Default select example" formControlName="unit">
-                            <option value="1" selected>Segundos</option>
-                            <option value="2">Minutos</option>
-                            <option value="3">Horas</option>
-                            <option value="4">Dias</option>
+                            <option value="1" selected>{{'cons.sec' | translate}}</option>
+                            <option value="2">{{'cons.min' | translate}}</option>
+                            <option value="3">{{'cons.hour' | translate}}</option>
+                            <option value="4">{{'cons.day' | translate}}</option>
                           </select>
                         </div>
                       </div>
@@ -101,15 +101,15 @@
 
                 <div class="col-sm-6">
 
-                  <label class="col-form-label">Selecciona la gráfica para representar los datos</label>
+                  <label class="col-form-label">{{'cons.form.img' | translate}}</label>
                   <select *ngIf="filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
-                    <option value="0">Gráfica lineal</option>
-                    <option value="1">Gráfica de barras</option>
+                    <option value="0">{{'cons.chart.line' | translate}}</option>
+                    <option value="1">{{'cons.chart.bar' | translate}}</option>
                   </select>
 
                   <select *ngIf="!filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
-                    <option value="2">Gráfica de gauge</option>
-                    <option value="3">Solo el valor</option>
+                    <option value="2">{{'cons.chart.gauge' | translate}}</option>
+                    <option value="3">{{'cons.chart.value' | translate}}</option>
                   </select>
                 </div>
 
@@ -125,18 +125,18 @@
             <div class="col-lg-6">
 
               <div>
-                <label class="col-form-label">Cantidad de datos</label>
+                <label class="col-form-label">{{'cons.data' | translate}}</label>
                 <select class="form-select" aria-label="Default select example" formControlName="operation" (change)="selectData()">
-                  <option value="1" selected>Todos</option>
-                  <option value="2">Máximo</option>
-                  <option value="3">Mínimo</option>
-                  <option value="4">Último</option>
+                  <option value="1" selected>{{'cons.data.all' | translate}}</option>
+                  <option value="2">{{'cons.data.max' | translate}}</option>
+                  <option value="3">{{'cons.data.min' | translate}}</option>
+                  <option value="4">{{'cons.data.last' | translate}}</option>
                 </select>
               </div>
 
               <div class="d-flex align-items-center">
-                <h5 class="card-title">Filtros</h5>
-                <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
+                <h5 class="card-title">{{'cons.data.filters' | translate}}</h5>
+                <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" title="{{'cons.data.tooltip.add' | translate}}" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
               </div>
               <form *ngIf="!filters" [formGroup]="operationForm">
                 <div class="row mb-3">
@@ -146,7 +146,7 @@
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <label for="inputName" class="col-sm-3 col-form-label">Magnitud</label>
+                  <label for="inputName" class="col-sm-3 col-form-label">{{'cons.data.mag' | translate}}</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputName" formControlName="name">
                   </div>
@@ -155,7 +155,7 @@
               <div *ngIf="filters" style="height: 500px; ;max-height: 100%; overflow-y: scroll;" [formGroup]="filterForm">
                 <div class="row g-3 align-items-end m-2" *ngFor="let key of keys; let i = index">
                   <div class="col-sm-3">
-                    <label class="form-label">Filtro {{i + 1}}</label>
+                    <label class="form-label">{{'cons.data.filter' | translate}} {{i + 1}}</label>
                     <select class="form-select" (change)="onChange(i, key, $event)">
                       <option *ngFor="let opt of options" value="{{opt}}" [selected]="opt === keys[i]"
                       [disabled]="keys.includes(opt) && opt !== keys[i]">{{opt}}</option>
@@ -165,15 +165,15 @@
                     <input type="text" name="filters" id="filters" class="form-control" formControlName="{{key}}">
                   </form>
                   <div class="col-2">
-                    <button type="button" class="btn btn-danger" title="Eliminar filtro" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
+                    <button type="button" class="btn btn-danger" title="{{'cons.data.tooltip.delete' | translate}}" (click)="deleteFilter(i, key)"><i class="bi bi-trash"></i></button>
                   </div>
                 </div>
               </div>
 
               <div class="d-flex justify-content-end m-2">
-                <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
-                <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
-                <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">Guardar</button>
+                <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">{{'button.return' | translate}}</button>
+                <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">{{'button.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success m-2" (click)="updateConsult()" [disabled]="!hasChanges">{{'button.save' | translate}}</button>
               </div>
             </div>
           </div>

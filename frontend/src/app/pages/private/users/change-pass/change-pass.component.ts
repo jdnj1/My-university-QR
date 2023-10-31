@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 
@@ -32,7 +34,9 @@ export class ChangePassComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private alertService: AlertService,
-    private userService: UserService
+    private userService: UserService,
+    private translateService: TranslateService,
+    private router: Router
   ){
     // Nos suscribimos a los cambios que pueda tener el fomrmulario
     this.formSubscription = this.passForm.valueChanges.subscribe(newValue => {
@@ -60,7 +64,7 @@ export class ChangePassComponent implements OnInit, OnDestroy {
 
     //comprobamos primero que la contraseña nueva coincide con el campo de repetir contraseña
     if(this.passForm.get('newPassword')?.value != this.passForm.get('newAgain')?.value){
-      this.alertService.error("La contraseña nueva no coincide");
+      this.alertService.error(this.translateService.instant('alert.pass.new'));
       return;
     }
 
@@ -80,6 +84,6 @@ export class ChangePassComponent implements OnInit, OnDestroy {
   }
 
   cancel(){
-
+    this.router.navigateByUrl('/home');
   }
 }

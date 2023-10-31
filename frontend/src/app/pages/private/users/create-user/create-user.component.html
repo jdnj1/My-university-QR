@@ -5,12 +5,12 @@
   <div class="pagetitle">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h1>Creación de nuevo usuario</h1>
+        <h1>{{'user.create.title' | translate}}</h1>
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
-            <li class="breadcrumb-item"><a routerLink="/users-list">Gestión de usuarios</a></li>
-            <li class="breadcrumb-item active">Creación de usuario</li>
+            <li class="breadcrumb-item"><a routerLink="/home">{{'bread.home' | translate}}</a></li>
+            <li class="breadcrumb-item"><a routerLink="/users-list">{{'bread.user' | translate}}</a></li>
+            <li class="breadcrumb-item active">{{'bread.user.create' | translate}}</li>
           </ol>
         </nav>
       </div>
@@ -25,43 +25,43 @@
             <div class="card-body">
               <h5 class="card-title">
                 <i class="bi-person-fill-add"></i>
-                Introduce los datos del nuevo usuario
+                {{'user.create.form' | translate}}
               </h5>
 
               <form class="row g-3 needs-validation" id="loginForm" [formGroup]="userForm" (ngSubmit)="createUser()" novalidate>
 
                 <div class="col-12">
-                  <label for="yourEmail" class="form-label">Email</label>
+                  <label for="yourEmail" class="form-label">{{'user.table.email' | translate}}</label>
                   <div class="input-group has-validation">
                     <span class="input-group-text" id="inputGroupPrepend">@</span>
                     <input type="text" name="email" class="form-control" formControlName="email" id="yourEmail" >
                   </div>
-                  <div class="text-danger" *ngIf="!campoValido('email')">Por favor introduce un email correcto.</div>
+                  <div class="text-danger" *ngIf="!campoValido('email')">{{'user.email.error' | translate}}</div>
                 </div>
 
                 <div class="col-12">
-                  <label for="yourPassword" class="form-label">Contraseña</label>
+                  <label for="yourPassword" class="form-label">{{'user.pass' | translate}}</label>
                   <input type="password" name="password" class="form-control" formControlName="password" id="yourPassword" >
-                  <div class="text-danger" *ngIf="!campoValido('password')">Porfavor introduce una contraseña</div>
+                  <div class="text-danger" *ngIf="!campoValido('password')">{{'user.pass.error' | translate}}</div>
                 </div>
 
                 <div class="col-12">
-                  <label for="limit" class="form-label">Límite de códigos QR</label>
-                  <p class="small">Para no tener límite, introduzca un 0</p>
+                  <label for="limit" class="form-label">{{'user.limit' | translate}}</label>
+                  <p class="small">{{'user.limit.des' | translate}}</p>
                   <input type="number" min="0" name="limit" class="form-control" formControlName="lim_consult" id="limit" >
                 </div>
 
                 <div class="col-12">
-                  <label class="col-form-label">Rol</label>
+                  <label class="col-form-label">{{'user.table.role' | translate}}</label>
                   <select class="form-select" aria-label="Default select example" formControlName="role">
-                    <option value="0" selected>Básico</option>
-                    <option value="1">Administrador</option>
+                    <option value="0" selected>{{'user.role.basic' | translate}}</option>
+                    <option value="1">{{'user.role.admin' | translate}}</option>
                   </select>
                 </div>
 
                 <div class="col-12 d-flex justify-content-around">
-                  <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
-                  <button class="btn btn-primary" type="submit" [disabled]="!hasChanges">Crear usuario</button>
+                  <button class="btn btn-danger" type="button" (click)="cancel()">{{'button.cancel' | translate}}</button>
+                  <button class="btn btn-primary" type="submit" [disabled]="!hasChanges">{{'user.create.button' | translate}}</button>
                 </div>
               </form>
 

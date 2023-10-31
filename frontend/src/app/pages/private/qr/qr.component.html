@@ -5,11 +5,11 @@
   <div class="pagetitle">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h1>Código QR</h1>
+        <h1>{{'qr.title' | translate}}</h1>
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink="/home">Inicio</a></li>
-            <li class="breadcrumb-item active">Configuración de código QR</li>
+            <li class="breadcrumb-item"><a routerLink="/home">{{'bread.home' | translate}}</a></li>
+            <li class="breadcrumb-item active">{{'bread.qr' | translate}}</li>
           </ol>
         </nav>
       </div>
@@ -21,8 +21,8 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 *ngIf="!create" class="card-title">Configuración del QR</h5>
-            <h5 *ngIf="create" class="card-title">Rellene los datos del nuevo QR</h5>
+            <h5 *ngIf="!create" class="card-title">{{'qr.conf' | translate}}</h5>
+            <h5 *ngIf="create" class="card-title">{{'qr.new' | translate}}</h5>
             <div class="container">
               <form [formGroup]="dataQrForm">
                 <div class="row">
@@ -30,10 +30,10 @@
                   <div class="col-lg-4">
 
                     <div class="d-flex align-items-center justify-content-between">
-                      <h5 class="scol-form-label">Datos del QR</h5>
+                      <h5 class="scol-form-label">{{'qr.data' | translate}}</h5>
                       <div *ngIf="!create" class="d-flex align-items-center">
-                        <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">Activado</span>
-                        <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">Desactivado</span>
+                        <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">{{'bacge.activated' | translate}}</span>
+                        <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">{{'badge.deactivated' | translate}}</span>
                         <form [formGroup]="activateForm">
                           <div class="form-check form-switch">
                             <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateQr()">
@@ -41,34 +41,34 @@
                         </form>
                       </div>
                     </div>
-                    <label for="inputName" class="form-label">Título<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
-                    <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="Título del QR">
-                    <div class="text-danger" *ngIf="!campoValido('description')">Por favor introduce un título al código QR.</div>
+                    <label for="inputName" class="form-label">{{'qr.data.title' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                    <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="{{'qr.data.title.placeholder' | translate}}">
+                    <div class="text-danger" *ngIf="!campoValido('description')">{{'qr.data.title.error' | translate}}</div>
 
-                    <label for="inputDate" class="form-label">Fecha de validez<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                    <label for="inputDate" class="form-label">{{'qr.data.date' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
                     <input type="date" class="form-control" id="inputDate"
                       formControlName="date">
-                    <div class="text-danger" *ngIf="!campoValido('date')">Por favor introduce una fecha de validez.</div>
+                    <div class="text-danger" *ngIf="!campoValido('date')">{{'qr.data.date.error' | translate}}</div>
                   </div>
 
 
                   <div class="col m-2 m-lg-0">
                     <div class="row">
                       <div class="col">
-                        <h5 class="scol-form-label">Datos de impresión</h5>
+                        <h5 class="scol-form-label">{{'qr.print' | translate}}</h5>
                         <div class="row">
                           <div class="col-6">
 
                             <!-- <h5 class="scol-form-label">Datos de impresión</h5> -->
-                            <label for="inputNameTag" class="form-label">Nombre de etiqueta</label>
+                            <label for="inputNameTag" class="form-label">{{'qr.print.tagname' | translate}}</label>
                             <input type="text" class="form-control" id="inputNameTag"
-                              formControlName="tagName"  placeholder="Nombre de etiqueta">
+                              formControlName="tagName"  placeholder="{{'qr.print.tagname' | translate}}">
 
 
                           </div>
 
                           <div class="col-6">
-                            <label for="inputNameTag" class="form-label">Tamaño impresión</label>
+                            <label for="inputNameTag" class="form-label">{{'qr.print.size' | translate}}</label>
                             <select class="form-select" formControlName="sizePrint">
                               <option value="a4" selected>A4</option>
                               <option value="a5">A5</option>
@@ -79,15 +79,15 @@
                           </div>
 
                           <div class="col">
-                            <label for="inputDescTag" class="form-label">Descripción de etiqueta</label>
+                            <label for="inputDescTag" class="form-label">{{'qr.print.tagdes' | translate}}</label>
                             <input type="text" class="form-control" id="inputDescTag"
-                              formControlName="tagDescription"  placeholder="Descripción de etiqueta">
+                              formControlName="tagDescription"  placeholder="{{'qr.print.tagdes' | translate}}">
                           </div>
 
                           <div class="d-flex justify-content-end  mt-4 mb-4">
-                            <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">Volver</button>
-                            <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">Cancelar</button>
-                            <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">Guardar</button>
+                            <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">{{'button.return' | translate}}</button>
+                            <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">{{'button.cancel' | translate}}</button>
+                            <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">{{'button.save' | translate}}</button>
 
                           </div>
 
@@ -105,7 +105,7 @@
                           <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
                         </div>
                         <div class="d-flex justify-content-center m-2">
-                          <button [disabled]="create" type="button" class="btn btn-success" title="Imprimir código QR" (click)="generatePDF()"><i class="bi bi-printer"></i> Descargar Código QR</button>
+                          <button [disabled]="create" type="button" class="btn btn-success" title="{{'qr.download' | translate}}" (click)="generatePDF()"><i class="bi bi-printer"></i> {{'qr.download' | translate}}</button>
                         </div>
                       </div>
 
@@ -128,11 +128,11 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title">Llamadas del código QR</h5>
-            <!-- barra de busqueda de codigos QR -->
+            <h5 class="card-title">{{'qr.table.title' | translate}}</h5>
+            <!-- barra de busqueda de llamadas -->
             <div class="search-bar">
               <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
-                <input #searchField type="text" name="query" placeholder="Buscar llamadas..." title="Buscar llamadas" formControlName="searchQuery" (input)="checkSearch()">
+                <input #searchField type="text" name="query" placeholder="{{'qr.search' | translate}}..." title="{{'qr.search' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
                 <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                 <button id="searchClearButton" type="reset" (click)="cleanSearch()">
                   <i #searchClear class="bi bi-x-lg"></i>
@@ -140,24 +140,24 @@
               </form>
             </div>
             <!-- Botón para añadir nuevas llamadas -->
-            <button [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> Añadir Llamada</button>
+            <button [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
           </div>
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Activar/Desactivar</th>
-                  <th class="text-center" scope="col">Editar</th>
-                  <th class="text-center" scope="col">Duplicar</th>
-                  <th class="text-center" scope="col">Eliminar</th>
-                  <th class="text-center" scope="col">Bajar</th>
-                  <th class="text-center" scope="col">Subir</th>
+                  <th scope="col">{{'qr.table.name' | translate}}</th>
+                  <th scope="col">{{'table.onoff' | translate}}</th>
+                  <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
+                  <th class="text-center" scope="col">{{'qr.table.duplicate' | translate}}</th>
+                  <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
+                  <th class="text-center" scope="col">{{'qr.table.down' | translate}}</th>
+                  <th class="text-center" scope="col">{{'qr.table.up' | translate}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="7" #msg>Este código QR no tiene llamadas</td>
+                  <td colspan="7" #msg>{{'qr.msg' | translate}}</td>
                 </tr>
                 <tr *ngFor="let consult of consults; let i = index" >
                   <td [ngClass]="{'disabled': disableConsult[i]}">{{consult.name}}</td>
@@ -168,11 +168,11 @@
                       </div>
                     </form>
                   </td>
-                  <td class="text-center"><button type="button" class="btn btn-primary" title="Editar llamada" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn btn-success" title="Duplicar llamada" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn btn-danger" title="Eliminar llamada" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn" title="Bajar en la lista" (click)="down(i)" [disabled]="i===consults.length - 1"><i class="bi bi-arrow-down"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn" title="Subir en la lista" (click)="up(i)" [disabled]="i===0"><i class="bi bi-arrow-up"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-primary" title="{{'qr.table.tooltip.edit' | translate}}" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-danger" title="{{'qr.table.tooltip.delete' | translate}}" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)" [disabled]="i===consults.length - 1"><i class="bi bi-arrow-down"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)" [disabled]="i===0"><i class="bi bi-arrow-up"></i></button></td>
                 </tr>
               </tbody>
             </table>

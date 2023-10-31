@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import Swal from 'sweetalert2';
@@ -31,7 +32,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
 
   ){
     // Nos suscribimos a los cambios que pueda tener el fomrmulario
@@ -71,7 +73,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/users-list');
       },
       error: (err: HttpErrorResponse) => {
-        this.alertService.error('Error al crear al nuevo usuario');
+        this.alertService.error(this.translateService.instant('alert.user.create.error'));
         console.log(err)
       }
     });
@@ -90,11 +92,11 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     if(this.hasChanges){
       await Swal.fire({
         icon: "warning",
-        title: "¡Cambios sin guardar!",
-        text: "¿Desea continuar sin guardar los cambios?",
+        title: this.translateService.instant('change.modal.title'),
+        text: this.translateService.instant('change.modal.text'),
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
+        cancelButtonText: this.translateService.instant('button.cancel'),
+        confirmButtonText: this.translateService.instant('button.confirm'),
         confirmButtonColor: '#198754',
         reverseButtons: true
       }).then((result) => {
