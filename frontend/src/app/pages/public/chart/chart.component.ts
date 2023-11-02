@@ -92,7 +92,10 @@ export class ChartComponent implements AfterViewInit {
             data: this.data.dates
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+              formatter: `{value} ${this.data.metric}`
+            }
           },
           grid: {
             top: '20%', // Espacio en la parte superior de la grafica
