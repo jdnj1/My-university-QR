@@ -69,6 +69,14 @@ export class ChartComponent implements AfterViewInit {
       case 1:
         // Grafica de barras
 
+        // Para añadir la unidad en el tooltip de la gráfica
+        for (let value of this.data.values){
+          value.tooltip = {
+            valueFormatter: (value: any) => value + ` ${this.data.metric}`
+          }
+        }
+
+        console.log(this.data.values)
         // let pru = 350 + grid
         // div.style.height = `${pru}px`;
         // console.log( pru)
