@@ -76,12 +76,6 @@ export class ChartComponent implements AfterViewInit {
           }
         }
 
-        console.log(this.data.values)
-        // let pru = 350 + grid
-        // div.style.height = `${pru}px`;
-        // console.log( pru)
-        // graph.resize();
-
         option = {
           title: {
             text: this.data.title
