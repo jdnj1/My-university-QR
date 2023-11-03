@@ -1,4 +1,5 @@
 PORT=3000
+#mariadb para docker
 HOST=localhost
 DATABASE=qr_app
 USER=root
