@@ -234,12 +234,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Funcion para que se pueda ver el QR más grande cuando se pone el raton encima
   onMouseQrEnter(index: any){
     Swal.fire({
-      title: 'Código QR',
+      title: this.translateService.instant('home.qrmodal.title'),
       imageUrl: this.imgQr[index],
-      imageAlt: 'Imágen del código QR',
-      showConfirmButton: false,
-      footer: `<a href="${this.urlQr[index]}" target="_blank">Visualizar QR</a>`
-    })
+      imageAlt: this.translateService.instant('home.qrmodal.imageAlt'),
+      confirmButtonColor: 'green',
+      confirmButtonText: this.translateService.instant('home.qrmodal.button'),
+      footer: `<a href="${this.urlQr[index]}" target="_blank">${this.translateService.instant('home.qrmodal.link')}</a>`
+    }).then((result) => {
+      if(result.isConfirmed){
+       navigator.clipboard.writeText(this.urlQr[index]);
+       this.alertService.success(this.translateService.instant('home.qrmodal.link'));
+      }
+    });
   }
 
   // Funciones relacionadas con la barra de búsqueda

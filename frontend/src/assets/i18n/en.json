@@ -21,6 +21,11 @@
   "home.tooltip.addlist":"Add to download list",
   "home.tooltip.deletelist":"Delete from download list",
   "home.tooltip.delete":"Eliminar código QR",
+  "home.qrmodal.title":"QR Code",
+  "home.qrmodal.link":"View QR",
+  "home.qrmodal.button":"Copy QR link",
+  "home.qrmodal.imageAlt":"QR code image",
+  "home.qrmodal.alert":"Link copied",
 
 
   "qr.title":"QR Code",
