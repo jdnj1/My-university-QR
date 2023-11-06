@@ -24,21 +24,13 @@ const getData = async( req , res ) => {
         // Eliminamos el token de la llamada del cuerpo de la peticion antes de enviarselo a SmartUniversity
         delete req.body.token;
 
-        axios.post(`${process.env.URLSU}/data/${token}`, req.body)
-            .then((result) => {
-                //console.log(result.data)
-                res.status(200).json({
-                    result: result.data
-                });
-                return;
-        
-            }).catch((err) => {
-                console.log(err)
-                res.status(400).json({
-                    res: err
-                });
-                return;
-            });
+        const result = await axios.post(`${process.env.URLSU}/data/${token}`, req.body);
+
+        res.status(200).json({
+            result: result.data
+        });
+
+        return;
 
     } catch (error) {
         console.error(error);
@@ -60,24 +52,12 @@ const getDataOperation = async( req , res ) => {
         let {token, dateFrom, dateTo, operation, uid, name} = req.body;
 
         const result = await axios.get(`${process.env.URLSU}/data/operation/${token}/time_start/${dateFrom}/time_end/${dateTo}/${operation}/uid/${uid}/name/${name}`);
-        console.log(result)
-        return result;
-            // .then((result) => {
-            //     //console.log(result.data)
-            //     res.status(200).json({
-            //         result: result.data
-            //     });
-            //     return;
-            
-            // }).catch((err) => {
-            //     //console.log(err.response.data)
-            //     //if(err.response.data.result = 'Token invalido'){
-            //     res.status(400).json({
-            //         res: err.response.data
-            //     });
-            //    // }
-            //     return;
-            // });
+        
+        res.status(200).json({
+            result: result.data
+        });
+
+        return;
 
     } catch (error) {
         console.error(error);
