@@ -12,7 +12,7 @@
   "table.edit": "Edit",
   "table.delete" :"Delete",
   "search.Qr": "Search QR codes",
-  "msg.home": "You have not created any QR code yet.",
+  "msg.home": "No QR code found",
   "home.modal.delete.title":"Delete QR code",
   "home.modal.delete.text":"You are going to delete this QR code. This action can't be reversed",
   "print.size":"Selected size is",

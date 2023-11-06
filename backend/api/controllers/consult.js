@@ -37,14 +37,14 @@ const getConsult = async( req , res ) => {
         query += ' ORDER BY orderConsult';
 
         // Se realiza una busqueda de todas las consultas del QR para poder hacer la paginación
-        const total = await dbConsult(query);
+        const [total] = await dbConsult(query);
         
         // Si se envia un -1 por parametro hacer que devuelva todos las consultas del qr
         if(desde !== -1){
             query += ` LIMIT ${desde}, ${registropp}`;
         }
 
-        const consult = await dbConsult(query);
+        const [consult] = await dbConsult(query);
         
         res.status(200).json({
             msg: 'getConsult',
@@ -75,7 +75,7 @@ const getConsultById = async( req , res ) => {
     const uid = req.params.id;
     try {
         const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult = ${uid}`;
-        const consult = await dbConsult(query);
+        const [consult] = await dbConsult(query);
 
         if(consult.length !== 0){
             res.status(200).json({
@@ -117,7 +117,7 @@ const createConsult = async( req , res = response ) => {
         // Se obtienen todas las llamadas del QR para saber cuantas tiene y poder añadirle el numero del orden a la nueva
         let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${qrCode}`;
 
-        let list = await dbConsult(query);
+        let [list] = await dbConsult(query);
 
         // En este array se van almacenando todos los campos a insertar
         let createFields = [];
@@ -185,7 +185,7 @@ const createConsult = async( req , res = response ) => {
 
         query = `INSERT INTO ${process.env.CONSULTTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
 
-        const consult = await dbConsult(query);
+        const [consult] = await dbConsult(query);
 
         res.status(200).json({
             msg: 'postLlamada',
@@ -213,7 +213,7 @@ const updateConsult = async( req , res = response ) => {
     try{
         // Comprueba que haya una llamada con ese ID.
         let qrQuery = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        let consult = await dbConsult(qrQuery);
+        let [consult] = await dbConsult(qrQuery);
 
         if( consult.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -272,7 +272,7 @@ const updateConsult = async( req , res = response ) => {
         updateQuery += ` WHERE idConsult=${uid}`;
         
         // Se actualiza. 
-        consult = await dbConsult(updateQuery);
+        [consult] = await dbConsult(updateQuery);
         
         res.status( 200 ).json( consult );
 
@@ -297,7 +297,7 @@ const deleteConsult = async(req, res) => {
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
         let consultQuery = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        let consult = await dbConsult(consultQuery);
+        let [consult] = await dbConsult(consultQuery);
         if( consult.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
@@ -307,7 +307,7 @@ const deleteConsult = async(req, res) => {
 
         // Se elimina el codigo qr.
         let deleteQuery = `DELETE FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        qr = await dbConsult(deleteQuery);
+        [qr] = await dbConsult(deleteQuery);
 
         res.status(200).json({
             msg:'Llamada eliminada',

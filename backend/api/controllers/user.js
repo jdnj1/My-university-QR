@@ -30,11 +30,11 @@ const getUsers = async( req , res ) => {
         }
 
         // Se realiza una busqueda de todos los usuarios para poder hacer la paginación
-        const total = await dbConsult(query);
+        const [total] = await dbConsult(query);
 
         query += ` LIMIT ${desde}, ${registropp}`;
 
-        const users = await dbConsult(query);
+        const [users] = await dbConsult(query);
         
         res.status(200).json({
             msg: 'getUsuarios',
@@ -65,7 +65,7 @@ const getUserById = async( req , res ) => {
     const uid = req.params.id;
     try {
         const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${uid}`;
-        const user = await dbConsult(query);
+        const [user] = await dbConsult(query);
 
         // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
         delete user[0].password;
@@ -114,7 +114,7 @@ const createUsers = async( req , res = response ) => {
 
         // Comprueba si el email ya esta en uso
         const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-        const existeEmail = await dbConsult(qEmail);
+        const [existeEmail] = await dbConsult(qEmail);
         if(existeEmail.length !== 0){
             res.status(400).json({
                 msg: 'El email ya existe'
@@ -153,7 +153,7 @@ const createUsers = async( req , res = response ) => {
 
         console.log(query);
 
-        const user = await dbConsult(query);
+        const [user] = await dbConsult(query);
 
         res.status(200).json({
             msg: 'postUsuarios',
@@ -190,7 +190,7 @@ const updateUsers = async( req , res = response ) => {
 
         // Comprueba que haya un usuario con ese ID.
         let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        let user = await dbConsult(userQuery);
+        let [user] = await dbConsult(userQuery);
 
         if( user.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -211,7 +211,7 @@ const updateUsers = async( req , res = response ) => {
         if(email){
             // Se comprueba si el email ya esta en uso
             const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-            const existeEmail = await dbConsult(qEmail);
+            const [existeEmail] = await dbConsult(qEmail);
 
             if(existeEmail.length !== 0){
                 // Se comprueba que sea el email del propio usuario
@@ -247,7 +247,7 @@ const updateUsers = async( req , res = response ) => {
         updateQuery += ` WHERE idUser=${uid}`;
         
         // Se actualiza. 
-        user = await dbConsult(updateQuery);
+        [user] = await dbConsult(updateQuery);
         
         res.status( 200 ).json( user );
 
@@ -294,7 +294,7 @@ const changePassword = async( req , res ) => {
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${userId}`;
-        let user = await dbConsult(userQuery);
+        let [user] = await dbConsult(userQuery);
        if( user.length === 0 ){
             // Si no se encuentra al usuario, responde con not found sin cuerpo.
             res.status(404);
@@ -357,7 +357,7 @@ const deleteUser = async(req, res) => {
         
         // Se comprueba que haya un usuario con ese ID.
         let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        let user = await dbConsult(userQuery);
+        let [user] = await dbConsult(userQuery);
         if( user.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
@@ -367,7 +367,7 @@ const deleteUser = async(req, res) => {
 
         // Se elimina usuario.
         let deleteQuery = `DELETE FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        user = await dbConsult(deleteQuery);
+        [user] = await dbConsult(deleteQuery);
 
         res.status(200).json({
             msg:'Usuario eliminado',

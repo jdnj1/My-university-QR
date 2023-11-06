@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
-          this.msgElement.nativeElement.innerHTML = 'No has creadao ningún código QR todavía.';
+          this.msgElement.nativeElement.innerHTML = this.translateService.instant('msg.home');
           this.msgElement.nativeElement.style.display = 'table-cell';
           return;
         }
@@ -234,7 +234,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Funcion para que se pueda ver el QR más grande cuando se pone el raton encima
   onMouseQrEnter(index: any){
     Swal.fire({
-      title: this.translateService.instant('home.qrmodal.title'),
       imageUrl: this.imgQr[index],
       imageAlt: this.translateService.instant('home.qrmodal.imageAlt'),
       confirmButtonColor: 'green',
@@ -243,7 +242,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if(result.isConfirmed){
        navigator.clipboard.writeText(this.urlQr[index]);
-       this.alertService.success(this.translateService.instant('home.qrmodal.link'));
+       this.alertService.success(this.translateService.instant('home.qrmodal.alert'));
       }
     });
   }

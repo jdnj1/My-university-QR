@@ -21,11 +21,12 @@ const {generateJWT} = require('../helpers/jwt')
 const login = async( req , res = response ) => {
     // Se extraen los campos "email" y "password" del cuerpo de la peticion.
     const { email, password } = req.body;
+    console.log(password)
 
     try{
         // Se busca al usuario.
         const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-        const user = await dbConsult(qEmail);
+        const [user] = await dbConsult(qEmail);
 
         if(user.length === 0){
             res.status(401).json({
@@ -85,7 +86,7 @@ const token = async( req , res = response ) => {
 
         // Comprobamos que el id del token recibido corresponde al usuario
         const qUser = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser='${uid}'`;
-        const user = await dbConsult(qUser);
+        const [user] = await dbConsult(qUser);
 
         if(user.length === 0){
             res.status(400).json({

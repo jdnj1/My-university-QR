@@ -59,23 +59,25 @@ const getDataOperation = async( req , res ) => {
     try {
         let {token, dateFrom, dateTo, operation, uid, name} = req.body;
 
-        axios.get(`${process.env.URLSU}/data/operation/${token}/time_start/${dateFrom}/time_end/${dateTo}/${operation}/uid/${uid}/name/${name}`)
-            .then((result) => {
-                //console.log(result.data)
-                res.status(200).json({
-                    result: result.data
-                });
-                return;
+        const result = await axios.get(`${process.env.URLSU}/data/operation/${token}/time_start/${dateFrom}/time_end/${dateTo}/${operation}/uid/${uid}/name/${name}`);
+        console.log(result)
+        return result;
+            // .then((result) => {
+            //     //console.log(result.data)
+            //     res.status(200).json({
+            //         result: result.data
+            //     });
+            //     return;
             
-            }).catch((err) => {
-                //console.log(err.response.data)
-                //if(err.response.data.result = 'Token invalido'){
-                res.status(400).json({
-                    res: err.response.data
-                });
-               // }
-                return;
-            });
+            // }).catch((err) => {
+            //     //console.log(err.response.data)
+            //     //if(err.response.data.result = 'Token invalido'){
+            //     res.status(400).json({
+            //         res: err.response.data
+            //     });
+            //    // }
+            //     return;
+            // });
 
     } catch (error) {
         console.error(error);

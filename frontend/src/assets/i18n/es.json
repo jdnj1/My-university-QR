@@ -12,7 +12,7 @@
   "table.edit": "Editar",
   "table.delete" :"Eliminar",
   "search.Qr": "Buscar códigos QR",
-  "msg.home": "No has creadao ningún código QR todavía.",
+  "msg.home": "No se ha encontrado ningún código QR",
   "home.modal.delete.title":"Eliminar código QR",
   "home.modal.delete.text":"Va a eliminar este código QR. Esta acción no se puede revertir.",
   "print.size":"El tamaño seleccionado es",

@@ -44,11 +44,11 @@ const getQr = async( req , res ) => {
         }
         
         // Se realiza una busqueda de todos los QR para poder hacer la paginación
-        let total = await dbConsult(query);
+        let [total] = await dbConsult(query);
 
         query += ` LIMIT ${desde}, ${registropp}`;
 
-        const qr = await dbConsult(query);
+        const [qr] = await dbConsult(query);
         
         res.status(200).json({
             msg: 'getQr',
@@ -79,7 +79,7 @@ const getQrById = async( req , res ) => {
     const uid = req.params.id;
     try {
         const query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr = ${uid}`;
-        const qr = await dbConsult(query);
+        const [qr] = await dbConsult(query);
 
         if(qr.length !== 0){
             res.status(200).json({
@@ -155,7 +155,7 @@ const createQr = async( req , res = response ) => {
 
         const query = `INSERT INTO ${process.env.QRTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
 
-        const qr = await dbConsult(query);
+        const [qr] = await dbConsult(query);
 
         res.status(200).json({
             msg: 'postQR',
@@ -183,7 +183,7 @@ const updateQr = async( req , res = response ) => {
     try{
         // Comprueba que haya un codigo QR con ese ID.
         let qrQuery = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        let qr = await dbConsult(qrQuery);
+        let [qr] = await dbConsult(qrQuery);
 
         if( qr.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -224,7 +224,7 @@ const updateQr = async( req , res = response ) => {
         updateQuery += ` WHERE idQr=${uid}`;
         
         // Se actualiza. 
-        qr = await dbConsult(updateQuery);
+        [qr] = await dbConsult(updateQuery);
         
         res.status( 200 ).json( qr );
 
@@ -249,7 +249,7 @@ const deleteQr = async(req, res) => {
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
         let qrQuery = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        let qr = await dbConsult(qrQuery);
+        let [qr] = await dbConsult(qrQuery);
         if( qr.length === 0 ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
@@ -259,7 +259,7 @@ const deleteQr = async(req, res) => {
 
         // Se elimina el codigo qr.
         let deleteQuery = `DELETE FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        qr = await dbConsult(deleteQuery);
+        [qr] = await dbConsult(deleteQuery);
 
         res.status(200).json({
             msg:'Código Qr eliminado',
@@ -307,7 +307,7 @@ const viewQr = async(req, res) => {
     try{
         // Obtenemos el código QR
         let query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr = ${uid}`;
-        const qr = await dbConsult(query);
+        const [qr] = await dbConsult(query);
 
         // Si no se encuentra
         if(qr.length === 0){
@@ -340,7 +340,7 @@ const viewQr = async(req, res) => {
 
         // Si todo esta correcto, obtener sus llamadas
         query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${uid} ORDER BY orderConsult`;
-        const consults = await dbConsult(query);
+        const [consults] = await dbConsult(query);
 
 
         // Si el códgio QR no tiene llamadas

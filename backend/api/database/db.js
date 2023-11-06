@@ -1,24 +1,33 @@
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 const util = require('util');
+// Implementacion de promesas
+// const bluebird = require('bluebird');
 
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    user: process.env.USER,
-    password: process.env.PASSWORD
-});
+// Función para conectarse con la base de datos
+async function connectDb(){
+    try{
+        const connection = await mysql.createConnection({
+            host: process.env.HOST,
+            database: process.env.DATABASE,
+            user: process.env.USER,
+            password: process.env.PASSWORD
+        });
 
-// Conexion con la base de datos
-connection.connect();
+        return connection;
+    }
+    catch (error){
+        console.log("Error al realizar conectarse con la base de datos");
+        throw error;
+    }
+}
 
-// Utilidad para promifisicar la función query y poder usar async/await
-const queryAsync = util.promisify(connection.query).bind(connection);
 
 // Función para realizar las consultas a la base de datos
 async function dbConsult(query){
+    const connection = await connectDb();
     try {
-        const resutls = await queryAsync(query);
-        return resutls
+        const resutls = await connection.query(query);
+        return resutls;
     } catch (error) {
         console.log("Error al realizar la consulta a la base de datos");
         throw error;
