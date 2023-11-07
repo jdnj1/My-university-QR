@@ -78,9 +78,17 @@ export class UsersComponent implements OnInit, AfterViewInit {
     // Se hace la peticion al servicio de los usuarios para obtener la lista de estos
     this.userService.getUsers(page, query).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.userArray = res.users;
         this.totalUsers = res.page.total;
+
+        if(this.userArray.length === 0){
+          this.msgElement.nativeElement.innerHTML = this.translateService.instant('user.msg');
+          this.msgElement.nativeElement.style.display = 'table-cell';
+          return;
+        }
+        else{
+          this.msgElement.nativeElement.style.display = 'none';
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -133,7 +141,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.lastSearch = this.searchForm.value.searchQuery;
+    this.lastSearch = '%' + this.searchForm.value.searchQuery + '%';
 
     this.getUsers(0, this.lastSearch);
   }

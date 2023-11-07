@@ -106,6 +106,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.qrService.getQr(page, query).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
+        console.log(this.codesQr)
 
         this.totalQr = res.page.total;
 
@@ -113,6 +114,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.msgElement.nativeElement.innerHTML = this.translateService.instant('msg.home');
           this.msgElement.nativeElement.style.display = 'table-cell';
           return;
+        }
+        else{
+          this.msgElement.nativeElement.style.display = 'none';
         }
 
         // Cambiamos como se ve la fecha en el frontend
@@ -254,7 +258,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.lastSearch = this.searchForm.value.searchQuery;
+    this.lastSearch = '%' + this.searchForm.value.searchQuery + '%';
     this.getQr(0, this.lastSearch);
   }
 

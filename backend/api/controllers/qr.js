@@ -9,6 +9,7 @@ const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
 const axios = require('axios');
 const {format} = require ('date-fns');
+const { qrList, qrById, qrCreate, qrUpdate, qrDelete } = require('../dao/qr');
 
 /**
  * Devuelve todos los codigos qr de la BD.
@@ -23,32 +24,18 @@ const getQr = async( req , res ) => {
 
     // Se comprueba si se pasa alguna query por parametro para buscar qr
     const querySearch = req.query.query;
+
+    // Datos para enviar a la base de datos
+    const data = {};
+    data.desde = desde;
+    data.registropp = registropp;
+    data.querySearch = querySearch;
+    data.role = req.role;
+    data.uid = req.uid;
     
     try {
-        let query = `SELECT * FROM ${process.env.QRTABLE}`;
 
-
-        // Si el usuario no es admin se le devuelven solo sus codigos qr
-        if(req.role === 0){
-            query += ` WHERE user = ${req.uid}`
-
-            // Si ademas existe la query de busqueda
-            if(querySearch){
-                query += ` AND description LIKE '%${querySearch}%'`;
-            }
-        }else{
-            // Si el usuario es amdmin y ademas existe la query de busqueda
-            if(querySearch){
-                query += ` WHERE description LIKE '%${querySearch}%'`
-            }
-        }
-        
-        // Se realiza una busqueda de todos los QR para poder hacer la paginación
-        let [total] = await dbConsult(query);
-
-        query += ` LIMIT ${desde}, ${registropp}`;
-
-        const [qr] = await dbConsult(query);
+        const [qr, total] = await qrList(data);
         
         res.status(200).json({
             msg: 'getQr',
@@ -56,7 +43,7 @@ const getQr = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: total.length
+                total: total
             }
         });
     } catch (error) {
@@ -78,13 +65,12 @@ const getQrById = async( req , res ) => {
     // Se extrae el id del qr desde el path
     const uid = req.params.id;
     try {
-        const query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr = ${uid}`;
-        const [qr] = await dbConsult(query);
+        const qr = await qrById(uid);
 
-        if(qr.length !== 0){
+        if(qr){
             res.status(200).json({
                 msg: 'getQr',
-                qr: qr[0]
+                qr: qr
             });
             return;
         }
@@ -110,52 +96,14 @@ const getQrById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createQr = async( req , res = response ) => {
-    // Cuando se le da a añadir qr se redirige a la interfaz de configruacion del qr con datos
-    // predetermindados para que se cambien. Por ejemplo descriptiom = Qr de prueba
 
     // Por si se introducen los campos por llamada
-    let {description, tagName, tagDescription, date, sizePrint} = req.body;
+    const {...object} = req.body;
+    object.uid = req.uid;
 
     try {
-        // En este array se van almacenando todos los campos a insertar
-        let createFields = [];
 
-        // En este array se van almacenando todos los calores de los campos a insertar
-        let valueFields = [];
-
-        if(description){
-            createFields.push(`description`);
-            valueFields.push(`'${description}'`);
-        }
-        if(tagName){
-            createFields.push(`tagName`);
-            valueFields.push(`'${tagName}'`);
-        }
-        if(tagDescription){
-            createFields.push(`tagDescription`);
-            valueFields.push(`'${tagDescription}'`);
-        }
-        if(sizePrint){
-            createFields.push(`sizePrint`);
-            valueFields.push(`'${sizePrint}'`);
-        }
-
-        // Creamos la fecha de validez del QR si no se ha enviado ninguna por el cuerpo
-        if(!date){
-            date = new Date();
-            date.setDate(date.getDate() + Number(process.env.DAYS));
-            date = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
-        }
-
-        createFields.push(`date`);
-        valueFields.push(`'${date}'`);
-
-        createFields.push(`user`);
-        valueFields.push(req.uid); 
-
-        const query = `INSERT INTO ${process.env.QRTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
-
-        const [qr] = await dbConsult(query);
+        const qr = await qrCreate(object);
 
         res.status(200).json({
             msg: 'postQR',
@@ -182,10 +130,9 @@ const updateQr = async( req , res = response ) => {
     
     try{
         // Comprueba que haya un codigo QR con ese ID.
-        let qrQuery = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        let [qr] = await dbConsult(qrQuery);
+        let qr = await qrById(uid);
 
-        if( qr.length === 0 ){
+        if( !qr ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -193,38 +140,10 @@ const updateQr = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { description, tagName, tagDescription, date, activated, sizePrint} = req.body;
-        let updateQuery = `UPDATE ${process.env.QRTABLE} SET `;
-
-        // En este array se van almacenando todos los campos a actualizar
-        let updateFields = [];
-
-        // Dependiendo de los campos que se envien la query es de una forma u otra.
-        if(description){
-            updateFields.push(`description = '${description}'`);
-        }
-        if(tagName){
-            updateFields.push(`tagName = '${tagName}'`);
-        }
-        if(tagDescription){
-            updateFields.push(`tagDescription = '${tagDescription}'`);
-        }
-        if(date){
-            updateFields.push(`date = '${date}'`);
-        }
-        if( activated === 1 || activated === 0 ){
-            updateFields.push(`activated = '${activated}'`);
-        }
-        if(sizePrint){
-            updateFields.push(`sizePrint = '${sizePrint}'`);
-        }
-
-        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
-        updateQuery += updateFields.join(','); 
-        updateQuery += ` WHERE idQr=${uid}`;
-        
-        // Se actualiza. 
-        [qr] = await dbConsult(updateQuery);
+        let { ...object } = req.body;
+        object.idQr = uid;
+    
+        qr = await qrUpdate(object);
         
         res.status( 200 ).json( qr );
 
@@ -248,9 +167,8 @@ const deleteQr = async(req, res) => {
     
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
-        let qrQuery = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        let [qr] = await dbConsult(qrQuery);
-        if( qr.length === 0 ){
+        let qr = await qrById(uid);
+        if( !qr ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -258,12 +176,11 @@ const deleteQr = async(req, res) => {
         }
 
         // Se elimina el codigo qr.
-        let deleteQuery = `DELETE FROM ${process.env.QRTABLE} WHERE idQr=${uid}`;
-        [qr] = await dbConsult(deleteQuery);
+        const qrDel = await qrDelete(uid);
 
         res.status(200).json({
             msg:'Código Qr eliminado',
-            qr
+            qr: qrDel
         });
     } catch(error){
         console.error(error);

@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="5" #msg>{{'msg.user' | translate}}</td>
+                    <td colspan="6" #msg>{{'msg.user' | translate}}</td>
                   </tr>
                   <tr *ngFor="let user of userArray; let i = index">
                     <td colspan="3" [ngClass]="{'text-primary': user.email === appUser}">{{user.email}}

@@ -23,11 +23,11 @@ async function connectDb(){
 
 
 // Función para realizar las consultas a la base de datos
-async function dbConsult(query){
+async function dbConsult(query, paramsQuery){
     const connection = await connectDb();
     try {
-        const resutls = await connection.query(query);
-        return resutls;
+        const results = await connection.query(query, paramsQuery);
+        return results;
     } catch (error) {
         console.log("Error al realizar la consulta a la base de datos");
         throw error;

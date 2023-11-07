@@ -69,10 +69,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         console.log(res);
 
+        this.hasChanges = false;
         // Se redirige a la página principal
         this.router.navigateByUrl('/users-list');
       },
       error: (err: HttpErrorResponse) => {
+        if(err.error.msg === 'El email ya existe'){
+          this.alertService.error(this.translateService.instant('user.create.error'));
+          return;
+        }
         this.alertService.error(this.translateService.instant('alert.user.create.error'));
         console.log(err)
       }

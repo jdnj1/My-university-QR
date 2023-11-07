@@ -190,6 +190,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.msgElement.nativeElement.style.display = 'table-cell';
           return;
         }
+        else{
+          this.msgElement.nativeElement.style.display = 'none';
+        }
 
         for (let i = 0; i < this.consults.length; i++) {
           if(this.consults[i].activated === 1){
@@ -345,7 +348,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.lastSearch = this.searchForm.value.searchQuery;
+    this.lastSearch = '%' + this.searchForm.value.searchQuery + '%';
 
     this.getConsults(0, this.lastSearch);
   }

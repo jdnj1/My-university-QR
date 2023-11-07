@@ -8,9 +8,8 @@ const bcrypt = require('bcryptjs'); // Bcrypt
 const jwt = require('jsonwebtoken'); // JSON Web Token
 
 // Propio
-//const { generateJWT , JWTExpire } = require( '../helpers/jwt.js' ); // Generador de JSON Web Token
-const {dbConsult} = require('../database/db');
-const {generateJWT} = require('../helpers/jwt')
+const {generateJWT} = require('../helpers/jwt');
+const { userByEmail, userById } = require('../DAO/user');
 
 /**
  * Resuelve un email y una contrasena y responde con un JSON Web Token.
@@ -21,14 +20,12 @@ const {generateJWT} = require('../helpers/jwt')
 const login = async( req , res = response ) => {
     // Se extraen los campos "email" y "password" del cuerpo de la peticion.
     const { email, password } = req.body;
-    console.log(password)
-
+    
     try{
         // Se busca al usuario.
-        const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-        const [user] = await dbConsult(qEmail);
+        const user = await userByEmail(email);
 
-        if(user.length === 0){
+        if(!user){
             res.status(401).json({
                 msg: 'Email o contraseña incorrectos'
             });
@@ -36,7 +33,7 @@ const login = async( req , res = response ) => {
         }
 
         // Se comprueba si es la contrasena que nos pasan es la del usuario.
-        const validPassword = bcrypt.compareSync(password, user[0].password);
+        const validPassword = bcrypt.compareSync(password, user.password);
         if( !validPassword ){
             res.status(403).json({
                 msg: 'Email o contraseña incorrectos'
@@ -45,10 +42,10 @@ const login = async( req , res = response ) => {
         }
         
         // Genera un token.
-        const token = await generateJWT( user[0].idUser , user[0].role );
+        const token = await generateJWT( user.idUser , user.role );
 
         res.status( 200 ).json( {
-            user: user[0] ,
+            user: user,
             token
         } );
 
@@ -82,13 +79,12 @@ const token = async( req , res = response ) => {
 
     try{
         // Se comprueba si el token es correcto
-        const { uid, role, ...object } = jwt.verify(token, process.env.JWTSECRET);
+        const { uid, role } = jwt.verify(token, process.env.JWTSECRET);
 
         // Comprobamos que el id del token recibido corresponde al usuario
-        const qUser = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser='${uid}'`;
-        const [user] = await dbConsult(qUser);
+        const user = await userById(uid);
 
-        if(user.length === 0){
+        if(!user){
             res.status(400).json({
                 msg: 'Token no valido'
             });

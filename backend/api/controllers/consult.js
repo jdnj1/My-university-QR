@@ -4,10 +4,9 @@
 
 // === Importar
 // Propio
-const {dbConsult} = require('../database/db');
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
-const {format} = require ('date-fns');
+const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
 
 /**
  * Devuelve todas las consultas que realiza un codigo qr de la BD.
@@ -23,28 +22,19 @@ const getConsult = async( req , res ) => {
     // Se obtiene el id del codigo QR desde la query
     const idQr = req.query.idQr;
 
-    // Se comprueba si se pasa alguna query por parametro para buscar qr
+    // Se comprueba si se pasa alguna query por parametro para buscar consulta
     const querySearch = req.query.query;
 
+    // Datos para enviar a la base de datos
+    const data = {};
+    data.desde = desde;
+    data.registropp = registropp;
+    data.idQr = idQr;
+    data.querySearch = querySearch;
+
     try {
-        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${idQr}`;
         
-        
-        if(querySearch){
-            query += ` AND name LIKE '%${querySearch}%'`
-        }
-
-        query += ' ORDER BY orderConsult';
-
-        // Se realiza una busqueda de todas las consultas del QR para poder hacer la paginación
-        const [total] = await dbConsult(query);
-        
-        // Si se envia un -1 por parametro hacer que devuelva todos las consultas del qr
-        if(desde !== -1){
-            query += ` LIMIT ${desde}, ${registropp}`;
-        }
-
-        const [consult] = await dbConsult(query);
+        const [consult, total] = await consultList(data);
         
         res.status(200).json({
             msg: 'getConsult',
@@ -52,7 +42,7 @@ const getConsult = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: total.length
+                total: total
             }
         });
     } catch (error) {
@@ -74,13 +64,12 @@ const getConsultById = async( req , res ) => {
     // Se extrae el id del qr desde el path
     const uid = req.params.id;
     try {
-        const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult = ${uid}`;
-        const [consult] = await dbConsult(query);
+        const consult = await consultById(uid);
 
-        if(consult.length !== 0){
+        if(consult){
             res.status(200).json({
                 msg: 'getConsult',
-                consult: consult[0]
+                consult: consult
             });
             return;
         }
@@ -106,86 +95,23 @@ const getConsultById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createConsult = async( req , res = response ) => {
-    // Cuando se le da a añadir llamada se redirige a la interfaz de configruacion de llamada con datos
-    // predetermindados para que se cambien. Por ejemplo name = Nombre de la llamda
-
     // Por si se introducen los campos por llamada
-    let {name, token, typeDate, dateFrom, dateTo, number, unit, filters, operation, chart, qrCode} = req.body;
+    const {...object} = req.body;
 
     try {   
 
-        // Se obtienen todas las llamadas del QR para saber cuantas tiene y poder añadirle el numero del orden a la nueva
-        let query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${qrCode}`;
-
-        let [list] = await dbConsult(query);
-
-        // En este array se van almacenando todos los campos a insertar
-        let createFields = [];
-
-        // En este array se van almacenando todos los calores de los campos a insertar
-        let valueFields = [];
-
-        if(name){
-            createFields.push('name');
-            valueFields.push(`'${name}'`);
-        }
-        if(token){
-            createFields.push('token');
-            valueFields.push(`'${token}'`);
-        }
-        if(typeDate === 1 || typeDate === 0){
-            createFields.push('typeDate');
-            valueFields.push(`'${typeDate}'`);
-        }
-
         //Comprobar que la fecha hasta no sea anterior a la fecha desde
-        if(dateFrom && dateTo){
-            if(dateFrom >= dateTo){
+        if(object.dateFrom && object.dateTo){
+            if(object.dateFrom >= object.dateTo){
                 res.status(400).json({
-                msg: "La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'"
+                    msg: "La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'"
                 });
 
                 return;
             }
-
-            createFields.push('dateFrom');
-            valueFields.push(`'${dateFrom}'`);
-
-            createFields.push('dateTo');
-            valueFields.push(`'${dateTo}'`);
         }
 
-        if(number >= 0){
-            createFields.push('number');
-            valueFields.push(`${number}`);
-        }
-        if(unit >= 1){
-            createFields.push('unit');
-            valueFields.push(`${unit}`);
-        }
-        if(filters){
-            createFields.push('filters');
-            valueFields.push(`'${filters}'`);
-        }
-        if(chart){
-            createFields.push('chart');
-            valueFields.push(`${chart}`);
-        }
-        if(operation){
-            createFields.push('operation');
-            valueFields.push(`${operation}`);
-        }
-
-        createFields.push('qrCode');
-        valueFields.push(`${qrCode}`);
-
-        createFields.push('orderConsult');
-        valueFields.push(`${list.length}`);
-
-
-        query = `INSERT INTO ${process.env.CONSULTTABLE} (${createFields.join(',')}) VALUES (${valueFields.join(',')})`;
-
-        const [consult] = await dbConsult(query);
+        const consult = await consutlCreate(object);
 
         res.status(200).json({
             msg: 'postLlamada',
@@ -212,10 +138,9 @@ const updateConsult = async( req , res = response ) => {
     
     try{
         // Comprueba que haya una llamada con ese ID.
-        let qrQuery = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        let [consult] = await dbConsult(qrQuery);
+        let consult = await consultById(uid);
 
-        if( consult.length === 0 ){
+        if( !consult ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -223,56 +148,11 @@ const updateConsult = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { name, token, dateFrom, dateTo, filters, chart, activated, operation, orderConsult, typeDate, number, unit} = req.body;
-        let updateQuery = `UPDATE ${process.env.CONSULTTABLE} SET `;
-
-        // En este array se van almacenando todos los campos a actualizar
-        let updateFields = [];
-
-        // Dependiendo de los campos que se envien la query es de una forma u otra.
-        if(name){
-            updateFields.push(`name = '${name}'`);
-        }
-        if(token){
-            updateFields.push(`token = '${token}'`);
-        }
-        if(dateFrom){
-            updateFields.push(`dateFrom = '${dateFrom}'`);
-        }
-        if(dateTo){
-            updateFields.push(`dateTo = '${dateTo}'`);
-        }
-        if(filters){
-            updateFields.push(`filters = '${filters}'`);
-        }
-        if(chart){
-            updateFields.push(`chart = '${chart}'`);
-        }
-        if(operation){
-            updateFields.push(`operation = '${operation}'`);
-        }
-        if(activated === 1 || activated === 0){
-            updateFields.push(`activated = '${activated}'`);
-        }
-        if(orderConsult >= 0){
-            updateFields.push(`orderConsult = ${orderConsult}`);
-        }
-        if(typeDate === 1 || typeDate === 0){
-            updateFields.push(`typeDate = '${typeDate}'`);
-        }
-        if(number >= 0){
-            updateFields.push(`number = ${number}`);
-        }
-        if(unit >= 1){
-            updateFields.push(`unit = ${unit}`);
-        }
-
-        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
-        updateQuery += updateFields.join(','); 
-        updateQuery += ` WHERE idConsult=${uid}`;
+        let { ...object } = req.body;
+        object.idConsult = uid;
         
         // Se actualiza. 
-        [consult] = await dbConsult(updateQuery);
+        consult = await consultUpdate(object);
         
         res.status( 200 ).json( consult );
 
@@ -296,22 +176,19 @@ const deleteConsult = async(req, res) => {
     
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
-        let consultQuery = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        let [consult] = await dbConsult(consultQuery);
-        if( consult.length === 0 ){
+        let consult = await consultById(uid);
+        if( !consult ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
             return;
         }
 
-        // Se elimina el codigo qr.
-        let deleteQuery = `DELETE FROM ${process.env.CONSULTTABLE} WHERE idConsult=${uid}`;
-        [qr] = await dbConsult(deleteQuery);
+        const consultDel = await consultDelete(uid);
 
         res.status(200).json({
             msg:'Llamada eliminada',
-            qr
+            consult: consultDel
         });
     } catch(error){
         console.error(error);

@@ -4,9 +4,9 @@
 
 // === Importar
 // Propio
-const {dbConsult} = require('../database/db');
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
+const { userById, userList, userByEmail, userDelete, userCreate, userUpdate } = require('../DAO/user');
 
 /**
  * Devuelve todos los usuarios de la BD.
@@ -22,19 +22,15 @@ const getUsers = async( req , res ) => {
     // Se comprueba si se pasa alguna query por parametro para buscar usuarios
     const querySearch = req.query.query;
 
+    // Datos para enviar a la base de datos
+    const data = {};
+
+    data.desde = desde;
+    data.registropp = registropp;
+    data.querySearch = querySearch;
+
     try {
-        let query = `SELECT * FROM ${process.env.USERTABLE}`; 
-
-        if(querySearch){
-            query += ` WHERE email LIKE '%${querySearch}%'`
-        }
-
-        // Se realiza una busqueda de todos los usuarios para poder hacer la paginación
-        const [total] = await dbConsult(query);
-
-        query += ` LIMIT ${desde}, ${registropp}`;
-
-        const [users] = await dbConsult(query);
+        const [users, total] = await userList(data);
         
         res.status(200).json({
             msg: 'getUsuarios',
@@ -42,7 +38,7 @@ const getUsers = async( req , res ) => {
             page:{
                 desde,
                 registropp,
-                total: total.length
+                total: total
             }
         });
     } catch (error) {
@@ -64,16 +60,15 @@ const getUserById = async( req , res ) => {
     // Se extrae el id del usuario desde el path
     const uid = req.params.id;
     try {
-        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${uid}`;
-        const [user] = await dbConsult(query);
+        const user = await userById(uid);
 
         // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
-        delete user[0].password;
+        delete user.password;
 
-        if(user.length !== 0){
+        if(user){
             res.status(200).json({
                 msg: 'getUsuario',
-                user: user[0]
+                user: user
             });
             return;
         }
@@ -101,7 +96,7 @@ const getUserById = async( req , res ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const createUsers = async( req , res = response ) => {
-    let {email, password, lim_consult, role} = req.body;
+    const {...object} = req.body;
 
     try {
         // Solo los usuarios administrador pueden crear nuevos usuarios
@@ -113,9 +108,8 @@ const createUsers = async( req , res = response ) => {
         }
 
         // Comprueba si el email ya esta en uso
-        const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-        const [existeEmail] = await dbConsult(qEmail);
-        if(existeEmail.length !== 0){
+        const existeEmail = await userByEmail(object.email);
+        if(existeEmail){
             res.status(400).json({
                 msg: 'El email ya existe'
             });
@@ -126,34 +120,10 @@ const createUsers = async( req , res = response ) => {
         const salt = bcrypt.genSaltSync();
 
         // Cifra la contrasena con la cadena.
-        password = bcrypt.hashSync(password, salt);
+        object.password = bcrypt.hashSync(object.password, salt);
 
-        let query = `INSERT INTO ${process.env.USERTABLE} (email, password`;
 
-        // Se comprueba si se pasa el rol y el limite de consultas
-        if(lim_consult){
-            query += `, lim_consult`;
-        }
-
-        if(role === 1 || role === 0){
-            query += `, role`;
-        }
-
-        query += `) VALUES ('${ email }', '${ password }'`;
-
-        if(lim_consult){
-            query += `, ${lim_consult}`;
-        }
-
-        if(role === 1 || role === 0){
-            query += `, ${role}`;
-        }
-
-        query += ')';
-
-        console.log(query);
-
-        const [user] = await dbConsult(query);
+        const user = await userCreate(object);
 
         res.status(200).json({
             msg: 'postUsuarios',
@@ -189,10 +159,9 @@ const updateUsers = async( req , res = response ) => {
         }
 
         // Comprueba que haya un usuario con ese ID.
-        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        let [user] = await dbConsult(userQuery);
+        let user = await userById(uid);
 
-        if( user.length === 0 ){
+        if( !user ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -200,54 +169,34 @@ const updateUsers = async( req , res = response ) => {
         }
 
         // Extrae los campos que no cabe especificar a la hora de crear.
-        let { email, password, role, lim_consult } = req.body;
-        console.log(lim_consult)
-        let updateQuery = `UPDATE ${process.env.USERTABLE} SET `;
+        let { ...object } = req.body;
+        object.uid = uid;
 
-         // En este array se van almacenando todos los campos a actualizar
-         let updateFields = [];
-
-        // Dependiendo de los campos que se envien la query es de una forma u otra.
-        if(email){
+        if(object.email){
             // Se comprueba si el email ya esta en uso
-            const qEmail = `SELECT * FROM ${process.env.USERTABLE} WHERE email='${email}'`;
-            const [existeEmail] = await dbConsult(qEmail);
+            const existeEmail = await userByEmail(object.email);
 
-            if(existeEmail.length !== 0){
+            if(!existeEmail){
                 // Se comprueba que sea el email del propio usuario
-                if(existeEmail[0].idUser !== uid){
+                if(existeEmail.idUser !== uid){
                     res.status(400).json({
                         msg: 'El email ya existe'
                     });
                     return;
                 }
             }
-            updateFields.push(`email = '${email}'`);
         }
 
-        if(password){
+        if(object.password){
             // Genera una cadena aleatoria.
             const salt = bcrypt.genSaltSync();
 
             // Cifra la contrasena con la cadena.
-            password = bcrypt.hashSync(password, salt);
-            updateFields.push(`password = '${password}'`);
+            object.password = bcrypt.hashSync(object.password, salt);
         }
-
-        if(role === 1 || role === 0){
-            updateFields.push(`role = '${role}'`);
-        }
-
-        if(lim_consult !== undefined){
-            updateFields.push(`lim_consult = ${lim_consult}`);
-        }
-
-        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
-        updateQuery += updateFields.join(','); 
-        updateQuery += ` WHERE idUser=${uid}`;
         
         // Se actualiza. 
-        [user] = await dbConsult(updateQuery);
+        user = await userUpdate(object);
         
         res.status( 200 ).json( user );
 
@@ -293,9 +242,8 @@ const changePassword = async( req , res ) => {
         // === Se comprueba que la contrasena recibida en la peticion coincida con la actual ===
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
-        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ${userId}`;
-        let [user] = await dbConsult(userQuery);
-       if( user.length === 0 ){
+        let user = await userById(userId);
+       if(!user){
             // Si no se encuentra al usuario, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -303,7 +251,7 @@ const changePassword = async( req , res ) => {
         }
 
         // Se contrasta la antigua contrasena con el hash existente.
-        const validPassword = bcrypt.compareSync( oldPassword , user[0].password );
+        const validPassword = bcrypt.compareSync( oldPassword , user.password );
         if( !validPassword ){
             res.status( 403 ).json({
                 msg: 'La contrasena proporcionada no coincide con la existente'
@@ -317,13 +265,16 @@ const changePassword = async( req , res ) => {
         const salt = bcrypt.genSaltSync();
         let newpass = bcrypt.hashSync( newPassword , salt );
 
+        let data = {}
+        data.password = newpass;
+        data.uid = userId;
+
         // Guarda los cambios.
-        let passQuery = `UPDATE ${process.env.USERTABLE} SET password = '${newpass}' WHERE idUser = ${userId}`;
-        await dbConsult(passQuery);
+        await userUpdate(data);
 
         res.status(200).json({
             msg: 'Contraseña actualizada',
-            user: user [0],
+            user: user,
         });
 
         return;
@@ -356,9 +307,8 @@ const deleteUser = async(req, res) => {
         }
         
         // Se comprueba que haya un usuario con ese ID.
-        let userQuery = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        let [user] = await dbConsult(userQuery);
-        if( user.length === 0 ){
+        let user = await userById(uid);
+        if( !user ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -366,8 +316,8 @@ const deleteUser = async(req, res) => {
         }
 
         // Se elimina usuario.
-        let deleteQuery = `DELETE FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        [user] = await dbConsult(deleteQuery);
+        //let deleteQuery = `DELETE FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
+        user = await userDelete(uid);
 
         res.status(200).json({
             msg:'Usuario eliminado',

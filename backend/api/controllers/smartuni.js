@@ -7,7 +7,6 @@
 const axios = require('axios');
 
 // Propio
-const {dbConsult} = require('../database/db');
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
 

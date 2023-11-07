@@ -77,7 +77,7 @@
   "cons.min":"Minutes",
   "cons.hour":"Hours",
   "cons.day":"Days",
-  "cosn.form.img":"Select a chart to represent the data",
+  "cons.form.img":"Select a chart to represent the data",
   "cons.chart.value": "Only value",
   "cons.chart.gauge":"Gauge chart",
   "cons.chart.line":"Line chart",
@@ -115,6 +115,7 @@
   "Básico":"Basic",
   "Administrador":"Administrator",
   "user.create.button":"Create user",
+  "user.create.error":"This email already exists",
 
   "user.edit.title":"Edit user",
   "user.edit.save":"Save changes",
