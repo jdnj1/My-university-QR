@@ -129,7 +129,8 @@ export class ChartComponent implements AfterViewInit {
         // Gauge
         option = {
           tooltip: {
-            formatter: `{a} <br/>{b} : {c}`
+            formatter: `{a} <br/>{b} : {c}`,
+            confine: true
           },
           title: {
             text: this.data.title
