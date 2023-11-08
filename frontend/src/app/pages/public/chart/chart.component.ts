@@ -81,7 +81,8 @@ export class ChartComponent implements AfterViewInit {
             text: this.data.title
           },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            confine: true
           },
           legend: {
             data: this.data.ids,
@@ -96,11 +97,12 @@ export class ChartComponent implements AfterViewInit {
           yAxis: {
             type: 'value',
             axisLabel: {
-              formatter: `{value} ${this.data.metric}`
+              formatter: `{value}${this.data.metric}`
             }
           },
           grid: {
             top: '20%', // Espacio en la parte superior de la grafica
+            containLabel: true,
           },
           dataZoom: [
             {
