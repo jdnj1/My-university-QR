@@ -84,7 +84,6 @@ export class ViewComponent implements OnInit,AfterViewInit {
         console.log(err);
         this.loading = false;
         this.warning = true;
-        console.log(this.loading)
 
         if(err.error.titleQr){
           this.qr = err.error.titleQr;

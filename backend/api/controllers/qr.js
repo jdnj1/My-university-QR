@@ -10,6 +10,7 @@ const bcrypt = require('bcryptjs'); // BcryptJS
 const axios = require('axios');
 const {format} = require ('date-fns');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete } = require('../dao/qr');
+const { consultListAll } = require('../dao/consult');
 
 /**
  * Devuelve todos los codigos qr de la BD.
@@ -133,7 +134,7 @@ const updateQr = async( req , res = response ) => {
         // Comprueba que haya un codigo QR con ese ID.
         let qr = await qrById(uid);
 
-        if( !qr ){
+        if( qr === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -169,7 +170,7 @@ const deleteQr = async(req, res) => {
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
         let qr = await qrById(uid);
-        if( !qr ){
+        if( qr === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -177,11 +178,10 @@ const deleteQr = async(req, res) => {
         }
 
         // Se elimina el codigo qr.
-        const qrDel = await qrDelete(uid);
+        await qrDelete(uid);
 
         res.status(200).json({
-            msg:'Código Qr eliminado',
-            qr: qrDel
+            msg:'Código Qr eliminado'
         });
     } catch(error){
         console.error(error);
@@ -224,48 +224,45 @@ const viewQr = async(req, res) => {
     
     try{
         // Obtenemos el código QR
-        let query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr = ${uid}`;
-        const [qr] = await dbConsult(query);
+        const qr = await qrById(uid);
 
         // Si no se encuentra
-        if(qr.length === 0){
+        if(qr === null){
             res.status(404).json({
                 msg: 'No se ha encontrado el código Qr'
             });
             return;
         }
 
-        results.titleQr = qr[0].description;
+        results.titleQr = qr.description;
 
         // Si existe, primero se debe comprobar que el qr no este desactivado y caducado
-        if(qr[0].activated !== 1){
+        if(qr.activated !== 1){
             res.status(404).json({
                 msg: 'desactivado',
-                titleQr: qr[0].description
+                titleQr: qr.description
             });
             return;
         }
 
         const now = new Date();
 
-        if(qr[0].date < now){
+        if(qr.date < now){
             res.status(404).json({
                 msg: 'caducado',
-                titleQr: qr[0].description
+                titleQr: qr.description
             });
             return;
         }
 
         // Si todo esta correcto, obtener sus llamadas
-        query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ${uid} ORDER BY orderConsult`;
-        const [consults] = await dbConsult(query);
-
+        const consults = await consultListAll(uid);
 
         // Si el códgio QR no tiene llamadas
         if(consults.length === 0){
             res.status(404).json({
                 msg: 'El qr no tiene llamadas',
-                titleQr: qr[0].description
+                titleQr: qr.description
             });
             return;
         }
@@ -374,7 +371,6 @@ const viewQr = async(req, res) => {
                         // Se realiza la peticion a Smart University
                         let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
                         let data = res.data.result;
-                        console.log(data.columns.length)
                         if(data.columns.length === 0){
                             continue;
                         }
@@ -388,17 +384,9 @@ const viewQr = async(req, res) => {
                                 idlist.push(id[data.columns.indexOf('uid')]);
                             }
                         })
-                        // console.log(ids)
+
                         // Eliminar los ids repetidos
                         let ids = [... new Set(idlist)];
-                        //console.log(ids)
-    
-                        // body.filters.map((id) => {
-                        //     if(Object.values(id)[0] === 'uid'){
-                        //         ids = Object.values(id)[1]
-                        //     }
-                        // })
-
     
                         let seriesData= [];
                         ids.forEach((id) => {
@@ -429,22 +417,20 @@ const viewQr = async(req, res) => {
                         });
                     }
                 }
+
             } catch (error) {
                 // Si hay algun error, como que el token no es correcto, lo ignora y pasa al siguiente
                 console.log(error.response.data)
             }
             
         }
-
-       //console.log(JSON.stringify(results[0]))
-
        // Se comprueba que por lo menos haya una llamada activa
        if(charts.length === 0){
-        res.status(404).json({
-            msg: 'desactivadas',
-            titleQr: qr[0].description
-        });
-        return;
+            res.status(404).json({
+                msg: 'desactivadas',
+                titleQr: qr.description
+            });
+            return;
        }
 
        results.charts = charts;

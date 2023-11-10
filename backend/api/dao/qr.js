@@ -151,7 +151,6 @@ const qrUpdate = async(data) =>{
         paramsQuery.push(data.idQr);
 
         const qr = await dbConsult(query, paramsQuery);
-        console.log(query)
 
         return qr.length === 0 ? null : qr[0];
     } catch (error) {
@@ -164,9 +163,8 @@ const qrDelete = async(id) => {
         const query = `DELETE FROM ${process.env.QRTABLE} WHERE idQr = ?`;
 
         const paramsQuery = [id];
-        const qr = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return qr.length === 0 ? null : qr[0];
     } catch (error) {
         throw error;
     }    

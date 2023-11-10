@@ -32,6 +32,18 @@ const consultList = async(data) => {
     }
 }
 
+const consultListAll = async(id) => {
+    try {
+        const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE qrCode = ? ORDER BY orderConsult`;
+        const paramsQuery = [id];
+        const [consults] = await dbConsult(query, paramsQuery);
+
+        return consults.length === 0 ? [[]] : consults;
+    } catch (error) {
+        throw error;
+    }
+}
+
 const consultById = async(id) => {
     try {
         const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult= ? LIMIT 1`;
@@ -216,4 +228,4 @@ const consultDelete = async(id) => {
     }   
 }
 
-module.exports = {consultList, consultById, consutlCreate, consultUpdate, consultDelete}
+module.exports = {consultList, consultListAll, consultById, consutlCreate, consultUpdate, consultDelete}
