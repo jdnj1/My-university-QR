@@ -217,12 +217,11 @@ const consultUpdate = async(data) => {
 
 const consultDelete = async(id) => {
     try {
+        
         const query = `DELETE FROM ${process.env.CONSULTTABLE} WHERE idConsult = ?`;
-
         const paramsQuery = [id];
-        const consult = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return consult.length === 0 ? null : consult[0];
     } catch (error) {
         throw error;
     }   

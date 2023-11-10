@@ -26,11 +26,12 @@ const getConsult = async( req , res ) => {
     const querySearch = req.query.query;
 
     // Datos para enviar a la base de datos
-    const data = {};
-    data.desde = desde;
-    data.registropp = registropp;
-    data.idQr = idQr;
-    data.querySearch = querySearch;
+    const data = {
+        desde,
+        registropp,
+        idQr,
+        querySearch
+    };
 
     try {
         
@@ -177,18 +178,17 @@ const deleteConsult = async(req, res) => {
     try{
         // Se comprueba que haya un codigo Qr con ese ID.
         let consult = await consultById(uid);
-        if( !consult ){
+        if( consult === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
             return;
         }
 
-        const consultDel = await consultDelete(uid);
+        await consultDelete(uid);
 
         res.status(200).json({
-            msg:'Llamada eliminada',
-            consult: consultDel
+            msg:'Llamada eliminada'
         });
     } catch(error){
         console.error(error);

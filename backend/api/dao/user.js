@@ -136,8 +136,8 @@ const userUpdate = async(data) =>  {
 
 const userDelete = async(id) => {
     try {
+        
         const query = `DELETE FROM ${process.env.USERTABLE} WHERE idUser= ?`;
-
         const paramsQuery = [id];
         await dbConsult(query, paramsQuery);
 

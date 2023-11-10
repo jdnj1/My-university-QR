@@ -160,8 +160,8 @@ const qrUpdate = async(data) =>{
 
 const qrDelete = async(id) => {
     try {
+        
         const query = `DELETE FROM ${process.env.QRTABLE} WHERE idQr = ?`;
-
         const paramsQuery = [id];
         await dbConsult(query, paramsQuery);
 
