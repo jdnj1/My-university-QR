@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken'); // JSON Web Token
 
 // Propio
 const {generateJWT} = require('../helpers/jwt');
-const { userByEmail, userById } = require('../DAO/user');
+const { userByEmail, userById } = require('../dao/user');
 
 /**
  * Resuelve un email y una contrasena y responde con un JSON Web Token.
