@@ -139,9 +139,8 @@ const userDelete = async(id) => {
         const query = `DELETE FROM ${process.env.USERTABLE} WHERE idUser= ?`;
 
         const paramsQuery = [id];
-        const [user] = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return user.length === 0 ? null : user[0];
     } catch (error) {
         throw error;
     }

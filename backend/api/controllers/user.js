@@ -23,11 +23,11 @@ const getUsers = async( req , res ) => {
     const querySearch = req.query.query;
 
     // Datos para enviar a la base de datos
-    const data = {};
-
-    data.desde = desde;
-    data.registropp = registropp;
-    data.querySearch = querySearch;
+    const data = {
+        desde,
+        registropp,
+        querySearch
+    };
 
     try {
         const [users, total] = await userList(data);
@@ -243,7 +243,7 @@ const changePassword = async( req , res ) => {
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let user = await userById(userId);
-       if(!user){
+       if( user === null ){
             // Si no se encuentra al usuario, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -265,16 +265,16 @@ const changePassword = async( req , res ) => {
         const salt = bcrypt.genSaltSync();
         let newpass = bcrypt.hashSync( newPassword , salt );
 
-        let data = {}
-        data.password = newpass;
-        data.uid = userId;
+        const data = {
+            password: newpass,
+            uid: userId
+        }
 
         // Guarda los cambios.
         await userUpdate(data);
 
         res.status(200).json({
             msg: 'Contraseña actualizada',
-            user: user,
         });
 
         return;
@@ -308,7 +308,7 @@ const deleteUser = async(req, res) => {
         
         // Se comprueba que haya un usuario con ese ID.
         let user = await userById(uid);
-        if( !user ){
+        if( user === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -316,12 +316,10 @@ const deleteUser = async(req, res) => {
         }
 
         // Se elimina usuario.
-        //let deleteQuery = `DELETE FROM ${process.env.USERTABLE} WHERE idUser=${uid}`;
-        user = await userDelete(uid);
+        await userDelete(uid);
 
         res.status(200).json({
             msg:'Usuario eliminado',
-            user
         });
     } catch(error){
         console.error(error);
