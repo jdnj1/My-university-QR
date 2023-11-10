@@ -6,7 +6,7 @@
 // Propio
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
-const { userById, userList, userByEmail, userDelete, userCreate, userUpdate } = require('../DAO/user');
+const { userById, userList, userByEmail, userDelete, userCreate, userUpdate } = require('../dao/user');
 
 /**
  * Devuelve todos los usuarios de la BD.
@@ -65,7 +65,7 @@ const getUserById = async( req , res ) => {
         // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
         delete user.password;
 
-        if(user){
+        if(user !== null){
             res.status(200).json({
                 msg: 'getUsuario',
                 user: user

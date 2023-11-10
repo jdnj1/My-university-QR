@@ -66,7 +66,7 @@ const getConsultById = async( req , res ) => {
     try {
         const consult = await consultById(uid);
 
-        if(consult){
+        if(consult !== null){
             res.status(200).json({
                 msg: 'getConsult',
                 consult: consult

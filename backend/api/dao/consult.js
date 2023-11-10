@@ -34,7 +34,7 @@ const consultList = async(data) => {
 
 const consultById = async(id) => {
     try {
-        const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult= ?`;
+        const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult= ? LIMIT 1`;
 
         const paramsQuery = [id];
         const [consult] = await dbConsult(query, paramsQuery);

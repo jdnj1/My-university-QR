@@ -72,7 +72,7 @@ const token = async( req , res = response ) => {
 
     // Si no hay token se notifica
     if(!token){
-        res.status(400).json({
+        res.status(403).json({
             msg: 'Falta token de autorización'
         });
     }

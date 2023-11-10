@@ -10,7 +10,7 @@ const userByEmail = async(email) => {
         const [user] = await dbConsult(query, paramsQuery);
         console.log(user)
 
-        return user.length === 0 ? null : user[0];
+        return user.length === 0 ? false : true;
     } catch (error) {
         throw error;
     }
@@ -44,7 +44,7 @@ const userList = async(data) => {
 
 const userById = async(id) => {
     try {
-        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser= ?`;
+        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser= ? LIMIT 1`;
 
         const paramsQuery = [id];
         const [user] = await dbConsult(query, paramsQuery);

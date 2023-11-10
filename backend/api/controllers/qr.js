@@ -26,12 +26,13 @@ const getQr = async( req , res ) => {
     const querySearch = req.query.query;
 
     // Datos para enviar a la base de datos
-    const data = {};
-    data.desde = desde;
-    data.registropp = registropp;
-    data.querySearch = querySearch;
-    data.role = req.role;
-    data.uid = req.uid;
+    const data = {
+        desde,
+        registropp,
+        querySearch,
+        role: req.role,
+        uid: req.uid
+    };
     
     try {
 
@@ -67,7 +68,7 @@ const getQrById = async( req , res ) => {
     try {
         const qr = await qrById(uid);
 
-        if(qr){
+        if(qr !== null){
             res.status(200).json({
                 msg: 'getQr',
                 qr: qr

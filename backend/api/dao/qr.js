@@ -44,7 +44,7 @@ const qrList = async(data) => {
 
 const qrById = async(id) =>{
     try {
-        const query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr= ?`;
+        const query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr= ? LIMIT 1`;
 
         const paramsQuery = [id];
         const [qr] = await dbConsult(query, paramsQuery);
