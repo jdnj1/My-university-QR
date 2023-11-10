@@ -100,11 +100,33 @@ const createQr = async( req , res = response ) => {
 
     // Por si se introducen los campos por llamada
     const {...object} = req.body;
-    object.uid = req.uid;
 
     try {
 
-        const qr = await qrCreate(object);
+        let data = {
+            description: object.description,
+            tagName: object.tagName,
+            tagDescription: object.tagDescription,
+            sizePrint: object.sizePrint,
+            date: object.date,
+            user: req.uid
+        };
+
+        // Creamos la fecha de validez del QR si no se ha enviado ninguna por el cuerpo
+        if(data.date === undefined){
+            data.date = new Date();
+            data.date.setDate(data.date.getDate() + Number(process.env.DAYS));
+            data.date = format(data.date, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        }
+
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if(data[key] === undefined || data[key] === null){
+                data[key] = '';
+            }
+        });
+
+        const qr = await qrCreate(data);
 
         res.status(200).json({
             msg: 'postQR',
@@ -127,11 +149,11 @@ const createQr = async( req , res = response ) => {
  * @param {*} res Respuesta a enviar por el servidor.
  */
 const updateQr = async( req , res = response ) => {
-    const uid = req.params.id;
+    const idQr = req.params.id;
     
     try{
         // Comprueba que haya un codigo QR con ese ID.
-        let qr = await qrById(uid);
+        let qr = await qrById(idQr);
 
         if( qr === null ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -142,9 +164,28 @@ const updateQr = async( req , res = response ) => {
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
         let { ...object } = req.body;
-        object.idQr = uid;
+        console.log(object)
+
+        let data = {
+            description: object.description,
+            tagName: object.tagName,
+            tagDescription: object.tagDescription,
+            sizePrint: object.sizePrint,
+            date: object.date,
+            idQr  
+        }
+
+        console.log(data)
+
+        // // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if(data[key] === undefined || data[key] === null){
+                delete data[key];
+            }
+        });
+        console.log(data)
     
-        qr = await qrUpdate(object);
+        qr = await qrUpdate(data);
         
         res.status( 200 ).json( qr );
 
