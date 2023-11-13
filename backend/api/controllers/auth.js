@@ -87,7 +87,7 @@ const token = async( req , res = response ) => {
         // Se renueva el token para la fecha de expiración
         const nuevotoken = await generateJWT( uid, role );
 
-        res.status( 200 ).json( {
+        res.status( 200 ).json({
             msg: 'token',
             token: nuevotoken
         });
