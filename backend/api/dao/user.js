@@ -56,35 +56,12 @@ const userById = async(id) => {
 
 const userCreate = async(data) => {
     try {
-        let paramsQuery = [data.email, data.password];
-        let query = `INSERT INTO ${process.env.USERTABLE} (email, password`;
 
-        // Se comprueba si se pasa el rol y el limite de consultas
-        if(data.lim_consult){
-            query += `, lim_consult`;
-        }
+        const query = `INSERT INTO ${process.env.USERTABLE} (${Object.keys(data).join(',')}) VALUES (?)`;
+        const paramsQuery = [Object.values(data)]
+        const [user] = await dbConsult(query, paramsQuery);
 
-        if(data.role === 1 || data.role === 0){
-            query += `, role`;
-        }
-
-        query += `) VALUES (?, ?`;
-
-        if(data.lim_consult){
-            query += `, ?`;
-            paramsQuery.push(data.lim_consult);
-        }
-
-        if(data.role === 1 || data.role === 0){
-            query += `, ?`;
-            paramsQuery.push(data.role);
-        }
-
-        query += ')';
-
-        const user = await dbConsult(query, paramsQuery);
-
-        return user.length === 0 ? null : user[0];
+        return user;
     } catch (error) {
         throw error;
     }
@@ -92,42 +69,12 @@ const userCreate = async(data) => {
 
 const userUpdate = async(data) =>  {
     try {
-        let paramsQuery = [];
-        // En este array se van almacenando todos los campos a actualizar
-        let updateFields = [];
 
-        let query = `UPDATE ${process.env.USERTABLE} SET `;
-
-        // Dependiendo de los campos que se envien la query es de una forma u otra.
-        if(data.email){
-            updateFields.push('email = ?');
-            paramsQuery.push(data.email);
-        }
-
-        if(data.password){
-            updateFields.push('password = ?');
-            paramsQuery.push(data.password);
-        }
-
-        if(data.role === 1 || data.role === 0){
-            updateFields.push(`role = ?`);
-            paramsQuery.push(data.role);
-
-        }
-        // Se comprueba si se pasa el rol y el limite de consultas
-        if(data.lim_consult){
-            updateFields.push(`lim_consult = ?`);
-            paramsQuery.push(data.lim_consult);
-        }
-
-        // Se unen los campos enviados por la peticion con una coma en el caso que haya mas de uno
-        query += updateFields.join(',');
-        query += ' WHERE idUser=?';
-        paramsQuery.push(data.uid);
-
+        const query = `UPDATE ${process.env.USERTABLE} SET ? WHERE idUser = ?`;
+        const paramsQuery = [data, data.idUser]
         const [user] = await dbConsult(query, paramsQuery);
 
-        return user.length === 0 ? null : user[0];
+        return user;
     } catch (error) {
         throw error;
     }

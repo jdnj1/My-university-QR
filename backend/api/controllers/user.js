@@ -109,21 +109,28 @@ const createUsers = async( req , res = response ) => {
 
         // Comprueba si el email ya esta en uso
         const existeEmail = await userByEmail(object.email);
-        if(existeEmail){
+        if( existeEmail !== null ){
             res.status(400).json({
                 msg: 'El email ya existe'
             });
             return;
         }
 
+        let data = {
+            email: object.email,
+            password: object.password,
+            role: ( object.role === 0 || object.role === 1 ? object.role : 0 ),
+            lim_consult: ( object.lim_consult >= 0 ? object.lim_consult : 10 )
+        }
+
         // Genera una cadena aleatoria.
         const salt = bcrypt.genSaltSync();
 
         // Cifra la contrasena con la cadena.
-        object.password = bcrypt.hashSync(object.password, salt);
+        data.password = bcrypt.hashSync(data.password, salt);
 
 
-        const user = await userCreate(object);
+        const user = await userCreate(data);
 
         res.status(200).json({
             msg: 'postUsuarios',
@@ -161,7 +168,7 @@ const updateUsers = async( req , res = response ) => {
         // Comprueba que haya un usuario con ese ID.
         let user = await userById(uid);
 
-        if( !user ){
+        if( user === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -169,34 +176,45 @@ const updateUsers = async( req , res = response ) => {
         }
 
         // Extrae los campos que no cabe especificar a la hora de crear.
-        let { ...object } = req.body;
-        object.uid = uid;
+        const { ...object } = req.body;
 
-        if(object.email){
+        let data = {
+            email: object.email,
+            password: object.password,
+            role: ( object.role === 0 || object.role === 1 ? object.role : 0 ),
+            lim_consult: ( object.lim_consult >= 0 ? object.lim_consult : 10 ),
+            idUser: uid
+        }
+
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if(data[key] === undefined || data[key] === null || data[key] === ''){
+                delete data[key];
+            }
+        });
+
+        if(data.email !== undefined){
             // Se comprueba si el email ya esta en uso
-            const existeEmail = await userByEmail(object.email);
+            const existeEmail = await userByEmail(data.email);
 
-            if(!existeEmail){
-                // Se comprueba que sea el email del propio usuario
-                if(existeEmail.idUser !== uid){
-                    res.status(400).json({
-                        msg: 'El email ya existe'
-                    });
-                    return;
-                }
+            if( existeEmail !== null ){
+                res.status(400).json({
+                    msg: 'El email ya existe'
+                });
+                return;
             }
         }
 
-        if(object.password){
+        if(data.password !== undefined){
             // Genera una cadena aleatoria.
             const salt = bcrypt.genSaltSync();
 
             // Cifra la contrasena con la cadena.
-            object.password = bcrypt.hashSync(object.password, salt);
+            data.password = bcrypt.hashSync(data.password, salt);
         }
         
         // Se actualiza. 
-        user = await userUpdate(object);
+        user = await userUpdate(data);
         
         res.status( 200 ).json( user );
 
@@ -204,7 +222,7 @@ const updateUsers = async( req , res = response ) => {
         console.error(error);
 
         res.status(500).json({
-            msg: 'ERROR al actualizar usuario'
+            msg: 'Error al actualizar usuario'
         });
     }
 }

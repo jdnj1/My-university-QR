@@ -58,11 +58,11 @@ const qrById = async(id) =>{
 const qrCreate = async(data) => {
     try {
 
-        const query = `INSERT INTO ${process.env.QRTABLE} (description, tagName, tagDescription, sizePrint, date, user) VALUES (?)`;
+        const query = `INSERT INTO ${process.env.QRTABLE} (${Object.keys(data).join(',')}) VALUES (?)`;
         const paramsQuery = [Object.values(data)]
-        const qr = await dbConsult(query, paramsQuery);
+        const [qr] = await dbConsult(query, paramsQuery);
 
-        return qr.length === 0 ? null : qr[0];
+        return qr;
     } catch (error) {
         throw error;
     }
@@ -73,9 +73,9 @@ const qrUpdate = async(data) =>{
 
         const query = `UPDATE ${process.env.QRTABLE} SET ? WHERE idQr = ?`;
         const paramsQuery = [data, data.idQr];
-        const qr = await dbConsult(query, paramsQuery);
+        const [qr] = await dbConsult(query, paramsQuery);
 
-        return qr.length === 0 ? null : qr[0];
+        return qr;
     } catch (error) {
         throw error;
     }

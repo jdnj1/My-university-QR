@@ -68,9 +68,9 @@ const consutlCreate = async(data) => {
 
         query = `INSERT INTO ${process.env.CONSULTTABLE} (${Object.keys(data).join(',')}) VALUES (?)`;
         paramsQuery = [Object.values(data)];
-        const consult = await dbConsult(query, paramsQuery);
+        const [consult] = await dbConsult(query, paramsQuery);
 
-        return consult.length === 0 ? null : consult[0];
+        return consult;
     } catch (error) {
         throw error;
     }
@@ -83,7 +83,7 @@ const consultUpdate = async(data) => {
         const paramsQuery = [data, data.idConsult]
         const [consult] = await dbConsult(query, paramsQuery);
 
-        return consult.length === 0 ? null : consult;
+        return consult;
     } catch (error) {
         throw error;
     }

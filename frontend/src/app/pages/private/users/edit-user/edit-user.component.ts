@@ -108,6 +108,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/users-list');
       },
       error: (err: HttpErrorResponse) => {
+        if(err.error.msg === 'El email ya existe'){
+          this.alertService.error(this.translateService.instant('user.create.error'));
+          return;
+        }
         this.alertService.error(this.translateService.instant('alert.user.update.error'));
       }
     });
