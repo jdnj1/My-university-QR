@@ -5,7 +5,6 @@
 // === Importar
 
 const { response } = require('express'); // Response de Express
-const bcrypt = require('bcryptjs'); // BcryptJS
 const axios = require('axios');
 const {format} = require ('date-fns');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete } = require('../dao/qr');
