@@ -311,6 +311,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
 
+    console.log(this.firstForm.value)
     // Se comprueba si se va a crear, duplicar o a editar una llamada
     if(this.create || this.duplicate){
 
@@ -319,8 +320,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       if (!this.firstForm.valid) {
         return;
       }
+
       // Se crea
-      console.log(this.firstForm.value)
       this.consultService.createConsult(this.firstForm.value).subscribe({
         next: (res: any) => {
           this.idCon = res.consult.insertId;

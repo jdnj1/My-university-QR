@@ -175,9 +175,7 @@ const updateQr = async( req , res = response ) => {
             idQr  
         }
 
-        console.log(data)
-
-        // // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
         Object.keys(data).forEach(key => {
             if(data[key] === undefined || data[key] === null){
                 delete data[key];

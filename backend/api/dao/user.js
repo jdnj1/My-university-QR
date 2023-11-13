@@ -8,9 +8,8 @@ const userByEmail = async(email) => {
 
         const paramsQuery = [email];
         const [user] = await dbConsult(query, paramsQuery);
-        console.log(user)
 
-        return user.length === 0 ? false : true;
+        return user.length === 0 ? null : user[0];
     } catch (error) {
         throw error;
     }

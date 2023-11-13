@@ -3,10 +3,12 @@
  */
 
 // === Importar
+const {format} = require ('date-fns');
 // Propio
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
 const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
+const { validateJSON } = require('../helpers/verify-json');
 
 /**
  * Devuelve todas las consultas que realiza un codigo qr de la BD.
@@ -99,11 +101,33 @@ const createConsult = async( req , res = response ) => {
     // Por si se introducen los campos por llamada
     const {...object} = req.body;
 
-    try {   
+    try {
+        
+        let data = {
+            name: object.name,
+            token: object.token,
+            typeDate: ( object.typeDate === 0 || object.typeDate === 1 ? object.typeDate : undefined ),
+            dateFrom: ( isNaN(Date.parse(object.dateFrom)) ? undefined : object.dateFrom ),
+            dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
+            number: ( object.number >= 0 ? object.number : 0 ),
+            unit: ( object.unit >= 1 ? object.unit : 1 ),
+            filters: ( validateJSON(object.filters) ? object.filters : undefined ),
+            chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
+            qrCode: object.qrCode
+        };
 
-        //Comprobar que la fecha hasta no sea anterior a la fecha desde
-        if(object.dateFrom && object.dateTo){
-            if(object.dateFrom >= object.dateTo){
+
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if( data[key] === undefined || data[key] === null ){
+                // Los campos que se borren aqui tendran su valor por defecto
+                delete data[key];
+            }
+        });
+
+        //Comprobar que la fecha hasta no sea anterior a la fecha dedse
+        if(data.dateFrom !== undefined && data.dateTo !== undefined){
+            if(data.dateFrom >= data.dateTo){
                 res.status(400).json({
                     msg: "La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'"
                 });
@@ -111,8 +135,15 @@ const createConsult = async( req , res = response ) => {
                 return;
             }
         }
+        else{
+            // Si no se pasan las fechas dateFrom tendra la fecha acutal
+            // DateTo se le suma los dias indicados en el .env
+            data.dateTo = new Date();
+            data.dateTo.setDate(data.dateTo.getDate() + Number(process.env.DAYS));
+            data.dateTo = format(data.dateTo, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        }
 
-        const consult = await consutlCreate(object);
+        const consult = await consutlCreate(data);
 
         res.status(200).json({
             msg: 'postLlamada',
@@ -141,7 +172,7 @@ const updateConsult = async( req , res = response ) => {
         // Comprueba que haya una llamada con ese ID.
         let consult = await consultById(uid);
 
-        if( !consult ){
+        if( consult === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
@@ -149,11 +180,43 @@ const updateConsult = async( req , res = response ) => {
         }
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
-        let { ...object } = req.body;
-        object.idConsult = uid;
+        const { ...object } = req.body;
+
+        let data = {
+            name: object.name,
+            token: object.token,
+            typeDate: ( object.typeDate === 0 || object.typeDate === 1 ? object.typeDate : undefined ),
+            dateFrom: ( isNaN(Date.parse(object.dateFrom)) ? undefined : object.dateFrom ),
+            dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
+            number: ( object.number >= 0 ? object.number : 0 ),
+            unit: ( object.unit >= 1 ? object.unit : 1 ),
+            filters: ( validateJSON(object.filters) ? object.filters : undefined ),
+            chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
+            activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
+            orderConsult: object.orderConsult,
+            idConsult: uid
+        };
+
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if(data[key] === undefined || data[key] === null){
+                delete data[key];
+            }
+        });
+        
+        //Comprobar que la fecha hasta no sea anterior a la fecha dedse
+        if(data.dateFrom !== undefined && data.dateTo !== undefined){
+            if(data.dateFrom >= data.dateTo){
+                res.status(400).json({
+                    msg: "La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'"
+                });
+
+                return;
+            }
+        }
         
         // Se actualiza. 
-        consult = await consultUpdate(object);
+        consult = await consultUpdate(data);
         
         res.status( 200 ).json( consult );
 

@@ -32,6 +32,8 @@ const login = async( req , res = response ) => {
             return;
         }
 
+        console.log(user)
+
         // Se comprueba si es la contrasena que nos pasan es la del usuario.
         const validPassword = bcrypt.compareSync(password, user.password);
         if( !validPassword ){
