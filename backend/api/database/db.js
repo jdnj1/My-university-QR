@@ -1,7 +1,4 @@
 const mysql = require('mysql2/promise');
-const util = require('util');
-// Implementacion de promesas
-// const bluebird = require('bluebird');
 
 // Función para conectarse con la base de datos
 async function connectDb(){

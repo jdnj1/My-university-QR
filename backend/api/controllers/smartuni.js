@@ -8,7 +8,6 @@ const axios = require('axios');
 
 // Propio
 const { response } = require('express'); // Response de Express
-const bcrypt = require('bcryptjs'); // BcryptJS
 
 /**
  * Devuelve los datos de SmartUniversity comprendidos en las fechas y filtros proporcionados

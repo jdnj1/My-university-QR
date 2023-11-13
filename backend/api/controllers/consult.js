@@ -6,7 +6,6 @@
 const {format} = require ('date-fns');
 // Propio
 const { response } = require('express'); // Response de Express
-const bcrypt = require('bcryptjs'); // BcryptJS
 const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
 const { validateJSON } = require('../helpers/verify-json');
 
