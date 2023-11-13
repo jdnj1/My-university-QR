@@ -15,7 +15,7 @@ export class UserService {
   email: string = '';
   token: string = '';
   lim_consult: number = 0;
-  role: number = 0;
+  role: number = -1;
   roleSub = new BehaviorSubject(0);
 
   private isLogout: boolean = false;
@@ -78,7 +78,7 @@ export class UserService {
 
   }
 
-  getUserData(){
+  async getUserData(){
     const token = localStorage.getItem('token') || '';
     let id = this.getId();
 
@@ -106,6 +106,20 @@ export class UserService {
     }
     return;
 
+  }
+
+  getRole(){
+    const token = localStorage.getItem('token') || '';
+
+    if(this.role === -1){
+      if(token !== ''){
+        const decoded: any = jwt_decode(token);
+        return decoded.role;
+      }
+    }
+    else{
+      return this.role;
+    }
   }
 
   validateToken(){
