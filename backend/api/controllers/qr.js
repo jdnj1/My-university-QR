@@ -163,7 +163,6 @@ const updateQr = async( req , res = response ) => {
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
         let { ...object } = req.body;
-        console.log(object)
 
         let data = {
             description: object.description,
@@ -180,7 +179,6 @@ const updateQr = async( req , res = response ) => {
                 delete data[key];
             }
         });
-        console.log(data)
     
         qr = await qrUpdate(data);
         
