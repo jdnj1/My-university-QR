@@ -32,8 +32,6 @@ const login = async( req , res = response ) => {
             return;
         }
 
-        console.log(user)
-
         // Se comprueba si es la contrasena que nos pasan es la del usuario.
         const validPassword = bcrypt.compareSync(password, user.password);
         if( !validPassword ){
@@ -72,13 +70,6 @@ const token = async( req , res = response ) => {
     // Se extrae el token de la cabecera
     const token = req.headers['x-token'];
 
-    // Si no hay token se notifica
-    if(!token){
-        res.status(403).json({
-            msg: 'Falta token de autorización'
-        });
-    }
-
     try{
         // Se comprueba si el token es correcto
         const { uid, role } = jwt.verify(token, process.env.JWTSECRET);
@@ -86,8 +77,8 @@ const token = async( req , res = response ) => {
         // Comprobamos que el id del token recibido corresponde al usuario
         const user = await userById(uid);
 
-        if(!user){
-            res.status(400).json({
+        if( user === null ){
+            res.status(403).json({
                 msg: 'Token no valido'
             });
             return;
@@ -103,9 +94,8 @@ const token = async( req , res = response ) => {
 
         return;
     } catch( error ){
-        console.error( error );
 
-        res.status(400).json({
+        res.status(403).json({
             msg: 'token no válido'
         });
         return;
