@@ -159,7 +159,17 @@ const updateQr = async( req , res = response ) => {
             res.status(404);
             res.send();
             return;
+        }  
+
+        // Se comprueba que el usuario no intente actualizar un qr que no sea suyo si no es admin
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para actualizar el qr'
+            });
+
+            return;
         }
+
 
         // Extrae los campos que se pueden enviar por el cuerpo de la peticion para realizar comprobaciones
         let { ...object } = req.body;

@@ -8,6 +8,7 @@ const {format} = require ('date-fns');
 const { response } = require('express'); // Response de Express
 const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
 const { validateJSON } = require('../helpers/verify-json');
+const { qrById } = require('../dao/qr');
 
 /**
  * Devuelve todas las consultas que realiza un codigo qr de la BD.
@@ -175,6 +176,18 @@ const updateConsult = async( req , res = response ) => {
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
+            return;
+        }
+
+        // Se obtiene el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(consult.qrCode);
+
+        // Se comprueba que el usuario no intente actualizar una llamada que no sea suyo si no es admin
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para actualizar la llamada'
+            });
+
             return;
         }
 
