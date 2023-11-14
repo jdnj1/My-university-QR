@@ -62,7 +62,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
   getUserById(){
     this.userService.getUserById(this.idUser).subscribe({
       next: (res: any) => {
-        console.log(res)
         this.user = res.user;
         this.emailUser = this.user.email;
 

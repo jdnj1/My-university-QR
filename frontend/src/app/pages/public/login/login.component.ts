@@ -39,7 +39,6 @@ export class LoginComponent {
 
     this.userService.login(this.loginForm.value).subscribe({
       next: (res: any) => {
-        console.log(res);
 
         // Se redirige a la página principal
         this.router.navigateByUrl('/home');

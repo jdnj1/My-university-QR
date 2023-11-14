@@ -44,6 +44,9 @@ const login = async( req , res = response ) => {
         // Genera un token.
         const token = await generateJWT( user.idUser , user.role );
 
+        // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
+        delete user.password;
+
         res.status( 200 ).json( {
             user: user,
             token

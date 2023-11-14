@@ -249,15 +249,7 @@ const changePassword = async( req , res ) => {
         // El cuerpo de la peticion debe contener la antigua contrasena y la nueva.
         const { oldPassword , newPassword } = req.body;
 
-        // La contrasena nueva y la antigua no pueden ser la misma.
-        if( oldPassword === newPassword ){
-            res.status( 400 ).json({
-                msg: 'La contrasena nueva y la antigua coinciden'
-            });
-            return;
-        }
-
-        // === Se comprueba que la contrasena recibida en la peticion coincida con la actual ===
+        // Se comprueba que la contrasena recibida en la peticion coincida con la actual
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let user = await userById(userId);
@@ -272,12 +264,10 @@ const changePassword = async( req , res ) => {
         const validPassword = bcrypt.compareSync( oldPassword , user.password );
         if( !validPassword ){
             res.status( 403 ).json({
-                msg: 'La contrasena proporcionada no coincide con la existente'
+                msg: 'La contraseña proporcionada no coincide con la existente'
             });
             return;
         }
-
-        // ------------------------------------------
 
         // Se obtiene el hash de la nueva contrasena a partir de una cadena aleatoria.
         const salt = bcrypt.genSaltSync();
