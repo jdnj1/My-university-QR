@@ -261,12 +261,12 @@ const changePassword = async( req , res ) => {
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let user = await userById(userId);
-       if( user === null ){
-            // Si no se encuentra al usuario, responde con not found sin cuerpo.
-            res.status(404);
-            res.send();
-            return;
-        }
+        if( user === null ){
+                // Si no se encuentra al usuario, responde con not found sin cuerpo.
+                res.status(404);
+                res.send();
+                return;
+            }
 
         // Se contrasta la antigua contrasena con el hash existente.
         const validPassword = bcrypt.compareSync( oldPassword , user.password );
