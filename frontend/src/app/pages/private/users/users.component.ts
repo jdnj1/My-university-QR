@@ -50,8 +50,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getUsers(0);
+    await this.userService.getUserData();
     this.appUser = this.userService.email;
   }
 

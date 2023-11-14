@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { loginform } from '../interfaces/login-form.interface';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, firstValueFrom, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
 
@@ -84,16 +84,16 @@ export class UserService {
 
     if(token !== ''){
 
-      this.getUserById(id).subscribe({
-        next: (res: any) => {
-          // Se almacenan los datos del usuario en la clase
-          this.idUser = res.user.idUser;
-          this.email = res.user.email;
-          this.lim_consult = res.user.lim_consult;
-          this.role = res.user.role;
-          this.roleSub.next(res.user.role);
-        }
-      });
+      const res: any = await firstValueFrom(this.getUserById(id));
+      console.log(res)
+
+      // Se almacenan los datos del usuario en la clase
+      this.idUser = res.user.idUser;
+      this.email = res.user.email;
+      this.lim_consult = res.user.lim_consult;
+      this.role = res.user.role;
+      this.roleSub.next(res.user.role);
+
     }
   }
 
