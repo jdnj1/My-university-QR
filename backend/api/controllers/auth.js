@@ -25,7 +25,7 @@ const login = async( req , res = response ) => {
         // Se busca al usuario.
         const user = await userByEmail(email);
 
-        if(!user){
+        if( user === null ){
             res.status(401).json({
                 msg: 'Email o contraseña incorrectos'
             });
