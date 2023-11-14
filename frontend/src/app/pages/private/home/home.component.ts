@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
@@ -10,7 +10,6 @@ import { UserService } from 'src/app/services/user.service';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { he } from 'date-fns/locale';
 import { PrintService } from 'src/app/services/print.service';
 import { qr } from 'src/app/interfaces/qr.interface';
 import { TranslateService } from '@ngx-translate/core';

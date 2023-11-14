@@ -85,7 +85,6 @@ export class UserService {
     if(token !== ''){
 
       const res: any = await firstValueFrom(this.getUserById(id));
-      console.log(res)
 
       // Se almacenan los datos del usuario en la clase
       this.idUser = res.user.idUser;
