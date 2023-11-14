@@ -285,7 +285,7 @@ const changePassword = async( req , res ) => {
 
         const data = {
             password: newpass,
-            uid: userId
+            idUser: userId
         }
 
         // Guarda los cambios.

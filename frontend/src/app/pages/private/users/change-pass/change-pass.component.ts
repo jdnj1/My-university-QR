@@ -70,8 +70,8 @@ export class ChangePassComponent implements OnInit, OnDestroy {
 
     this.userService.changePassword(this.idUser, this.passForm.value).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.alertService.success('Contraseña actualizada');
+        this.router.navigateByUrl('/');
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error(`Error al acutalizar la contraseña: ${err.error.msg}`);
