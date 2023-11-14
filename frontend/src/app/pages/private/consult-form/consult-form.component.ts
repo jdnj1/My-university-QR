@@ -459,29 +459,4 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.date = true;
     this.firstForm.get('typeDate')?.setValue(1);
   }
-
-  async checkExit(){
-    let res = true;
-    if(this.hasChanges){
-      await Swal.fire({
-        icon: "warning",
-        title: this.translateService.instant('change.modal.title'),
-        text: this.translateService.instant('change.modal.text'),
-        showCancelButton: true,
-        cancelButtonText: this.translateService.instant('button.cancel'),
-        confirmButtonText: this.translateService.instant('button.confirm'),
-        confirmButtonColor: '#198754',
-        reverseButtons: true
-      }).then((result) => {
-        if(result.isConfirmed){
-          res = true;
-        }
-        else{
-          res = false;
-        }
-      })
-    }
-
-    return res;
-  }
 }
