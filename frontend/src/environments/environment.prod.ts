@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:3000/api',
-  appBaseUrl: 'http://localhost:4200',
+  apiBaseUrl: 'http://192.168.18.5:3000/api',
+  appBaseUrl: 'http://192.168.18.5:4200',
   openApi: 'http://openapi.smartua.es',
   googleOAuth_ClientID: '314663795555-o1kmo76glu1jhep9u4cgbkn4bs4tmqm6.apps.googleusercontent.com',
   recordsByPage: 10,
@@ -44,5 +44,10 @@ export const environment = {
   //Mensaje si el QR no tiene llamadas
   messEmpty: "El código QR no tiene llamadas.",
 
-  defaultDes: "Descripción del código QR"
+  defaultDes: "Descripción del código QR",
+
+  //Colores de fondo para las graficas de solo el valor (preferiblemente colores suaves)
+  maxColor: "#FF7878",
+  minColor: "#1AA3F1",
+  lastColor: "#0EB500"
 };

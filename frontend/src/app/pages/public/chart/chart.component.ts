@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { format } from 'date-fns';
 import * as echarts from 'echarts';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chart',
@@ -21,6 +22,19 @@ export class ChartComponent implements AfterViewInit {
     "number"
   ]
 
+  // Variable con el tipo de operaciones
+  operation: Array<string> = [
+    "Máximo",
+    "Mínimo",
+    "Último"
+  ];
+
+  // 1: max, 2: min, 3: last
+  opColor: Array<string> = [
+    environment.maxColor,
+    environment.minColor,
+    environment.lastColor
+  ];
 
   ngAfterViewInit(): void {
     this.chart();
@@ -171,20 +185,23 @@ export class ChartComponent implements AfterViewInit {
         // Solo el valor
         option = {
           title: {
-            text: `Máximo: ${this.data.values[0]} ${this.data.metric}\n`,
+            text: `${this.operation[this.data.operation - 2]}: ${this.data.values[0]} ${this.data.metric}\n`,
             subtext: `\n${this.data.title}: \n\n ${this.data.description}`,
             left: "center",
-            top: "center",
+            top: "25%",
             textStyle: {
               fontSize: 30,
-              width: 350,
-              overflow: 'break',
+              width: 300,
+              color: "#FFF",
+              overflow: 'break'
             },
             subtextStyle: {
               width: 550,
               overflow: 'break',
+              color: "#FFF"
             }
           },
+          backgroundColor: this.opColor[this.data.operation - 2],
           media: [{
             query: {
               maxWidth: 360,

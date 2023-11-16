@@ -373,7 +373,8 @@ const viewQr = async(req, res) => {
                             type: consult.chart,
                             values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
                             name: data.values[0][data.columns.indexOf('name')],
-                            metric: data.values[0][data.columns.indexOf('metric')]
+                            metric: data.values[0][data.columns.indexOf('metric')],
+                            operation: consult.operation
                         });
     
                     }

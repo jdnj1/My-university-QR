@@ -204,6 +204,7 @@ const updateConsult = async( req , res = response ) => {
             unit: ( object.unit >= 1 ? object.unit : 1 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
+            operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : 1 ),
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             orderConsult: object.orderConsult,
             idConsult: uid
