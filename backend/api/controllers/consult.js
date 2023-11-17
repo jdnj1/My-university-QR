@@ -36,6 +36,18 @@ const getConsult = async( req , res ) => {
     };
 
     try {
+
+        // Se obtiene el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(idQr);
+
+        // Solo el propietario o los admin pueden obtener las llamadas
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para obtener las llamadas'
+            });
+
+            return;
+        }
         
         const [consult, total] = await consultList(data);
         
@@ -65,8 +77,21 @@ const getConsult = async( req , res ) => {
  */
 const getConsultById = async( req , res ) => {
     // Se extrae el id del qr desde el path
-    const uid = req.params.id;
+    const idQr = req.params.id;
     try {
+
+        // Se obtiene el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(idQr);
+
+        // Solo el propietario o los admin pueden obtener la llamada
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para obtener  llamada'
+            });
+
+            return;
+        }
+
         const consult = await consultById(uid);
 
         if(consult !== null){
@@ -182,7 +207,7 @@ const updateConsult = async( req , res = response ) => {
         // Se obtiene el qr de la llamada para saber a que usuario pertenece
         let qr = await qrById(consult.qrCode);
 
-        // Se comprueba que el usuario no intente actualizar una llamada que no sea suyo si no es admin
+        // Se comprueba que el usuario no intente actualizar una llamada que no sea suya si no es admin
         if(req.role !== 1 && req.uid !== qr.user ){
             res.status(403).json({
                 msg: 'No tienes permisos para actualizar la llamada'
