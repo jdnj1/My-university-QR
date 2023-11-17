@@ -30,6 +30,15 @@ const getUsers = async( req , res ) => {
     };
 
     try {
+
+        // Solo los usuarios administrador pueden listar usuarios
+        if(req.role !== 1){
+            res.status(403).json({
+                msg: 'Solo los administradores pueden listar usuarios'
+            });
+            return;
+        }
+
         const [users, total] = await userList(data);
         
         res.status(200).json({
