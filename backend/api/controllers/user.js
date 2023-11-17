@@ -230,9 +230,9 @@ const updateUsers = async( req , res = response ) => {
         }
         
         // Se actualiza. 
-        user = await userUpdate(data);
+        await userUpdate(data);
         
-        res.status( 200 ).json( user );
+        res.status( 200 ).json( {msg: 'Usuario actualizado'} );
 
     } catch(error){
         console.error(error);

@@ -71,9 +71,8 @@ const userUpdate = async(data) =>  {
 
         const query = `UPDATE ${process.env.USERTABLE} SET ? WHERE idUser = ?`;
         const paramsQuery = [data, data.idUser]
-        const [user] = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return user;
     } catch (error) {
         throw error;
     }
