@@ -198,6 +198,7 @@
   "alert.pass.new":"The new password does not match",
   "alert.pass.update":"Password updated",
   "alert.pass.update.error":"Error updating password",
+  "alert.user.email.error":"Error getting user email",
 
   "view.share.title":"Compartir"
 

@@ -127,6 +127,13 @@ const createConsult = async( req , res = response ) => {
     const {...object} = req.body;
 
     try {
+
+        // Solo el propietario del qr puede añadirle llamadas
+        if( req.uid != object.qrCode ){
+            res.status(403).json({
+                msg: 'No eres el propietario de esta llamada'
+            })
+        }
         
         let data = {
             name: object.name,

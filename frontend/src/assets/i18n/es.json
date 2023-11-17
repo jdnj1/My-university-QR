@@ -197,6 +197,7 @@
   "alert.pass.new":"La contraseña nueva no coincide",
   "alert.pass.update":"Contraseña acutalizada",
   "alert.pass.update.error":"Error al actualziar la contraseña",
+  "alert.user.email.error":"Error al obtener el email del usuario",
 
   "view.share.title":"Compartir"
 

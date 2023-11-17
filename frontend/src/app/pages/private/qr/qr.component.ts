@@ -31,6 +31,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   urlQr: string = `${environment.appBaseUrl}/view/${this.idQr}`;
   width = 256;
   qr: any;
+  qrUsu: number = 0;
+
+  idUsu: number = 0;
+  usuEmail: string = '';
 
   create: boolean = this.idQr === '0'? true : false;
   formSubmit: boolean = false;
@@ -127,6 +131,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getData(){
+    this.idUsu = this.userService.getId();
     this.getQr();
     this.getConsults(0);
   }
@@ -140,6 +145,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.qrService.getQrbyId(this.idQr).subscribe({
       next: (res: any) => {
         this.qr = res.qr;
+        this.qrUsu = res.qr.user;
 
         this.urlQr = `${environment.appBaseUrl}/view/${this.qr.uid}`;
 
@@ -182,6 +188,16 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qrSubscription = this.dataQrForm.valueChanges.subscribe( () => {
           this.hasChanges = true;
         });
+
+        // Obtenemos el email de usuario por si el QR no es del dueño
+        this.userService.getUserById(this.qr.user).subscribe({
+          next: (res: any) => {
+            this.usuEmail = res.user.email;
+          },
+          error: (err: HttpErrorResponse) => {
+            this.alertService.error(this.translateService.instant('alert.user.email.error'));
+          }
+        })
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.error(this.translateService.instant('alert.qr.get'));
