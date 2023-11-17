@@ -59,9 +59,8 @@ const userCreate = async(data) => {
 
         const query = `INSERT INTO ${process.env.USERTABLE} (${Object.keys(data).join(',')}) VALUES (?)`;
         const paramsQuery = [Object.values(data)]
-        const [user] = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return user;
     } catch (error) {
         throw error;
     }

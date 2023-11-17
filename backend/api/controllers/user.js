@@ -147,11 +147,10 @@ const createUsers = async( req , res = response ) => {
         data.password = bcrypt.hashSync(data.password, salt);
 
 
-        const user = await userCreate(data);
+        await userCreate(data);
 
         res.status(200).json({
-            msg: 'postUsuarios',
-            user
+            msg: 'Usuario creado',
         });
         
     } catch (error) {
