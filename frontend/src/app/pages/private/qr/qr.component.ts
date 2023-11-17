@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { FormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
