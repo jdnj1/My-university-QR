@@ -5,7 +5,7 @@ const { dbConsult } = require("../database/db");
 const qrList = async(data) => {
     try {
         let paramsQuery = [];
-        let query = `SELECT * FROM ${process.env.QRTABLE}`;
+        let query = `SELECT LOWER(HEX(AES_ENCRYPT(idQr, '${process.env.CODE}'))) AS uid, ${process.env.QRTABLE}.* FROM ${process.env.QRTABLE}`;
 
         // Si el usuario no es admin se le devuelven solo sus codigos qr
         if(data.role === 0){
@@ -44,8 +44,8 @@ const qrList = async(data) => {
 
 const qrById = async(id) =>{
     try {
-        const query = `SELECT * FROM ${process.env.QRTABLE} WHERE idQr= ? LIMIT 1`;
 
+        const query = `SELECT LOWER(HEX(AES_ENCRYPT(idQr, '${process.env.CODE}'))) AS uid, ${process.env.QRTABLE}.* FROM ${process.env.QRTABLE} WHERE idQr= ? LIMIT 1`;
         const paramsQuery = [id];
         const [qr] = await dbConsult(query, paramsQuery);
 
@@ -93,6 +93,21 @@ const qrDelete = async(id) => {
     }    
 }
 
+// Desencriptar uid 
+const decrypt = async(uid) => {
+
+    try {
+        const query = `SELECT AES_DECRYPT(UNHEX('${uid}'), '${process.env.CODE}') AS idQr`;
+        let res = await dbConsult(query);
+        const idQr = res[0][0].idQr.toString();
+
+        return idQr;
+    } catch (error) {
+        throw error;
+    }
+    
+}
 
 
-module.exports = {qrList, qrById, qrCreate, qrUpdate, qrDelete}
+
+module.exports = {qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt}

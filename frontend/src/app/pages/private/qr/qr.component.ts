@@ -28,7 +28,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   //Datos del qr
   idQr = this.route.snapshot.params['id'];
-  urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
+  urlQr: string = `${environment.appBaseUrl}/view/${this.idQr}`;
   width = 256;
   qr: any;
 
@@ -138,6 +138,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.qrService.getQrbyId(this.idQr).subscribe({
       next: (res: any) => {
         this.qr = res.qr;
+
+        this.urlQr = `${environment.appBaseUrl}/view/${this.qr.uid}`;
 
         //Adaptamos el formato de la fecha para poder ponerla en el input
         let date = new Date(this.qr.date);

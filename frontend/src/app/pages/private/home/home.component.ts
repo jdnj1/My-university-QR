@@ -106,7 +106,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.codesQr = res.qr;
         console.log(this.codesQr)
-
         this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
@@ -132,7 +131,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           }
 
           // Almacenamos la url de cada código QR
-          this.urlQr[index] = `${environment.appBaseUrl}/view/${qr.idQr}`;
+          this.urlQr[index] = `${environment.appBaseUrl}/view/${qr.uid}`;
         });
 
         for (let i = 0; i < this.codesQr.length; i++) {

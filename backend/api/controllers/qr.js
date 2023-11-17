@@ -7,7 +7,7 @@
 const { response } = require('express'); // Response de Express
 const axios = require('axios');
 const {format} = require ('date-fns');
-const { qrList, qrById, qrCreate, qrUpdate, qrDelete } = require('../dao/qr');
+const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
 const { consultListAll } = require('../dao/consult');
 
 /**
@@ -180,6 +180,7 @@ const updateQr = async( req , res = response ) => {
             tagDescription: object.tagDescription,
             sizePrint: object.sizePrint,
             date: object.date,
+            activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             idQr  
         }
 
@@ -268,8 +269,11 @@ const viewQr = async(req, res) => {
     const uid = req.params.id;
     
     try{
+        //Desencriptamos el id del Qr
+        const idQr = await decrypt(uid)
+
         // Obtenemos el código QR
-        const qr = await qrById(uid);
+        const qr = await qrById(idQr);
 
         // Si no se encuentra
         if(qr === null){
@@ -301,7 +305,7 @@ const viewQr = async(req, res) => {
         }
 
         // Si todo esta correcto, obtener sus llamadas
-        const consults = await consultListAll(uid);
+        const consults = await consultListAll(idQr);
 
         // Si el códgio QR no tiene llamadas
         if(consults.length === 0){

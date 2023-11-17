@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://192.168.18.5:3000/api',
-  appBaseUrl: 'http://192.168.18.5:4200',
+  apiBaseUrl: 'http://localhost:3000/api',
+  appBaseUrl: 'http://localhost:4200',
   openApi: 'http://openapi.smartua.es',
   recordsByPage: 10,
   filters: [
