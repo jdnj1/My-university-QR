@@ -7,5 +7,6 @@ export interface qr {
   sizePrint: string,
   date: string,
   activated: number,
+  share: number,
   user: number
 }

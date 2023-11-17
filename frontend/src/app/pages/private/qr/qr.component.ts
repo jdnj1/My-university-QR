@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { QrService } from 'src/app/services/qr.service';
@@ -50,7 +50,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     tagName: [''],
     tagDescription: [''],
     date: [''],
-    sizePrint: ['']
+    sizePrint: [''],
+    share: new UntypedFormControl(false)
   });
 
   // Form de búsqueda de QR
@@ -89,7 +90,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         tagName: [''],
         tagDescription: [''],
         date: ['', Validators.required],
-        sizePrint: ['a4']
+        sizePrint: ['a4'],
+        share: [false]
       });
 
       // Nos suscribimos a los cambios que pueda tener el fomrmulario
@@ -156,6 +158,15 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.dataQrForm.get('sizePrint')?.setValue(this.qr.sizePrint);
 
+        //Botón compartir
+        if(this.qr.share === 1){
+          this.dataQrForm.get('share')?.setValue(true);
+        }
+        else{
+          this.dataQrForm.get('share')?.setValue(false);
+        }
+
+        // Botón activar
         if(this.qr.activated === 1){
           this.activateForm = this.fb.group({
             activated: [true]
@@ -249,6 +260,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateQr(){
+    // Se comprueba el valor del campo share para pasar un 1 o un 0
+    if(this.dataQrForm.get('share')?.value){
+      this.dataQrForm.get('share')?.setValue(1)
+    }
+    else{
+      this.dataQrForm.get('share')?.setValue(0);
+    }
+
     // Se comprueba si se esta creando un qr
     if(this.create){
       this.formSubmit = true;

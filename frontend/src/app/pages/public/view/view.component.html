@@ -14,7 +14,7 @@
       <div>
         <h1>{{this.qr}}</h1>
       </div>
-      <button *ngIf="!warning" (click)="share()" title="Compartir" class="share btn btn-success rounded-pill"><i class="bi bi-share-fill"></i></button>
+      <button *ngIf="!warning && showShare === 1" (click)="share()" title="Compartir" class="share btn btn-success rounded-pill"><i class="bi bi-share-fill"></i></button>
     </div>
   </div>
 

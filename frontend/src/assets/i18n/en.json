@@ -38,6 +38,7 @@
   "qr.data.title.error":"Please, enter the QR code title",
   "qr.data.date":"Expiration date",
   "qr.data.date.error":"Please, enter an expiration date",
+  "qr.data.share":"Show share button",
   "qr.print":"Print configuration",
   "qr.print.tagname":"Tag name",
   "qr.print.size":"Print size",
@@ -196,6 +197,8 @@
   "alert.user.update.error":"Error updating user",
   "alert.pass.new":"The new password does not match",
   "alert.pass.update":"Password updated",
-  "alert.pass.update.error":"Error updating password"
+  "alert.pass.update.error":"Error updating password",
+
+  "view.share.title":"Compartir"
 
 }

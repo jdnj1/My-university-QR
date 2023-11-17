@@ -108,6 +108,7 @@ const createQr = async( req , res = response ) => {
             tagDescription: object.tagDescription,
             sizePrint: object.sizePrint,
             date: object.date,
+            share: ( object.share === 1 || object.share === 0 ? object.share : undefined ),
             user: req.uid
         };
 
@@ -181,6 +182,7 @@ const updateQr = async( req , res = response ) => {
             sizePrint: object.sizePrint,
             date: object.date,
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
+            share: ( object.share === 0 || object.share === 1 ? object.share : undefined ),
             idQr  
         }
 
@@ -284,6 +286,7 @@ const viewQr = async(req, res) => {
         }
 
         results.titleQr = qr.description;
+        results.share = qr.share;
 
         // Si existe, primero se debe comprobar que el qr no este desactivado y caducado
         if(qr.activated !== 1){

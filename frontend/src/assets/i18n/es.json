@@ -37,6 +37,7 @@
   "qr.data.title.error":"Por favor introduce un título al código QR",
   "qr.data.date":"Fecha de validez",
   "qr.data.date.error":"Por favor introduce una fecha de validez",
+  "qr.data.share":"Mostrar botón compartir",
   "qr.print":"Datos de impresión",
   "qr.print.tagname":"Nombre de etiqueta",
   "qr.print.size":"Tamaño impresión",
@@ -195,7 +196,9 @@
   "alert.user.update.error":"Error al actualizar el usuario",
   "alert.pass.new":"La contraseña nueva no coincide",
   "alert.pass.update":"Contraseña acutalizada",
-  "alert.pass.update.error":"Error al actualziar la contraseña"
+  "alert.pass.update.error":"Error al actualziar la contraseña",
+
+  "view.share.title":"Compartir"
 
 
 

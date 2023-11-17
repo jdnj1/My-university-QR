@@ -18,8 +18,11 @@ export class ViewComponent implements OnInit,AfterViewInit {
   @ViewChild('container') containerElement!: ElementRef<HTMLElement>;
   @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
 
-  // Variable donde se va a almacenar el código QR
+  // Variable donde se va a almacenar el titulo del código QR
   qr: string = '';
+
+  // Si el boton de compartir está activo o no
+  showShare: number = 0;
 
   // Se obtiene el id del QR a partir de la url
   idQr = this.route.snapshot.params['id'];
@@ -70,6 +73,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
         this.loading = false;
         this.charts = res.res.charts;
         this.qr = res.res.titleQr;
+        this.showShare = res.res.share;
         console.log(this.charts)
 
         // Se itera entre las gráficas devueltas
