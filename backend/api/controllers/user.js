@@ -69,6 +69,14 @@ const getUserById = async( req , res ) => {
     // Se extrae el id del usuario desde el path
     const uid = req.params.id;
     try {
+
+        // Solo los usuarios administrador pueden listar usuarios
+        if(req.role !== 1){
+            res.status(403).json({
+                msg: 'Solo los administradores pueden listar usuarios'
+            });
+            return;
+        }
         const user = await userById(uid);
 
         // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
@@ -263,11 +271,11 @@ const changePassword = async( req , res ) => {
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let user = await userById(userId);
         if( user === null ){
-                // Si no se encuentra al usuario, responde con not found sin cuerpo.
-                res.status(404);
-                res.send();
-                return;
-            }
+            // Si no se encuentra al usuario, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
 
         // Se contrasta la antigua contrasena con el hash existente.
         const validPassword = bcrypt.compareSync( oldPassword , user.password );
