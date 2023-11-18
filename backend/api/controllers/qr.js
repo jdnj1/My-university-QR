@@ -216,12 +216,22 @@ const deleteQr = async(req, res) => {
     const uid = req.params.id;
     
     try{
+
         // Se comprueba que haya un codigo Qr con ese ID.
         let qr = await qrById(uid);
         if( qr === null ){
             // Si no lo hay, responde con not found sin cuerpo.
             res.status(404);
             res.send();
+            return;
+        }
+
+        // Solo el propietario o admin puede eliminar los qr
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para eliminar el qr'
+            });
+
             return;
         }
 
