@@ -45,7 +45,7 @@ const qrList = async(data) => {
 const qrById = async(id) =>{
     try {
 
-        const query = `SELECT LOWER(HEX(AES_ENCRYPT(idQr, '${process.env.CODE}'))) AS uid, ${process.env.QRTABLE}.* FROM ${process.env.QRTABLE} WHERE idQr= ? LIMIT 1`;
+        const query = `SELECT LOWER(HEX(AES_ENCRYPT(idQr, '${process.env.CODE}'))) AS uid, ${process.env.QRTABLE}.* FROM ${process.env.QRTABLE} WHERE idQr = ? LIMIT 1`;
         const paramsQuery = [id];
         const [qr] = await dbConsult(query, paramsQuery);
 
@@ -62,7 +62,7 @@ const qrCreate = async(data) => {
         const paramsQuery = [Object.values(data)];
         const [qr] = await dbConsult(query, paramsQuery);
 
-        return qr;
+        return qr.insertId;
     } catch (error) {
         throw error;
     }

@@ -286,6 +286,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Se comprueba si se esta creando un qr
     if(this.create){
+
       this.formSubmit = true;
       // Se crea el qr si el formulario no tiene errores
       if (!this.dataQrForm.valid) {
@@ -294,7 +295,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.qrService.createQr(this.dataQrForm.value).subscribe({
         next: (res:any) =>{
-          this.idQr = res.qr.insertId;
+          this.idQr = res.qr;
           this.urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
           this.create = false;
           this.hasChanges = false;
@@ -307,8 +308,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.alertService.error(this.translateService.instant('alert.qr.create.error'));
         }
       });
+
     }
     else{
+
       // Se acutaliza el qr con los datos introducidos
       this.qrService.updateQr(this.dataQrForm.value, this.qr.idQr).subscribe({
         next: (res: any) => {
@@ -319,6 +322,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.alertService.error(this.translateService.instant('alert.qr.update.error'));
         }
       });
+
     }
   }
 
