@@ -59,7 +59,7 @@ const qrCreate = async(data) => {
     try {
 
         const query = `INSERT INTO ${process.env.QRTABLE} (${Object.keys(data).join(',')}) VALUES (?)`;
-        const paramsQuery = [Object.values(data)]
+        const paramsQuery = [Object.values(data)];
         const [qr] = await dbConsult(query, paramsQuery);
 
         return qr;

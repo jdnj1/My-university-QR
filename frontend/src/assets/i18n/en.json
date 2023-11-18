@@ -58,6 +58,7 @@
   "qr.modal.delete.title":"Delete consult",
   "qr.msg":"This QR code does not have consults",
   "qr.modal.delete.text":"You are going to delete this consult. This action can't be reversed",
+  "qr.table.owner":"QR code from:",
 
 
   "cons.title":"Consult configuration",

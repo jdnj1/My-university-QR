@@ -57,6 +57,7 @@
   "qr.modal.delete.title":"Eliminar llamada",
   "qr.msg":"Este código QR no tiene llamadas",
   "qr.modal.delete.text":"Va a eliminar esta llamada del código QR. Esta acción no se puede revertir.",
+  "qr.table.owner":"Código QR de:",
 
   "cons.title":"Configuración de la llamada",
   "cons.form":"Formulario de configuración",

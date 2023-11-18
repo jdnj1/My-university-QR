@@ -151,7 +151,7 @@
             </div>
             <!-- Botón para añadir nuevas llamadas -->
             <button *ngIf="idUsu === qrUsu" [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
-            <p *ngIf="idUsu !== qrUsu">Código Qr de: <span class="badge bg-primary">{{usuEmail}}</span></p>
+            <p *ngIf="idUsu !== qrUsu">{{'qr.table.owner' | translate}} <span class="badge bg-primary">{{usuEmail}}</span></p>
           </div>
           <div class="table-responsive">
             <table class="table">
