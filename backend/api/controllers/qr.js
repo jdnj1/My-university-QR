@@ -370,8 +370,7 @@ const viewQr = async(req, res) => {
                         }
     
                         // Se realiza la peticion a Smart University
-                        let res = await axios.post(`${process.env.URLAPI}/smartuni/operation`, data);
-                        data = res.data.result;
+                        data = await getDataOperation(data);
     
                         // Rellenar el objeto con los datos de la llamada
                         charts.push({
@@ -422,8 +421,8 @@ const viewQr = async(req, res) => {
                         body = JSON.parse(body);
     
                         // Se realiza la peticion a Smart University
-                        let res = await axios.post(`${process.env.URLAPI}/smartuni/`, body);
-                        let data = res.data.result;
+                        let data = await getData(body);
+                        
                         if(data.columns.length === 0){
                             continue;
                         }
@@ -501,6 +500,45 @@ const viewQr = async(req, res) => {
             msg: 'Error visualizar QR'
         });
         return
+    }
+}
+
+// Peticiones a Open Api de Smart University
+
+/**
+ * Devuelve los datos de SmartUniversity comprendidos en las fechas y filtros proporcionados
+ * 
+ */
+const getData = async( body ) => {
+    try {
+        let token = body.token;
+
+        // Eliminamos el token de la llamada del cuerpo de la peticion antes de enviarselo a SmartUniversity
+        delete body.token;
+
+        const result = await axios.post(`${process.env.URLSU}/data/${token}`, body);
+
+        return result.data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * Devuelve un maximo, minimo o el utimo dato de SmartUniversity comprendido en las fechas y filtros proporcionados
+ * 
+ */
+const getDataOperation = async( body ) => {
+    try {
+        let {token, dateFrom, dateTo, operation, uid, name} = body;
+
+        const result = await axios.get(`${process.env.URLSU}/data/operation/${token}/time_start/${dateFrom}/time_end/${dateTo}/${operation}/uid/${uid}/name/${name}`);
+
+        return result.data;
+
+    } catch (error) {
+        throw error;;
     }
 }
 

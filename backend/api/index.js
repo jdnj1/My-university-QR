@@ -24,8 +24,6 @@ app.use('/api/login', require('./routes/auth'));
 app.use('/api/qr', require('./routes/qr'));
 // Llamadas de cada codigo QR
 app.use('/api/consult', require('./routes/consult'));
-// Perticones a SmartUniversity
-app.use('/api/smartuni', require('./routes/smartuni'));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ', process.env.PORT);
