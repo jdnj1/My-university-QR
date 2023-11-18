@@ -29,6 +29,7 @@ router.get('/:id', [
 
 router.post('/', [
     check('email', 'El campo email es obligatorio').notEmpty(),
+    check('email', 'El email debe ser válido').isEmail(),
     check('password', 'El campo password es obligatorio').notEmpty(),
     validateJWT,
     validateFields,

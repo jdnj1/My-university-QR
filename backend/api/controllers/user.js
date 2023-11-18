@@ -3,10 +3,11 @@
  */
 
 // === Importar
-// Propio
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
 const { userById, userList, userByEmail, userDelete, userCreate, userUpdate } = require('../dao/user');
+const passwordValidator = require('password-validator');
+
 
 /**
  * Devuelve todos los usuarios de la BD.
@@ -116,6 +117,7 @@ const createUsers = async( req , res = response ) => {
     const {...object} = req.body;
 
     try {
+        console.log(req.uid)
         // Solo los usuarios administrador pueden crear nuevos usuarios
         if(req.role !== 1){
             res.status(403).json({
@@ -129,6 +131,14 @@ const createUsers = async( req , res = response ) => {
         if( existeEmail !== null ){
             res.status(400).json({
                 msg: 'El email ya existe'
+            });
+            return;
+        }
+
+        // Comprueba si la contraseña cumple con los requisitos
+        if(!checkPassword(object.password)){
+            res.status(400).json({
+                msg: 'La contraseña de debe tener minimo 8 caracteres, 2 dígitos, tener al menos una mayúscula y minúscula y no debe tener espacios'
             });
             return;
         }
@@ -222,6 +232,14 @@ const updateUsers = async( req , res = response ) => {
         }
 
         if(data.password !== undefined){
+            // Comprueba si la contraseña cumple con los requisitos
+            if(!checkPassword(data.password)){
+                res.status(400).json({
+                    msg: 'La contraseña de debe tener minimo 8 caracteres, 2 dígitos, tener al menos una mayúscula y minúscula y no debe tener espacios'
+                });
+                return;
+            }
+
             // Genera una cadena aleatoria.
             const salt = bcrypt.genSaltSync();
 
@@ -264,8 +282,6 @@ const changePassword = async( req , res ) => {
 
         // El cuerpo de la peticion debe contener la antigua contrasena y la nueva.
         const { oldPassword , newPassword } = req.body;
-
-        // Se comprueba que la contrasena recibida en la peticion coincida con la actual
         
         // Se busca al usuario cuyo ID coincide con el solicitado.
         let user = await userById(userId);
@@ -281,6 +297,14 @@ const changePassword = async( req , res ) => {
         if( !validPassword ){
             res.status( 403 ).json({
                 msg: 'La contraseña proporcionada no coincide con la existente'
+            });
+            return;
+        }
+
+        // Comprueba si la nueva contraseña cumple con los requisitos
+        if(!checkPassword(newPassword)){
+            res.status(400).json({
+                msg: 'La contraseña de debe tener minimo 8 caracteres, 2 dígitos, tener al menos una mayúscula y minúscula y no debe tener espacios'
             });
             return;
         }
@@ -351,6 +375,22 @@ const deleteUser = async(req, res) => {
             msg: 'Error al borrar usuario'
         });
     }
+}
+
+// Funcion que comprueba si la contraseña cumple los requisitos
+const checkPassword = (password) => {
+    const shcema = new passwordValidator();
+    
+    shcema
+        .is().min(8)
+        .has().uppercase()
+        .has().lowercase()
+        .has().digits(2)
+        .has().not().spaces();
+
+    return shcema.validate(password);
+
+
 }
 
 module.exports = {getUsers, getUserById, createUsers, updateUsers, changePassword, deleteUser};
