@@ -193,9 +193,9 @@ const updateQr = async( req , res = response ) => {
             }
         });
     
-        qr = await qrUpdate(data);
+        await qrUpdate(data);
         
-        res.status( 200 ).json( qr );
+        res.status( 200 ).json( {msg: 'Qr actualizado'} );
 
     } catch(error){
         console.error(error);

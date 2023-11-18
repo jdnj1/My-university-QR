@@ -73,9 +73,8 @@ const qrUpdate = async(data) =>{
 
         const query = `UPDATE ${process.env.QRTABLE} SET ? WHERE idQr = ?`;
         const paramsQuery = [data, data.idQr];
-        const [qr] = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return qr;
     } catch (error) {
         throw error;
     }
