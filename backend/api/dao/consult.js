@@ -70,7 +70,7 @@ const consutlCreate = async(data) => {
         paramsQuery = [Object.values(data)];
         const [consult] = await dbConsult(query, paramsQuery);
 
-        return consult;
+        return consult.insertId;
     } catch (error) {
         throw error;
     }

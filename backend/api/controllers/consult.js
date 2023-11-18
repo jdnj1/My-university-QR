@@ -128,11 +128,24 @@ const createConsult = async( req , res = response ) => {
 
     try {
 
+        // Se busca el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(object.qrCode);
+
+        if(qr === null){
+            res.status(404).json({
+                msg: 'No existe el Qr'
+            });
+
+            return;
+        }
+
         // Solo el propietario del qr puede añadirle llamadas
-        if( req.uid != object.qrCode ){
+        if( req.uid != qr.user ){
             res.status(403).json({
-                msg: 'No eres el propietario de esta llamada'
-            })
+                msg: 'No eres el propietario de este QR'
+            });
+            
+            return;
         }
         
         let data = {

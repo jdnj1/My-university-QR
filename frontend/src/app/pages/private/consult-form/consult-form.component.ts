@@ -324,7 +324,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       // Se crea
       this.consultService.createConsult(this.firstForm.value).subscribe({
         next: (res: any) => {
-          this.idCon = res.consult.insertId;
+          this.idCon = res.consult;
           this.hasChanges = false;
           this.create = false;
 
