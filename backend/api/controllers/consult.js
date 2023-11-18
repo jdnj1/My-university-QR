@@ -77,24 +77,25 @@ const getConsult = async( req , res ) => {
  */
 const getConsultById = async( req , res ) => {
     // Se extrae el id del qr desde el path
-    const idQr = req.params.id;
+    const uid = req.params.id;
     try {
 
-        // Se obtiene el qr de la llamada para saber a que usuario pertenece
-        let qr = await qrById(idQr);
-
-        // Solo el propietario o los admin pueden obtener la llamada
-        if(req.role !== 1 && req.uid !== qr.user ){
-            res.status(403).json({
-                msg: 'No tienes permisos para obtener  llamada'
-            });
-
-            return;
-        }
-
+        // Se busca la llamada
         const consult = await consultById(uid);
 
         if(consult !== null){
+            // Se obtiene el qr de la llamada para saber a que usuario pertenece
+            let qr = await qrById(consult.qrCode);
+
+            // Solo el propietario o los admin pueden obtener la llamada
+            if(req.role !== 1 && req.uid !== qr.user ){
+                res.status(403).json({
+                    msg: 'No tienes permisos para obtener llamada'
+                });
+
+                return;
+            }
+
             res.status(200).json({
                 msg: 'getConsult',
                 consult: consult
@@ -106,7 +107,10 @@ const getConsultById = async( req , res ) => {
             res.status(404).json({
                 msg: 'No se ha encontrado la llamada'
             });
+            
+            return;
         }
+        
     } catch (error) {
         console.error(error);
 
@@ -274,9 +278,9 @@ const updateConsult = async( req , res = response ) => {
         }
         
         // Se actualiza. 
-        consult = await consultUpdate(data);
+        await consultUpdate(data);
         
-        res.status( 200 ).json( consult );
+        res.status( 200 ).json( {msg: 'Llamada actualizada'} );
 
     } catch(error){
         console.error(error);

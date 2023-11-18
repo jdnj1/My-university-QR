@@ -81,9 +81,8 @@ const consultUpdate = async(data) => {
 
         const query = `UPDATE ${process.env.CONSULTTABLE} SET ? WHERE idConsult = ?`;
         const paramsQuery = [data, data.idConsult]
-        const [consult] = await dbConsult(query, paramsQuery);
+        await dbConsult(query, paramsQuery);
 
-        return consult;
     } catch (error) {
         throw error;
     }
