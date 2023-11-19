@@ -25,6 +25,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
   // Booleano para comprobar si se realizan cambios en el formulario
   hasChanges: boolean = false;
 
+  // Booleano para comprobar si hay algun error en la contraseña
+  passError: boolean = false;
+
 
   // Formulario para crear nuevos usuarios
   public userForm = this.fb.group({
@@ -99,7 +102,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this.userService.updateUser(this.userForm.value, this.user.idUser).subscribe({
       next: (res: any) => {
-        console.log(res);
+        this.passError = false;
 
         this.hasChanges = false;
         this.userService.getUserData();
@@ -109,6 +112,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
       error: (err: HttpErrorResponse) => {
         if(err.error.msg === 'El email ya existe'){
           this.alertService.error(this.translateService.instant('user.create.error'));
+          return;
+        }
+        else if(err.status === 400){
+          this.passError = true;
+          this.alertService.error(this.translateService.instant('user.checkpass.error'));
           return;
         }
         this.alertService.error(this.translateService.instant('alert.user.update.error'));

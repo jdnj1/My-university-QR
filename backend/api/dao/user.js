@@ -18,7 +18,7 @@ const userByEmail = async(email) => {
 const userList = async(data) => {
     try {
         let paramsQuery = [];
-        let query = `SELECT idUSer, email, role, lim_consult FROM ${process.env.USERTABLE}`;
+        let query = `SELECT idUser, email, role, lim_consult FROM ${process.env.USERTABLE}`;
 
         if(data.querySearch){
             query += ` WHERE email LIKE ?`;

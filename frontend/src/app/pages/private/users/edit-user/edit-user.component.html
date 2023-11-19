@@ -43,6 +43,7 @@
                   <label for="yourPassword" class="form-label">{{'user.pass' | translate}}</label>
                   <p class="small">{{'user.edit.pass' | translate}}</p>
                   <input type="password" name="password" class="form-control" formControlName="password" id="yourPassword" >
+                  <div class="text-danger" *ngIf="passError">{{'user.pass.error' | translate}}</div>
                 </div>
 
                 <div class="col-12">

@@ -78,8 +78,11 @@ export class CreateUserComponent implements OnInit, OnDestroy {
           this.alertService.error(this.translateService.instant('user.create.error'));
           return;
         }
+        else if(err.status === 400){
+          this.alertService.error(this.translateService.instant('user.checkpass.error'));
+          return;
+        }
         this.alertService.error(this.translateService.instant('alert.user.create.error'));
-        console.log(err)
       }
     });
   }

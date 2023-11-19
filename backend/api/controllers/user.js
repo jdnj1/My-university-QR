@@ -117,7 +117,6 @@ const createUsers = async( req , res = response ) => {
     const {...object} = req.body;
 
     try {
-        console.log(req.uid)
         // Solo los usuarios administrador pueden crear nuevos usuarios
         if(req.role !== 1){
             res.status(403).json({
