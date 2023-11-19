@@ -5,7 +5,7 @@
 // === Importar
 const { response } = require('express'); // Response de Express
 const bcrypt = require('bcryptjs'); // BcryptJS
-const { userById, userList, userByEmail, userDelete, userCreate, userUpdate } = require('../dao/user');
+const { userById, userList, userByEmail, userDelete, userCreate, userUpdate, getHash } = require('../dao/user');
 const passwordValidator = require('password-validator');
 
 
@@ -78,10 +78,8 @@ const getUserById = async( req , res ) => {
             });
             return;
         }
-        const user = await userById(uid);
 
-        // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
-        delete user.password;
+        const user = await userById(uid);
 
         if(user !== null){
             res.status(200).json({
@@ -154,7 +152,6 @@ const createUsers = async( req , res = response ) => {
 
         // Cifra la contrasena con la cadena.
         data.password = bcrypt.hashSync(data.password, salt);
-
 
         await userCreate(data);
 
@@ -291,8 +288,11 @@ const changePassword = async( req , res ) => {
             return;
         }
 
+        // Se obtiene la contraseña hasheada del usuario para comprobar
+        const hash = await getHash(user.idUser);
+
         // Se contrasta la antigua contrasena con el hash existente.
-        const validPassword = bcrypt.compareSync( oldPassword , user.password );
+        const validPassword = bcrypt.compareSync( oldPassword , hash.password );
         if( !validPassword ){
             res.status( 403 ).json({
                 msg: 'La contraseña proporcionada no coincide con la existente'

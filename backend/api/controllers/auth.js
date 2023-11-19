@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken'); // JSON Web Token
 
 // Propio
 const {generateJWT} = require('../helpers/jwt');
-const { userByEmail, userById } = require('../dao/user');
+const { userByEmail, userById, getHash } = require('../dao/user');
 
 /**
  * Resuelve un email y una contrasena y responde con un JSON Web Token.
@@ -32,8 +32,11 @@ const login = async( req , res = response ) => {
             return;
         }
 
+        // Se obtiene la contraseña hasheada del usuario para comprobar
+        const hash = await getHash(user.idUser);
+
         // Se comprueba si es la contrasena que nos pasan es la del usuario.
-        const validPassword = bcrypt.compareSync(password, user.password);
+        const validPassword = bcrypt.compareSync(password, hash.password);
         if( !validPassword ){
             res.status(403).json({
                 msg: 'Email o contraseña incorrectos'
@@ -41,11 +44,8 @@ const login = async( req , res = response ) => {
             return;
         }
         
-        // Genera un token.
+        // Genera un token
         const token = await generateJWT( user.idUser , user.role );
-
-        // Eliminamos la contraseña de la respuesta para que no se envie por seguridad
-        delete user.password;
 
         res.status( 200 ).json( {
             user: user,

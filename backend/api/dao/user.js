@@ -4,7 +4,7 @@ const { dbConsult } = require("../database/db");
 
 const userByEmail = async(email) => {
     try {
-        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE email= ?`;
+        const query = `SELECT idUser, email, role, lim_consult FROM ${process.env.USERTABLE} WHERE email= ?`;
 
         const paramsQuery = [email];
         const [user] = await dbConsult(query, paramsQuery);
@@ -43,7 +43,7 @@ const userList = async(data) => {
 
 const userById = async(id) => {
     try {
-        const query = `SELECT * FROM ${process.env.USERTABLE} WHERE idUser = ? LIMIT 1`;
+        const query = `SELECT idUser, email, role, lim_consult FROM ${process.env.USERTABLE} WHERE idUser = ? LIMIT 1`;
 
         const paramsQuery = [id];
         const [user] = await dbConsult(query, paramsQuery);
@@ -90,4 +90,18 @@ const userDelete = async(id) => {
     }
 }
 
-module.exports = {userByEmail, userList, userById, userCreate, userUpdate, userDelete}
+// Funcion que devuelve la contraseña hasheada para hacer comprobaciones (login, cambiar contraseña...)
+const getHash = async(id) => {
+    try {
+        
+        const query = `SELECT password FROM ${process.env.USERTABLE} WHERE idUser = ? LIMIT 1`;
+        const paramsQuery = [id];
+        const [pass] = await dbConsult(query, paramsQuery);
+
+        return pass.length === 0 ? null : pass[0];
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {userByEmail, userList, userById, userCreate, userUpdate, userDelete, getHash}
