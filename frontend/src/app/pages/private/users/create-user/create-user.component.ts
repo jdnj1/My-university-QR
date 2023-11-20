@@ -43,8 +43,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.hasChanges)
-    //this.checkExit();
   }
 
   ngOnDestroy(): void {
