@@ -44,7 +44,9 @@ router.delete('/:id', [
     validateFields
 ], deleteQr); 
 
-router.get('/view/:id',
-    viewQr);
+router.get('/view/:id', [
+    check('id', 'El id del QR no es válido').notEmpty(),
+    validateFields
+], viewQr);
 
 module.exports = router;

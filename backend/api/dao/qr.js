@@ -98,9 +98,8 @@ const decrypt = async(uid) => {
     try {
         const query = `SELECT AES_DECRYPT(UNHEX('${uid}'), '${process.env.CODE}') AS idQr`;
         let res = await dbConsult(query);
-        const idQr = res[0][0].idQr.toString();
 
-        return idQr;
+        return res[0][0].idQr === null ? null : res[0][0].idQr.toString();
     } catch (error) {
         throw error;
     }

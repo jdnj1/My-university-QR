@@ -291,7 +291,15 @@ const viewQr = async(req, res) => {
     
     try{
         //Desencriptamos el id del Qr
-        const idQr = await decrypt(uid)
+        const idQr = await decrypt(uid);
+
+        // Se comprueba si el id proporcionado es incorrecto
+        if( idQr === null ){
+            res.status(404).json({
+                msg: 'No se ha encontrado el código Qr'
+            });
+            return;
+        }
 
         // Obtenemos el código QR
         const qr = await qrById(idQr);
