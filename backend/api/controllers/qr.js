@@ -68,6 +68,15 @@ const getQrById = async( req , res ) => {
         const qr = await qrById(uid);
 
         if(qr !== null){
+            // Solo el dueño o un admin puede obtener la info del codigo QR
+            if(req.role !== 1 && req.uid !== qr.user ){
+                res.status(403).json({
+                    msg: 'No tienes permisos para obtener el qr'
+                });
+
+                return;
+            }
+
             res.status(200).json({
                 msg: 'getQr',
                 qr: qr
