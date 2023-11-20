@@ -35,8 +35,6 @@ export class LoginComponent {
       return;
     }
 
-    console.log(this.loginForm)
-
     this.userService.login(this.loginForm.value).subscribe({
       next: (res: any) => {
 

@@ -41,7 +41,6 @@ export class ChartComponent implements AfterViewInit {
   }
 
   chart(){
-    console.log(this.data)
 
     const div = document.createElement('div');
     div.id = `chart${this.id}`;
@@ -58,14 +57,6 @@ export class ChartComponent implements AfterViewInit {
     window.addEventListener('resize', function() {
       graph.resize();
     });
-
-    // let grid = 0;
-    // if(this.data.ids){
-    //   grid = Math.round(this.data.ids.length / 2) * 10;
-    // }
-    // console.log(grid)
-
-    //let grid = 20;
 
     if(this.data.dates){
       for (let i = 0; i < this.data.dates.length; i++){

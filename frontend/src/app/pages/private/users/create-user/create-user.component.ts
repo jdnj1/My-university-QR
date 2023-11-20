@@ -63,11 +63,9 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     let role = this.userForm.get('role')?.value;
     this.userForm.get('role')?.setValue(Number(role) || 0);
 
-    console.log(this.userForm.value);
 
     this.userService.createUser(this.userForm.value).subscribe({
       next: (res: any) => {
-        console.log(res);
 
         this.hasChanges = false;
         // Se redirige a la página principal

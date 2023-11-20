@@ -105,7 +105,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.qrService.getQr(page, query).subscribe({
       next: (res: any) => {
         this.codesQr = res.qr;
-        console.log(this.codesQr)
         this.totalQr = res.page.total;
 
         if(this.codesQr.length === 0){
@@ -299,16 +298,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     html2canvas(qr!).then((canvas) => {
       qr?.remove();
       const img = canvas.toDataURL('image/PNG');
-
-
-      const imgProp = doc.getImageProperties(img);
-
       const width = doc.internal.pageSize.getWidth();
       const height = doc.internal.pageSize.getHeight();
-
-      console.log(width, height)
-      console.log(imgProp.width, imgProp.height)
-
 
       doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
       doc.save(`${this.codesQr[index].description}.pdf`);
@@ -383,15 +374,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       await html2canvas(div).then((canvas) => {
         div.remove();
         const img = canvas.toDataURL('image/PNG');
-
-
-        const imgProp = doc.getImageProperties(img);
-
         const width = doc.internal.pageSize.getWidth();
         const height = doc.internal.pageSize.getHeight();
-
-        console.log((width-2*28)/2, height)
-        console.log(imgProp.width, imgProp.height)
 
         // Se calcula el tamaño de las img para que quepan 4 en un a4 con un margen de 10mm =~ 28pt
         const margin = 28;
@@ -412,8 +396,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
           doc.addPage();
         }
 
-
-        //console.log(imgProp.width * index, imgProp.height * index)
         doc.addImage(img, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
         //w269 h392
 
@@ -421,8 +403,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     }
     this.print = false;
-    //window.open(doc.output('bloburl'));
-    doc.save(`varios.pdf`);
+    doc.save(`lista_qr.pdf`);
   }
 
   codes(qr: any, im: string){

@@ -485,11 +485,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
     html2canvas(data!).then((canvas) => {
       const img = canvas.toDataURL('image/PNG');
-      const imgProp = doc.getImageProperties(img);
       const width = doc.internal.pageSize.getWidth();
       const height = doc.internal.pageSize.getHeight();
-
-      console.log(width, doc.internal.pageSize.width, imgProp.width)
 
       doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
       doc.save(`${this.qr.description}.pdf`);

@@ -137,7 +137,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   // Funciones relacionadas con la barra de búsqueda
   search(){
     // Se comprueba que el fomrulario este correcto
-    console.log(this.searchForm.valid)
     if(!this.searchForm.valid){
       return;
     }

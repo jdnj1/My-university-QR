@@ -135,11 +135,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
     this.consultService.getConsultbyId(this.idCon).subscribe({
       next: (res: any) => {
-        console.log(res);
 
         this.consult =  res.consult;
 
-        console.log(this.consult)
         // Se adaptan las fechas
         this.consult.dateFrom = new Date(this.consult.dateFrom);
         this.consult.dateFrom = format(this.consult.dateFrom, "yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -212,11 +210,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           else if(this.consult.filters !== ''){
             // Pasamos los filtros al array
             this.filtersArray = Object.values(this.consult.filters);
-            console.log(this.filtersArray);
 
             // Pasamos las keys al array
             this.keys = Object.keys(this.consult.filters);
-            console.log(this.keys);
 
             // Agregamos los filtros al formulario
             for(let i = 0; i < this.filtersArray.length; i ++){
@@ -254,8 +250,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       // Comprobar que la fecha hasta no sea anterior a la fecha desde
       let dateFrom = this.firstForm.get('dateFrom')?.value;
       let dateTo = this.firstForm.get('dateTo')?.value;
-
-      console.log(dateFrom, dateTo)
 
       if(dateFrom !== null && dateFrom !== undefined && dateFrom !== '' && dateTo !== null && dateTo !== undefined && dateTo !== ''){
         if(dateFrom >= dateTo){
@@ -311,7 +305,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se añade este campo al primer forumulario que es el que se envia al update
     this.firstForm.setControl('filters', new FormControl(json));
 
-    console.log(this.firstForm.value)
     // Se comprueba si se va a crear, duplicar o a editar una llamada
     if(this.create || this.duplicate){
 
