@@ -404,6 +404,7 @@ const viewQr = async(req, res) => {
                             title: consult.name,
                             description: data.values[0][data.columns.indexOf('description')],
                             type: consult.chart,
+                            date: data.values[0][data.columns.indexOf('time')],
                             values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
                             name: data.values[0][data.columns.indexOf('name')],
                             metric: data.values[0][data.columns.indexOf('metric')],

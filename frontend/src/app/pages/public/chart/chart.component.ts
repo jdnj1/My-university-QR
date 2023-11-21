@@ -176,15 +176,21 @@ export class ChartComponent implements AfterViewInit {
         // Solo el valor
         option = {
           title: {
-            text: `${this.operation[this.data.operation - 2]}: ${this.data.values[0]} ${this.data.metric}\n`,
+            text: `{date|${format(new Date(this.data.date), "Pp")}}\n${this.operation[this.data.operation - 2]}: ${this.data.values[0]} ${this.data.metric}\n`,
             subtext: `\n${this.data.title}: \n\n ${this.data.description}`,
             left: "center",
-            top: "25%",
+            top: "15%",
             textStyle: {
               fontSize: 30,
               width: 300,
               color: "#FFF",
-              overflow: 'break'
+              overflow: 'break',
+              rich:{
+                date: {
+                  color: 'white',
+                  padding: 10
+                }
+              }
             },
             subtextStyle: {
               width: 550,

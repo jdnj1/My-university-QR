@@ -74,6 +74,8 @@ export class ViewComponent implements OnInit,AfterViewInit {
         this.qr = res.res.titleQr;
         this.showShare = res.res.share;
 
+        console.log(this.charts)
+
         // Se itera entre las gráficas devueltas
         this.charts.forEach( (chart: any, index: any) => {
           const chartComponent = this.containerRef.createComponent(ChartComponent)
