@@ -259,6 +259,12 @@ const updateConsult = async( req , res = response ) => {
             idConsult: uid
         };
 
+        // Si esta seleccionada la fecha relativa, el rango de fechas no es necesario
+        if(data.typeDate !== undefined && data.typeDate === 1){
+            delete data.dateFrom;
+            delete data.dateTo;
+        }
+
         // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
         Object.keys(data).forEach(key => {
             if(data[key] === undefined || data[key] === null){
