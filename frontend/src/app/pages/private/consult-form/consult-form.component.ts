@@ -50,6 +50,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     chart: [0],
     number: [0],
     unit: [1],
+    decimals: [2],
     qrCode: [this.idQr]
   });
 
@@ -170,6 +171,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('chart')?.setValue(this.consult.chart);
         this.firstForm.get('number')?.setValue(this.consult.number);
         this.firstForm.get('unit')?.setValue(this.consult.unit);
+        this.firstForm.get('decimals')?.setValue(this.consult.decimals);
         this.firstForm.get('qrCode')?.setValue(this.consult.qrCode);
 
         if(this.consult.activated === 1){

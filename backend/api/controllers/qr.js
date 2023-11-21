@@ -8,7 +8,7 @@ const { response } = require('express'); // Response de Express
 const axios = require('axios');
 const {format} = require ('date-fns');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
-const { consultListAll } = require('../dao/consult');
+const { consultListAll, consultById } = require('../dao/consult');
 
 /**
  * Devuelve todos los codigos qr de la BD.
@@ -408,7 +408,8 @@ const viewQr = async(req, res) => {
                             values: [data.values[0][data.columns.indexOf(op[consult.operation - 2])]],
                             name: data.values[0][data.columns.indexOf('name')],
                             metric: data.values[0][data.columns.indexOf('metric')],
-                            operation: consult.operation
+                            operation: consult.operation,
+                            decimals: consult.decimals
                         });
     
                     }

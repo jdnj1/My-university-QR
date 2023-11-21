@@ -17,117 +17,116 @@
   </div>
 
   <section class="section dashboard">
-    <div class="row" style="max-width: 1500px; margin: auto;">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body">
-            <h5 *ngIf="!create" class="card-title">{{'qr.conf' | translate}}</h5>
-            <h5 *ngIf="create" class="card-title">{{'qr.new' | translate}}</h5>
-            <div class="container">
-              <form [formGroup]="dataQrForm">
-                <div class="row">
-                  <!-- Parte del formulario del codigo QR -->
-                  <div class="col-lg-4">
+    <div class="row">
 
-                    <div class="d-flex align-items-center justify-content-between">
-                      <h5 class="scol-form-label">{{'qr.data' | translate}}</h5>
-                      <div *ngIf="!create" class="d-flex align-items-center">
-                        <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">{{'badge.activated' | translate}}</span>
-                        <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">{{'badge.deactivated' | translate}}</span>
-                        <form [formGroup]="activateForm">
-                          <div class="form-check form-switch">
-                            <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="activateQR" formControlName="activated" (change)="activateQr()">
-                          </div>
-                        </form>
-                      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 *ngIf="!create" class="card-title">{{'qr.conf' | translate}}</h5>
+          <h5 *ngIf="create" class="card-title">{{'qr.new' | translate}}</h5>
+          <div class="container">
+            <form [formGroup]="dataQrForm">
+              <div class="row">
+                <!-- Parte del formulario del codigo QR -->
+                <div class="col-lg-4">
+
+                  <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="scol-form-label">{{'qr.data' | translate}}</h5>
+                    <div *ngIf="!create" class="d-flex align-items-center">
+                      <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">{{'badge.activated' | translate}}</span>
+                      <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">{{'badge.deactivated' | translate}}</span>
+                      <form [formGroup]="activateForm">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="activateQR" formControlName="activated" (change)="activateQr()">
+                        </div>
+                      </form>
                     </div>
-                    <label for="inputName" class="form-label">{{'qr.data.title' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
-                    <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="{{'qr.data.title.placeholder' | translate}}">
-                    <div class="text-danger" *ngIf="!campoValido('description')">{{'qr.data.title.error' | translate}}</div>
+                  </div>
+                  <label for="inputName" class="form-label">{{'qr.data.title' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                  <input type="text" id="inputName" class="form-control" formControlName="description" placeholder="{{'qr.data.title.placeholder' | translate}}">
+                  <div class="text-danger" *ngIf="!campoValido('description')">{{'qr.data.title.error' | translate}}</div>
 
-                    <label for="inputDate" class="form-label">{{'qr.data.date' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
-                    <input type="date" class="form-control" id="inputDate"
-                      formControlName="date">
-                    <div class="text-danger" *ngIf="!campoValido('date')">{{'qr.data.date.error' | translate}}</div>
+                  <label for="inputDate" class="form-label">{{'qr.data.date' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                  <input type="date" class="form-control" id="inputDate"
+                    formControlName="date">
+                  <div class="text-danger" *ngIf="!campoValido('date')">{{'qr.data.date.error' | translate}}</div>
 
-                    <div class="form-check form-switch m-2">
-                      <input class="form-check-input" type="checkbox" id="shareButton" formControlName="share">
-                      <label class="form-check-label" for="sharebutton">{{'qr.data.share' | translate}}</label>
-                    </div>
-
+                  <div class="form-check form-switch m-2">
+                    <input class="form-check-input" type="checkbox" id="shareButton" formControlName="share">
+                    <label class="form-check-label" for="sharebutton">{{'qr.data.share' | translate}}</label>
                   </div>
 
-
-                  <div class="col m-2 m-lg-0">
-                    <div class="row">
-                      <div class="col">
-                        <h5 class="scol-form-label">{{'qr.print' | translate}}</h5>
-                        <div class="row">
-                          <div class="col-6">
-
-                            <!-- <h5 class="scol-form-label">Datos de impresión</h5> -->
-                            <label for="inputNameTag" class="form-label">{{'qr.print.tagname' | translate}}</label>
-                            <input type="text" class="form-control" id="inputNameTag"
-                              formControlName="tagName"  placeholder="{{'qr.print.tagname' | translate}}">
+                </div>
 
 
-                          </div>
+                <div class="col m-2 m-lg-0">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="scol-form-label">{{'qr.print' | translate}}</h5>
+                      <div class="row">
+                        <div class="col-6">
 
-                          <div class="col-6">
-                            <label for="inputNameTag" class="form-label">{{'qr.print.size' | translate}}</label>
-                            <select class="form-select" formControlName="sizePrint">
-                              <option value="a4" selected>A4</option>
-                              <option value="a5">A5</option>
-                              <option value="a6">A6</option>
-                              <option value="a7">A7</option>
-                            </select>
+                          <!-- <h5 class="scol-form-label">Datos de impresión</h5> -->
+                          <label for="inputNameTag" class="form-label">{{'qr.print.tagname' | translate}}</label>
+                          <input type="text" class="form-control" id="inputNameTag"
+                            formControlName="tagName"  placeholder="{{'qr.print.tagname' | translate}}">
 
-                          </div>
-
-                          <div class="col">
-                            <label for="inputDescTag" class="form-label">{{'qr.print.tagdes' | translate}}</label>
-                            <input type="text" class="form-control" id="inputDescTag"
-                              formControlName="tagDescription"  placeholder="{{'qr.print.tagdes' | translate}}">
-                          </div>
-
-                          <div class="d-flex justify-content-end  mt-4 mb-4">
-                            <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">{{'button.return' | translate}}</button>
-                            <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">{{'button.cancel' | translate}}</button>
-                            <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">{{'button.save' | translate}}</button>
-
-                          </div>
 
                         </div>
-                      </div>
 
-                      <!-- IMAGEN DEL QR -->
-                      <div *ngIf="!create" class="col">
-                        <div id="qrCode">
-                          <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
-                          <div class="d-flex align-items-center justify-content-center">
-                            <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
-                          </div>
-                          <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
+                        <div class="col-6">
+                          <label for="inputNameTag" class="form-label">{{'qr.print.size' | translate}}</label>
+                          <select class="form-select" formControlName="sizePrint">
+                            <option value="a4" selected>A4</option>
+                            <option value="a5">A5</option>
+                            <option value="a6">A6</option>
+                            <option value="a7">A7</option>
+                          </select>
+
                         </div>
-                        <div class="d-flex justify-content-center m-2">
-                          <button [disabled]="create" type="button" class="btn btn-success" title="{{'qr.download' | translate}}" (click)="generatePDF()"><i class="bi bi-printer"></i> {{'qr.download' | translate}}</button>
+
+                        <div class="col">
+                          <label for="inputDescTag" class="form-label">{{'qr.print.tagdes' | translate}}</label>
+                          <input type="text" class="form-control" id="inputDescTag"
+                            formControlName="tagDescription"  placeholder="{{'qr.print.tagdes' | translate}}">
                         </div>
-                        <hr>
-                        <div class="d-flex justify-content-center">
-                          <a href="{{urlQr}}" target="_blank">{{'home.qrmodal.link' | translate}}</a>
+
+                        <div class="d-flex justify-content-end  mt-4 mb-4">
+                          <button *ngIf="!hasChanges && !create" type="button" class="btn btn-primary m-2" (click)="cancel()">{{'button.return' | translate}}</button>
+                          <button *ngIf="hasChanges || create" type="button" class="btn btn-danger m-2" (click)="cancel()">{{'button.cancel' | translate}}</button>
+                          <button type="button" class="btn btn-success m-2" (click)="updateQr()" [disabled]="!hasChanges">{{'button.save' | translate}}</button>
+
                         </div>
 
                       </div>
+                    </div>
 
+                    <!-- IMAGEN DEL QR -->
+                    <div *ngIf="!create" class="col">
+                      <div id="qrCode">
+                        <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                          <qrcode [qrdata]="urlQr" [width]="width" [errorCorrectionLevel]="'M'" [elementType]="'canvas'"></qrcode>
+                        </div>
+                        <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
+                      </div>
+                      <div class="d-flex justify-content-center m-2">
+                        <button [disabled]="create" type="button" class="btn btn-success" title="{{'qr.download' | translate}}" (click)="generatePDF()"><i class="bi bi-printer"></i> {{'qr.download' | translate}}</button>
+                      </div>
+                      <hr>
+                      <div class="d-flex justify-content-center">
+                        <a href="{{urlQr}}" target="_blank">{{'home.qrmodal.link' | translate}}</a>
+                      </div>
 
                     </div>
+
+
                   </div>
                 </div>
-              </form>
-            </div>
-
-
+              </div>
+            </form>
           </div>
+
+
         </div>
       </div>
     </div>

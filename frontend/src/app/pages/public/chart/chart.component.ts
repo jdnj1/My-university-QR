@@ -40,6 +40,10 @@ export class ChartComponent implements AfterViewInit {
     this.chart();
   }
 
+  decimals(num: number, dec: number){
+    return num.toFixed(dec);
+  }
+
   chart(){
 
     const div = document.createElement('div');
@@ -176,7 +180,7 @@ export class ChartComponent implements AfterViewInit {
         // Solo el valor
         option = {
           title: {
-            text: `{date|${format(new Date(this.data.date), "Pp")}}\n${this.operation[this.data.operation - 2]}: ${this.data.values[0]} ${this.data.metric}\n`,
+            text: `{date|${format(new Date(this.data.date), "Pp")}}\n${this.operation[this.data.operation - 2]}: ${this.decimals(this.data.values[0], this.data.decimals)} ${this.data.metric}\n`,
             subtext: `\n${this.data.title}: \n\n ${this.data.description}`,
             left: "center",
             top: "15%",

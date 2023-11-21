@@ -138,24 +138,26 @@
                 <h5 class="card-title">{{'cons.data.filters' | translate}}</h5>
                 <button *ngIf="filters" [disabled]="keys.length >= 12" type="button" class="m-2 btn btn-primary" title="{{'cons.data.tooltip.add' | translate}}" (click)="addFilter()"><i class="bi bi-plus-lg"></i></button>
               </div>
-              <form *ngIf="!filters" [formGroup]="operationForm">
-                <div class="row mb-3">
-                  <label for="inputUid" class="col-sm-3 col-form-label">UID</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputUid" formControlName="uid">
+              <div *ngIf="!filters">
+                <form [formGroup]="operationForm">
+                  <div class="row mb-3">
+                    <label for="inputUid" class="col-sm-3 col-form-label">UID</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="inputUid" formControlName="uid">
+                    </div>
                   </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputName" class="col-sm-3 col-form-label">{{'cons.data.mag' | translate}}</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputName" formControlName="name">
+                  <div class="row mb-3">
+                    <label for="inputName" class="col-sm-3 col-form-label">{{'cons.data.mag' | translate}}</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="inputName" formControlName="name">
+                    </div>
                   </div>
-                </div>
-              </form>
-              <div class="row mb-3">
-                <label for="inputName" class="col-sm-4 col-form-label">Decimales a mostrar</label>
-                <div class="col-sm-3">
-                  <input type="number" class="form-control" id="inputName" formControlName="name">
+                </form>
+                <div class="row mb-3">
+                  <label for="inputName" class="col-sm-3 col-form-label">Decimales</label>
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control" id="inputName" formControlName="decimals" min="0">
+                  </div>
                 </div>
               </div>
               <div *ngIf="filters" style="height: 500px; ;max-height: 100%; overflow-y: scroll;" [formGroup]="filterForm">

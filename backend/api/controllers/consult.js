@@ -160,6 +160,7 @@ const createConsult = async( req , res = response ) => {
             dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
             number: ( object.number >= 0 ? object.number : 0 ),
             unit: ( object.unit >= 1 ? object.unit : 1 ),
+            decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
             qrCode: object.qrCode
@@ -251,6 +252,7 @@ const updateConsult = async( req , res = response ) => {
             dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
             number: ( object.number >= 0 ? object.number : 0 ),
             unit: ( object.unit >= 1 ? object.unit : 1 ),
+            decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
             operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : 1 ),
