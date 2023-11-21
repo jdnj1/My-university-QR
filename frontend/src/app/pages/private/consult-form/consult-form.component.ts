@@ -359,10 +359,16 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   selectData(){
-    if(Number(this.firstForm.value.operation) > 1){
+    const value = Number(this.firstForm.value.operation);
+    const chart = Number(this.firstForm.value.chart);
+
+    if(value > 1){
       this.filters = false;
-      this.firstForm.get('chart')?.setValue(2);
-      this.urlChart = environment.charts[2];
+      if( chart !== 2 && chart !== 3 ){
+        this.firstForm.get('chart')?.setValue(2);
+        this.urlChart = environment.charts[2];
+      }
+
 
     }
     else {
