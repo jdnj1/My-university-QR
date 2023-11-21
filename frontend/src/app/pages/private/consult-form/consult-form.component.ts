@@ -344,6 +344,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     }
     else{
       // Se edita
+      console.log(this.firstForm.value)
       this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
         next: (res: any) => {
           this.alertService.success(this.translateService.instant('alert.cons.update'));
@@ -380,6 +381,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   selectChart(event: any){
     this.urlChart = environment.charts[event.target.value]
+    this.firstForm.get('chart')?.setValue(Number(event.target.value))
   }
 
   addFilter(){

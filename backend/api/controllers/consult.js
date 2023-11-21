@@ -274,10 +274,10 @@ const updateConsult = async( req , res = response ) => {
 
         // Se comprueba que la grafica seleccionada sea la correcta para el tipo de operacion
         if(data.operation !== undefined){
-          if(data.operation === 1 && (data.chart !== 0 || data.chart !== 1)){
+          if(data.operation === 1 && (data.chart !== 0 && data.chart !== 1)){
             data.chart = 0;
           }
-          else if(data.operation > 1 && (data.chart !== 2 || data.chart !== 3)){
+          else if(data.operation > 1 && (data.chart !== 2 && data.chart !== 3)){
             data.chart = 2;
           }
         }
