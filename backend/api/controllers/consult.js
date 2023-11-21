@@ -259,10 +259,17 @@ const updateConsult = async( req , res = response ) => {
             idConsult: uid
         };
 
+        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
+        Object.keys(data).forEach(key => {
+            if(data[key] === undefined || data[key] === null){
+                delete data[key];
+            }
+        });
+
         // Si esta seleccionada la fecha relativa, el rango de fechas no es necesario
         if(data.typeDate !== undefined && data.typeDate === 1){
-            delete data.dateFrom;
-            delete data.dateTo;
+          delete data.dateFrom;
+          delete data.dateTo;
         }
 
         // Se comprueba que la grafica seleccionada sea la correcta para el tipo de operacion
@@ -274,13 +281,6 @@ const updateConsult = async( req , res = response ) => {
             data.chart = 2;
           }
         }
-
-        // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
-        Object.keys(data).forEach(key => {
-            if(data[key] === undefined || data[key] === null){
-                delete data[key];
-            }
-        });
         
         //Comprobar que la fecha hasta no sea anterior a la fecha dedse
         if(data.dateFrom !== undefined && data.dateTo !== undefined){
