@@ -265,6 +265,16 @@ const updateConsult = async( req , res = response ) => {
             delete data.dateTo;
         }
 
+        // Se comprueba que la grafica seleccionada sea la correcta para el tipo de operacion
+        if(data.operation !== undefined){
+          if(data.operation === 1 && (data.chart !== 0 || data.chart !== 1)){
+            data.chart = 0;
+          }
+          else if(data.operation > 1 && (data.chart !== 2 || data.chart !== 3)){
+            data.chart = 2;
+          }
+        }
+
         // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
         Object.keys(data).forEach(key => {
             if(data[key] === undefined || data[key] === null){
