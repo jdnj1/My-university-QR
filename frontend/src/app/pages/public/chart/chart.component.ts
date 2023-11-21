@@ -161,7 +161,7 @@ export class ChartComponent implements AfterViewInit {
               },
               data: [
                 {
-                  value: this.data.values[0],
+                  value: this.decimals(this.data.values[0], this.data.decimals),
                   name: this.data.metric
                 }
               ]
