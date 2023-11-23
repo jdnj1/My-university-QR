@@ -116,7 +116,7 @@
   "Administrador":"Administrador",
   "user.create.button":"Crear usuario",
   "user.create.error":"Este email ya existe",
-  "user.checkpass.error":"La contraseña de debe tener minimo 8 caracteres, 2 dígitos, tener al menos una mayúscula y minúscula y no debe tener espacios",
+  "user.checkpass.error":"La contraseña de debe tener minimo 8 caracteres, una mayúscula y minúscula, 2 dígitos y no debe tener espacios",
 
   "user.edit.title":"Editar usuario",
   "user.edit.save":"Guardar cambios",
