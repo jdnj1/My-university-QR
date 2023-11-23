@@ -38,6 +38,7 @@ router.post('/', [
 
 router.put('/:id', [
     check('id', 'El identificador no es válido').isInt(),
+    check('email', 'El email debe ser válido').isEmail(),
     validateJWT,
     validateFields,
     validateRole
