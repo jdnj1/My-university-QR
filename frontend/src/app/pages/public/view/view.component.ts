@@ -85,7 +85,6 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
         this.loading = false;
         this.warning = true;
 

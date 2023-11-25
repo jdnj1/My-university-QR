@@ -116,7 +116,7 @@ const createQr = async( req , res = response ) => {
             tagName: object.tagName,
             tagDescription: object.tagDescription,
             sizePrint: object.sizePrint,
-            date: object.date,
+            date: isNaN(Date.parse(object.date)) ? undefined : object.date,
             share: ( object.share === 1 || object.share === 0 ? object.share : undefined ),
             user: req.uid
         };
@@ -189,7 +189,7 @@ const updateQr = async( req , res = response ) => {
             tagName: object.tagName,
             tagDescription: object.tagDescription,
             sizePrint: object.sizePrint,
-            date: object.date,
+            date: isNaN(Date.parse(object.date)) ? undefined : object.date,
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             share: ( object.share === 0 || object.share === 1 ? object.share : undefined ),
             idQr  
@@ -395,9 +395,13 @@ const viewQr = async(req, res) => {
                             uid: Object.values(consult.filters)[0],
                             name: Object.values(consult.filters)[1]
                         }
-    
+                        
                         // Se realiza la peticion a Smart University
                         data = await getDataOperation(data);
+
+                        if(data.columns.length === 0){
+                            continue;
+                        }
     
                         // Rellenar el objeto con los datos de la llamada
                         charts.push({

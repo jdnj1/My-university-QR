@@ -160,6 +160,7 @@ const createConsult = async( req , res = response ) => {
             dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
             number: ( object.number >= 0 ? object.number : 0 ),
             unit: ( object.unit >= 1 ? object.unit : 1 ),
+            operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : 1 ),
             decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
@@ -250,16 +251,17 @@ const updateConsult = async( req , res = response ) => {
             typeDate: ( object.typeDate === 0 || object.typeDate === 1 ? object.typeDate : undefined ),
             dateFrom: ( isNaN(Date.parse(object.dateFrom)) ? undefined : object.dateFrom ),
             dateTo: ( isNaN(Date.parse(object.dateTo)) ? undefined : object.dateTo ),
-            number: ( object.number >= 0 ? object.number : 0 ),
-            unit: ( object.unit >= 1 ? object.unit : 1 ),
-            decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
+            number: ( object.number >= 0 ? object.number : undefined ),
+            unit: ( object.unit >= 1 ? object.unit : undefined ),
+            decimals: ( object.decimals >= 0 ? object.decimals : undefined ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
-            chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
-            operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : 1 ),
+            chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : undefined ),
+            operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : undefined ),
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             orderConsult: object.orderConsult,
             idConsult: uid
         };
+
 
         // Se comprueba si alguno de los campos no se han enviado por el cuerpo o es nulo
         Object.keys(data).forEach(key => {
@@ -267,6 +269,7 @@ const updateConsult = async( req , res = response ) => {
                 delete data[key];
             }
         });
+
 
         // Si esta seleccionada la fecha relativa, el rango de fechas no es necesario
         if(data.typeDate !== undefined && data.typeDate === 1){
