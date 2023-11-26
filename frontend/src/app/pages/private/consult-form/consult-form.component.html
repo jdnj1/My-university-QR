@@ -111,11 +111,23 @@
                     <option value="2">{{'cons.chart.gauge' | translate}}</option>
                     <option value="3">{{'cons.chart.value' | translate}}</option>
                   </select>
+
+                  <div *ngIf="getChart()" class="mt-2">
+                    <label for="inputColor" class="col-form-label">{{'cons.chart.value.colorNumber' | translate}}</label>
+                    <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorVal">
+                  </div>
+
+                  <div *ngIf="getChart()" class="mt-2">
+                    <label for="inputColor" class="col-form-label">{{'cons.chart.value.color' | translate}}</label>
+                    <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorBack">
+                  </div>
+
+
                 </div>
 
-                <div class="col-sm-6 mb-5">
-                  <div class="">
-                    <img src="{{urlChart}}" alt="Gráfica seleccionada" class="d-block w-100">
+                <div class="col-sm-6 mb-5 h-100">
+
+                  <div #preview class="echart border" style="height:250px;">
                   </div>
 
                 </div>

@@ -413,7 +413,9 @@ const viewQr = async(req, res) => {
                             name: data.values[0][data.columns.indexOf('name')],
                             metric: data.values[0][data.columns.indexOf('metric')],
                             operation: consult.operation,
-                            decimals: consult.decimals
+                            decimals: consult.decimals,
+                            colorValue: consult.colorVal,
+                            colorBackground: consult.colorBack
                         });
     
                     }

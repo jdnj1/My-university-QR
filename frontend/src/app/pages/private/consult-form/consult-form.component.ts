@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
@@ -8,6 +8,7 @@ import { environment } from '../../../../environments/environment';
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import * as echarts from 'echarts';
 
 @Component({
   selector: 'app-consult-form',
@@ -15,6 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./consult-form.component.css']
 })
 export class ConsultFormComponent implements OnInit, OnDestroy {
+
+  @ViewChild('preview', { static: true }) previewElement!: ElementRef<HTMLElement>;
 
   //Obtenemos el id del QR y de la llamada a partir de la url
   idQr = this.route.snapshot.params['idQr'];
@@ -39,15 +42,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   filters: boolean = true;
 
    // Form de la primera parte
-   firstForm = this.fb.group({
+   firstForm = this.fb.nonNullable.group({
     name: [''],
     token: ['', Validators.required],
     dateFrom: [''],
     dateTo: [''],
     typeDate: [0 , Validators.required],
     filters: [''],
-    operation:[1],
+    operation: [1],
     chart: [0],
+    colorVal: ['#4154f1'],
+    colorBack: ['#4154f1'],
     number: [0],
     unit: [1],
     decimals: [2],
@@ -97,14 +102,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     if(!this.create){
       this.getConsult();
     }
     else{
       // Nos suscribimos a los cambios que puedan tener los formularios
-      this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
+      this.firstFormSubscription = this.firstForm.valueChanges.subscribe((newValue) => {
         this.hasChanges = true;
+        this.resizeGraph();
       });
 
       this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
@@ -169,10 +174,14 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('filters')?.setValue(this.consult.filters);
         this.firstForm.get('operation')?.setValue(this.consult.operation);
         this.firstForm.get('chart')?.setValue(this.consult.chart);
+        this.firstForm.get('colorVal')?.setValue(this.consult.colorVal);
+        this.firstForm.get('colorBack')?.setValue(this.consult.colorBack);
         this.firstForm.get('number')?.setValue(this.consult.number);
         this.firstForm.get('unit')?.setValue(this.consult.unit);
         this.firstForm.get('decimals')?.setValue(this.consult.decimals);
         this.firstForm.get('qrCode')?.setValue(this.consult.qrCode);
+
+        this.initGraph();
 
         if(this.consult.activated === 1){
           this.activateForm = this.fb.group({
@@ -183,20 +192,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           this.activateForm = this.fb.group({
             activated: [false]
           });
-        }
-
-        // Se comprubeba que tipo de representacion tiene la llamada
-        if(this.consult.chart === 0){
-          this.urlChart = environment.charts[0];
-        }
-        else if(this.consult.chart === 1){
-          this.urlChart = environment.charts[1];
-        }
-        else if(this.consult.chart === 2){
-          this.urlChart = environment.charts[2];
-        }
-        else if(this.consult.chart === 3){
-          this.urlChart = environment.charts[3];
         }
 
         // Pasamos los filtros a JSON si tiene
@@ -227,6 +222,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         // Nos suscribimos a los cambios que puedan tener los formularios
         this.firstFormSubscription = this.firstForm.valueChanges.subscribe(() => {
           this.hasChanges = true;
+          this.resizeGraph();
         });
 
         this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
@@ -248,6 +244,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   updateConsult(){
     // Se realizan todas las comprobaciones necesarias antes de actualizar
     // En caso de que este seleccionada la fecha absoluta
+    console.log(this.firstForm)
     if(!this.date){
       // Comprobar que la fecha hasta no sea anterior a la fecha desde
       let dateFrom = this.firstForm.get('dateFrom')?.value;
@@ -305,7 +302,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
     json += `}`;
     // Se añade este campo al primer forumulario que es el que se envia al update
-    this.firstForm.setControl('filters', new FormControl(json));
+    this.firstForm.setControl('filters', this.fb.nonNullable.control(json));
 
     // Se comprueba si se va a crear, duplicar o a editar una llamada
     if(this.create || this.duplicate){
@@ -461,5 +458,125 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   dateRelative(){
     this.date = true;
     this.firstForm.get('typeDate')?.setValue(1);
+  }
+
+  getChart(){
+    let chart =  this.firstForm.value.chart;
+
+    if (chart !== null && chart !== undefined){
+      return chart === 3;
+    }
+    else{
+      return false;
+    }
+  }
+
+  initGraph(){
+    const graph = echarts.init(this.previewElement.nativeElement);
+
+    // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+    window.addEventListener('resize', function() {
+      graph.resize();
+    });
+
+    this.resizeGraph();
+  }
+
+  resizeGraph(){
+    const graph = echarts.getInstanceByDom(this.previewElement.nativeElement);
+
+    const chart = this.firstForm.value.chart;
+
+    let option;
+
+    switch(chart){
+      //lineas
+      case 0:
+        option = {
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: [5, 10, 4, 12, 3, 1, 10],
+              type: 'line'
+            }
+          ]
+        }
+
+        graph?.setOption(option, true);
+        break;
+
+      //barras
+      case 1:
+        option = {
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: [150, 230, 224, 218, 135, 147, 260],
+              type: 'bar'
+            }
+          ]
+        }
+
+        graph?.setOption(option, true);
+        break;
+
+      //gauge
+      case 2:
+        option = {
+          series: [
+            {
+              type: 'gauge',
+              data: [
+                {
+                  value: 50,
+                }
+              ],
+              splitLine: {
+                show: false
+              },
+              axisTick: {
+                show: true,
+                distance: 3
+              },
+              axisLabel: {
+                distance: 3.5
+              }
+            }
+          ]
+        }
+
+        graph?.setOption(option, true);
+        break;
+
+      //valor
+      case 3:
+        option = {
+          title: {
+            text: 70,
+            left: "center",
+            top: "center",
+            textStyle: {
+              fontSize: 30,
+              color: this.firstForm.value.colorVal
+            },
+          },
+          backgroundColor: this.firstForm.value.colorBack,
+        }
+
+        graph?.setOption(option, true);
+        break;
+    }
   }
 }

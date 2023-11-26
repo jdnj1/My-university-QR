@@ -187,11 +187,11 @@ export class ChartComponent implements AfterViewInit {
             textStyle: {
               fontSize: 30,
               width: 300,
-              color: "#FFF",
+              color: this.data.colorValue,
               overflow: 'break',
               rich:{
                 date: {
-                  color: 'white',
+                  color: this.data.colorValue,
                   padding: 10
                 }
               }
@@ -199,10 +199,10 @@ export class ChartComponent implements AfterViewInit {
             subtextStyle: {
               width: 550,
               overflow: 'break',
-              color: "#FFF"
+              color: this.data.colorValue
             }
           },
-          backgroundColor: this.opColor[this.data.operation - 2],
+          backgroundColor: this.data.colorBackground,
           media: [{
             query: {
               maxWidth: 360,

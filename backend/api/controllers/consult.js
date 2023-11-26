@@ -164,6 +164,8 @@ const createConsult = async( req , res = response ) => {
             decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
+            colorVal: object.colorVal,
+            colorBack: object.colorBack,
             qrCode: object.qrCode
         };
 
@@ -256,6 +258,8 @@ const updateConsult = async( req , res = response ) => {
             decimals: ( object.decimals >= 0 ? object.decimals : undefined ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : undefined ),
+            colorVal: object.colorVal,
+            colorBack: object.colorBack,
             operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : undefined ),
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             orderConsult: object.orderConsult,
