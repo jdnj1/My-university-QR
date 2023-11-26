@@ -9,6 +9,7 @@ const { response } = require('express'); // Response de Express
 const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
 const { validateJSON } = require('../helpers/verify-json');
 const { qrById } = require('../dao/qr');
+const { validateHTMLColorHex, default: validateColor } = require('validate-color');
 
 /**
  * Devuelve todas las consultas que realiza un codigo qr de la BD.
@@ -164,8 +165,8 @@ const createConsult = async( req , res = response ) => {
             decimals: ( object.decimals >= 0 ? object.decimals : 2 ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
-            colorVal: object.colorVal,
-            colorBack: object.colorBack,
+            colorVal: ( validateHTMLColorHex(object.colorVal) ? object.colorVal : undefined ),
+            colorBack: ( validateHTMLColorHex(object.colorBack) ? object.colorBack : undefined ),
             qrCode: object.qrCode
         };
 
@@ -258,8 +259,8 @@ const updateConsult = async( req , res = response ) => {
             decimals: ( object.decimals >= 0 ? object.decimals : undefined ),
             filters: ( validateJSON(object.filters) ? object.filters : undefined ),
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : undefined ),
-            colorVal: object.colorVal,
-            colorBack: object.colorBack,
+            colorVal: ( validateHTMLColorHex(object.colorVal) ? object.colorVal : undefined ),
+            colorBack: ( validateHTMLColorHex(object.colorBack) ? object.colorBack : undefined ),
             operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : undefined ),
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
             orderConsult: object.orderConsult,
