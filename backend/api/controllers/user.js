@@ -71,17 +71,18 @@ const getUserById = async( req , res ) => {
     const uid = req.params.id;
     try {
 
-        // Solo los usuarios administrador pueden listar usuarios
-        if(req.role !== 1){
-            res.status(403).json({
-                msg: 'Solo los administradores pueden listar usuarios'
-            });
-            return;
-        }
-
         const user = await userById(uid);
 
         if(user !== null){
+            
+            // Solo los usuarios administrador pueden listar usuarios y el propio usuario
+            if(req.role !== 1 && uid === user.idUser){
+                res.status(403).json({
+                    msg: 'No tienes permisos para listar usuarios'
+                });
+                return;
+            }
+
             res.status(200).json({
                 msg: 'getUsuario',
                 user: user
@@ -94,6 +95,8 @@ const getUserById = async( req , res ) => {
                 msg: 'No se ha encontrado al usuario'
             });
         }
+
+        
     } catch (error) {
         console.error(error);
 
