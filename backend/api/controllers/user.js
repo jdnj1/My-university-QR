@@ -76,7 +76,7 @@ const getUserById = async( req , res ) => {
         if(user !== null){
             
             // Solo los usuarios administrador pueden listar usuarios y el propio usuario
-            if(req.role !== 1 && uid === user.idUser){
+            if(req.role !== 1 && req.uid !== user.idUser){
                 res.status(403).json({
                     msg: 'No tienes permisos para listar usuarios'
                 });
