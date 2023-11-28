@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router, UrlTree } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import { format } from 'date-fns';
-import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import * as echarts from 'echarts';
+
 
 @Component({
   selector: 'app-consult-form',
@@ -18,6 +18,15 @@ import * as echarts from 'echarts';
 export class ConsultFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('preview', { static: true }) previewElement!: ElementRef<HTMLElement>;
+
+  //Para que la gráfica se redimensiona cuando se mueve la barra lateral
+  @HostListener('transitionend', ['$event'])
+  onTransitionEnd(event: TransitionEvent): void {
+    if(event.propertyName === 'margin-left'){
+      this.resizeBar();
+    }
+
+  }
 
   //Obtenemos el id del QR y de la llamada a partir de la url
   idQr = this.route.snapshot.params['idQr'];
@@ -89,6 +98,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   firstFormSubscription: any;
   filterFormSubscription: any;
   operationFormSubscription: any;
+  sidebarSubscription: any;
 
   constructor(
     private fb: FormBuilder,
@@ -125,6 +135,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.options = environment.filters;
 
     if(this.duplicate) this.hasChanges = true;
+
   }
 
   ngOnDestroy(): void {
@@ -132,6 +143,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.firstFormSubscription.unsubscribe();
     this.filterFormSubscription.unsubscribe();
     this.operationFormSubscription.unsubscribe();
+    this.sidebarSubscription.unsubscribe();
   }
 
   campoValido(campo: string){
@@ -484,6 +496,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   resizeGraph(){
+    let pru = this.previewElement.nativeElement.style.width
+    this.previewElement.nativeElement.style.width = this.previewElement.nativeElement.style.width;
+
     const graph = echarts.getInstanceByDom(this.previewElement.nativeElement);
 
     const chart = this.firstForm.value.chart;
@@ -579,5 +594,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         graph?.setOption(option, true);
         break;
     }
+  }
+
+  resizeBar(){
+    const graph = echarts.getInstanceByDom(this.previewElement.nativeElement);
+    graph?.resize()
   }
 }
