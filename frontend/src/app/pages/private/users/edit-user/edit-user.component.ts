@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
@@ -31,7 +31,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   // Formulario para crear nuevos usuarios
   public userForm = this.fb.group({
-    email: ['', [Validators.email]],
+    email: [''],
     password: [''],
     lim_consult:[''],
     role: [0]
@@ -43,7 +43,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   roles = environment.roles;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private userService: UserService,
     private router: Router,
     private alertService: AlertService,
@@ -97,7 +97,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.userForm.get('role')?.setValue(Number(role) || 0);
 
     if(!this.userForm.get('email')?.dirty){
-      this.userForm.get('email')?.setValue(null);
+      this.userForm.removeControl('email');
     }
 
     console.log(this.userForm.value)
