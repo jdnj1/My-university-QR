@@ -109,7 +109,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       // Nos suscribimos a los cambios que puedan tener los formularios
       this.firstFormSubscription = this.firstForm.valueChanges.subscribe((newValue) => {
         this.hasChanges = true;
-        this.resizeGraph();
       });
 
       this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {

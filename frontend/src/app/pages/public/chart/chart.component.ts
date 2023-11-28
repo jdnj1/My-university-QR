@@ -37,6 +37,7 @@ export class ChartComponent implements AfterViewInit {
   ];
 
   ngAfterViewInit(): void {
+    console.log(this.data)
     this.chart();
   }
 
@@ -45,197 +46,219 @@ export class ChartComponent implements AfterViewInit {
   }
 
   chart(){
-
-    const div = document.createElement('div');
-    div.id = `chart${this.id}`;
-    div.style.height = '350px';
-    div.classList.add('echart');
-
-    this.containerElement.nativeElement.appendChild(div);
-
-    const graph = echarts.init(div);
+    this.data.forEach((data: any, index: number) => {
 
 
+      const div = document.createElement('div');
+      div.id = `chart${this.id + index}`;
+      div.style.height = '350px';
+      div.classList.add('echart');
 
-    // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
-    window.addEventListener('resize', function() {
-      graph.resize();
-    });
+      const body = document.createElement('div');
+      body.classList.add('card-body');
+      body.style.padding = '20px';
+      body.appendChild(div);
 
-    if(this.data.dates){
-      for (let i = 0; i < this.data.dates.length; i++){
-        this.data.dates[i] = this.data.dates[i].slice(0, -1);
-        this.data.dates[i] = format(new Date(this.data.dates[i]), "Pp");
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.appendChild(body);
+
+      const bootstrap = document.createElement('div');
+      if(data.columns){
+        bootstrap.classList.add("col-lg-4");
       }
-    }
+      else{
+        bootstrap.classList.add("col-lg-12");
+      }
+      bootstrap.appendChild(card);
 
-    let option;
+      this.containerElement.nativeElement.appendChild(bootstrap);
 
-    // Comprobar el tipo de gráfica que es
-    switch(this.data.type){
-      case 0:
-        // Gráfica de lineas
-      case 1:
-        // Grafica de barras
+      const graph = echarts.init(div);
 
-        // Para añadir la unidad en el tooltip de la gráfica
-        for (let value of this.data.values){
-          value.tooltip = {
-            valueFormatter: (value: any) => value + ` ${this.data.metric}`
+
+
+      // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
+      window.addEventListener('resize', function() {
+        graph.resize();
+      });
+
+
+      if(data.dates){
+        for (let i = 0; i < data.dates.length; i++){
+          data.dates[i] = data.dates[i].slice(0, -1);
+          data.dates[i] = format(new Date(data.dates[i]), "Pp");
+        }
+      }
+
+      let option;
+
+      // Comprobar el tipo de gráfica que es
+      switch(data.type){
+        case 0:
+          // Gráfica de lineas
+        case 1:
+          // Grafica de barras
+
+          // Para añadir la unidad en el tooltip de la gráfica
+          for (let value of data.values){
+            value.tooltip = {
+              valueFormatter: (value: any) => value + ` ${data.metric}`
+            }
           }
-        }
 
-        option = {
-          title: {
-            text: this.data.title
-          },
-          tooltip: {
-            trigger: 'axis',
-            confine: true
-          },
-          legend: {
-            data: this.data.ids,
-            top: '10%',
-            type: 'scroll',
-            pageButtonPosition: 'start'
-          },
-          xAxis: {
-            type: 'category',
-            data: this.data.dates
-          },
-          yAxis: {
-            type: 'value',
-            axisLabel: {
-              formatter: `{value}${this.data.metric}`
-            }
-          },
-          grid: {
-            top: '20%', // Espacio en la parte superior de la grafica
-            containLabel: true,
-          },
-          dataZoom: [
-            {
-              type: 'inside',
-              start: 0,
-              end: 100
+          option = {
+            title: {
+              text: data.title
             },
-            {
-              start: 0,
-              end: 100
-            }
-          ],
-          series: this.data.values
-        };
-
-        graph.setOption(option);
-
-        break;
-
-      case 2:
-        div.style.height = '300px';
-        graph.resize();
-
-        // Gauge
-        option = {
-          tooltip: {
-            formatter: `{a} <br/>{b} : {c}`,
-            confine: true
-          },
-          title: {
-            text: this.data.title
-          },
-          series: [
-            {
-              name: this.data.description,
-              type: this.type[this.data.type],
-              progress: {
-                show: true
-              },
-              detail: {
-                valueAnimation: true,
-                fontSize: 20,
-                formatter: '{value}'
-              },
+            tooltip: {
+              trigger: 'axis',
+              confine: true
+            },
+            legend: {
+              data: data.ids,
+              top: '10%',
+              type: 'scroll',
+              pageButtonPosition: 'start'
+            },
+            xAxis: {
+              type: 'category',
+              data: data.dates
+            },
+            yAxis: {
+              type: 'value',
               axisLabel: {
-                fontSize: 10
+                formatter: `{value}${data.metric}`
+              }
+            },
+            grid: {
+              top: '20%', // Espacio en la parte superior de la grafica
+              containLabel: true,
+            },
+            dataZoom: [
+              {
+                type: 'inside',
+                start: 0,
+                end: 100
               },
-              data: [
-                {
-                  value: this.decimals(this.data.values[0], this.data.decimals),
-                  name: this.data.metric
-                }
-              ]
-            }
-          ]
-        }
-
-        graph.setOption(option);
-
-        break;
-
-      case 3:
-        div.style.height = '200px';
-        graph.resize();
-
-        // Solo el valor
-        option = {
-          title: {
-            text: `{date|${format(new Date(this.data.date), "Pp")}}\n${this.operation[this.data.operation - 2]}: ${this.decimals(this.data.values[0], this.data.decimals)} ${this.data.metric}\n`,
-            subtext: `\n${this.data.title}: \n\n ${this.data.description}`,
-            left: "center",
-            top: "15%",
-            textStyle: {
-              fontSize: 30,
-              width: 300,
-              color: this.data.colorValue,
-              overflow: 'break',
-              rich:{
-                date: {
-                  color: this.data.colorValue,
-                  padding: 10
-                }
+              {
+                start: 0,
+                end: 100
               }
+            ],
+            series: data.values
+          };
+
+          graph.setOption(option);
+
+          break;
+
+        case 2:
+          div.style.height = '300px';
+          graph.resize();
+
+          // Gauge
+          option = {
+            tooltip: {
+              formatter: `{a} <br/>{b} : {c}`,
+              confine: true
             },
-            subtextStyle: {
-              width: 550,
-              overflow: 'break',
-              color: this.data.colorValue
-            }
-          },
-          backgroundColor: this.data.colorBackground,
-          media: [{
-            query: {
-              maxWidth: 360,
+            title: {
+              text: data.title
             },
-            option: {
-              title: {
-                subtextStyle: {
+            series: [
+              {
+                name: data.description,
+                type: this.type[data.type],
+                progress: {
+                  show: true
+                },
+                detail: {
+                  valueAnimation: true,
+                  fontSize: 20,
+                  formatter: '{value}'
+                },
+                axisLabel: {
                   fontSize: 10
-                }
+                },
+                data: [
+                  {
+                    value: this.decimals(data.values[0], data.decimals),
+                    name: data.metric
+                  }
+                ]
               }
-            }
+            ]
+          }
+
+          graph.setOption(option);
+
+          break;
+
+        case 3:
+          div.style.height = '200px';
+          graph.resize();
+
+          // Solo el valor
+          option = {
+            title: {
+              text: `{date|${format(new Date(data.date), "Pp")}}\n${this.operation[data.operation - 2]}: ${this.decimals(data.values[0], data.decimals)} ${data.metric}\n`,
+              subtext: `\n${data.title}: \n\n ${data.description}`,
+              left: "center",
+              top: "15%",
+              textStyle: {
+                fontSize: 30,
+                width: 300,
+                color: data.colorValue,
+                overflow: 'break',
+                rich:{
+                  date: {
+                    color: data.colorValue,
+                    padding: 10
+                  }
+                }
+              },
+              subtextStyle: {
+                width: 550,
+                overflow: 'break',
+                color: data.colorValue
+              }
             },
-            {
+            backgroundColor: data.colorBackground,
+            media: [{
               query: {
-                minWidth: 361,
+                maxWidth: 360,
               },
               option: {
                 title: {
                   subtextStyle: {
-                    fontSize: 15
+                    fontSize: 10
                   }
                 }
               }
-            }
-          ]
-        }
+              },
+              {
+                query: {
+                  minWidth: 361,
+                },
+                option: {
+                  title: {
+                    subtextStyle: {
+                      fontSize: 15
+                    }
+                  }
+                }
+              }
+            ]
+          }
 
-        graph.setOption(option);
+          graph.setOption(option);
 
-        break;
+          break;
 
-      default:
-        break;
-    }
+        default:
+          break;
+      }
+    });
   }
 }

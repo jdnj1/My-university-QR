@@ -17,6 +17,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
   @ViewChild('container') containerElement!: ElementRef<HTMLElement>;
   @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
+  @ViewChild('containerDiv', {read: ViewContainerRef, static: false}) divRef!: ElementRef<HTMLElement>;
 
   // Variable donde se va a almacenar el titulo del código QR
   qr: string = '';
@@ -28,7 +29,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   idQr = this.route.snapshot.params['id'];
 
   // Variables para almacenar la informacion de las llamadas
-  charts: any;
+  charts: any = [];
   petition: any = '';
 
   // Variable con el tipo de operaciones
@@ -58,7 +59,6 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
   ngOnInit(): void {
 
-    // this.container = this.renderer.selectRootElement('#charts', true);
   }
 
   ngAfterViewInit(): void {
@@ -67,6 +67,8 @@ export class ViewComponent implements OnInit,AfterViewInit {
   }
 
   viewQr(){
+    let data: any = [];
+
     this.qrService.viewQr(this.idQr).subscribe({
       next: (res: any) => {
         this.loading = false;
@@ -77,11 +79,47 @@ export class ViewComponent implements OnInit,AfterViewInit {
         console.log(this.charts)
 
         // Se itera entre las gráficas devueltas
-        this.charts.forEach( (chart: any, index: any) => {
+        // this.charts.forEach( (chart: any, index: any) => {
+        //   const chartComponent = this.containerRef.createComponent(ChartComponent)
+        //   chartComponent.instance.data = chart;
+        //   chartComponent.instance.id = index;
+
+        //   const div = document.createElement('div');
+        //   div.classList.add('row')
+        //   this.containerElement.nativeElement.appendChild(div);
+        // });
+
+        for(let i = 0; i < this.charts.length; i++){
+          let index = i;
+          if(this.charts[i].type === 2 || this.charts[i].type === 3){
+            this.charts[i].columns = true;
+            if(this.charts[i + 1].type === 2 || this.charts[i + 1].type === 3){
+              this.charts[i + 1].columns = true;
+              if(this.charts[i + 2].type === 2 || this.charts[i + 2].type === 3){
+                this.charts[i + 2].columns = true;
+                data.push(this.charts[i], this.charts[i + 1], this.charts[i + 2])
+                i += 2;
+              }
+              else{
+                data.push(this.charts[i], this.charts[i + 1])
+                i += 1;
+              }
+            }
+            else{
+              data.push(this.charts[i]);
+            }
+          }
+          else{
+            this.charts[i].columns = false;
+            data.push(this.charts[i]);
+          }
+
           const chartComponent = this.containerRef.createComponent(ChartComponent)
-          chartComponent.instance.data = chart;
+          chartComponent.instance.data = data;
           chartComponent.instance.id = index;
-        });
+
+          data = [];
+        }
 
       },
       error: (err: HttpErrorResponse) => {

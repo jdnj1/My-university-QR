@@ -97,8 +97,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.userForm.get('role')?.setValue(Number(role) || 0);
 
     if(!this.userForm.get('email')?.dirty){
-      this.userForm.get('email')?.setValue('');
+      this.userForm.get('email')?.setValue(null);
     }
+
+    console.log(this.userForm.value)
 
     this.userService.updateUser(this.userForm.value, this.user.idUser).subscribe({
       next: (res: any) => {
@@ -114,7 +116,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.alertService.error(this.translateService.instant('user.create.error'));
           return;
         }
-        else if(err.status === 400){
+        else if(err.error.msg === 'La contraseña de debe tener minimo 8 caracteres, 2 dígitos, tener al menos una mayúscula y minúscula y no debe tener espacios'){
           this.passError = true;
           this.alertService.error(this.translateService.instant('user.checkpass.error'));
           return;

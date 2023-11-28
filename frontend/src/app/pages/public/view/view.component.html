@@ -18,10 +18,12 @@
     </div>
   </div>
 
-  <section [hidden]="loading" #container class="section">
+  <section [hidden]="loading" class="section">
     <div *ngIf="warning" class="d-flex justify-content-center" style="margin-top: 100px;">
       <p class="text-center">{{message}}</p>
     </div>
+
+    <div #container></div>
   </section>
 
 </main>
