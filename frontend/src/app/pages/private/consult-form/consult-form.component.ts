@@ -51,8 +51,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     filters: [''],
     operation: [1],
     chart: [0],
-    colorVal: ['#4154f1'],
-    colorBack: ['#4154f1'],
+    colorVal: ['#000000'],
+    colorBack: ['#ffffff'],
     number: [0],
     unit: [1],
     decimals: [2],
@@ -106,9 +106,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       this.getConsult();
     }
     else{
+      this.initGraph();
       // Nos suscribimos a los cambios que puedan tener los formularios
       this.firstFormSubscription = this.firstForm.valueChanges.subscribe((newValue) => {
         this.hasChanges = true;
+        this.resizeGraph();
       });
 
       this.filterFormSubscription = this.filterForm.valueChanges.subscribe(() => {
