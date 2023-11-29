@@ -442,15 +442,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consultService.updateConsult({orderConsult: index}, this.consults[index + 1].idConsult).subscribe({
       next: (res: any) => {
         this.alertService.success((this.translateService.instant('alert.cons.order')));
+        // Obtenemos de nuevo la lista de las llamadas
+        this.getConsults(0);
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
-
-    // Obtenemos de nuevo la lista de las llamadas
-    this.getConsults(0);
 
   }
 
@@ -467,15 +466,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consultService.updateConsult({orderConsult: index}, this.consults[index - 1].idConsult).subscribe({
       next: (res: any) => {
         this.alertService.success(this.translateService.instant('alert.cons.order'));
+        // Obtenemos de nuevo la lista de las llamadas
+        this.getConsults(0);
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
-
-    // Obtenemos de nuevo la lista de las llamadas
-    this.getConsults(0);
   }
 
   generatePDF(){
