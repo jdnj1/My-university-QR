@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationStart, Router, UrlTree } from '@angular/router';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
@@ -98,7 +98,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   firstFormSubscription: any;
   filterFormSubscription: any;
   operationFormSubscription: any;
-  sidebarSubscription: any;
 
   constructor(
     private fb: FormBuilder,
@@ -143,7 +142,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     this.firstFormSubscription.unsubscribe();
     this.filterFormSubscription.unsubscribe();
     this.operationFormSubscription.unsubscribe();
-    this.sidebarSubscription.unsubscribe();
   }
 
   campoValido(campo: string){
