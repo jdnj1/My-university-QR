@@ -255,7 +255,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   updateConsult(){
     // Se realizan todas las comprobaciones necesarias antes de actualizar
     // En caso de que este seleccionada la fecha absoluta
-    console.log(this.firstForm)
     if(!this.date){
       // Comprobar que la fecha hasta no sea anterior a la fecha desde
       let dateFrom = this.firstForm.get('dateFrom')?.value;
@@ -354,7 +353,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     }
     else{
       // Se edita
-      console.log(this.firstForm.value)
       this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
         next: (res: any) => {
           this.alertService.success(this.translateService.instant('alert.cons.update'));

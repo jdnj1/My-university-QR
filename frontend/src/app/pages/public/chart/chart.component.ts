@@ -37,7 +37,6 @@ export class ChartComponent implements AfterViewInit {
   ];
 
   ngAfterViewInit(): void {
-    console.log(this.data)
     this.chart();
   }
 
