@@ -79,11 +79,20 @@ export class ViewComponent implements OnInit,AfterViewInit {
         // Se itera entre las gráficas devueltas
         for(let i = 0; i < this.charts.length; i++){
           let index = i;
-          if(this.charts[i].type === 2 || this.charts[i].type === 3){
+          if(
+            this.charts[i] !== undefined &&
+            (this.charts[i].type === 2 || this.charts[i].type === 3)
+            ){
             this.charts[i].columns = true;
-            if(this.charts[i + 1].type === 2 || this.charts[i + 1].type === 3){
+            if(
+              this.charts[i + 1] !== undefined &&
+              (this.charts[i + 1].type === 2 || this.charts[i + 1].type === 3)
+              ){
               this.charts[i + 1].columns = true;
-              if(this.charts[i + 2].type === 2 || this.charts[i + 2].type === 3){
+              if(
+                this.charts[i + 2] !== undefined &&
+                (this.charts[i + 2].type === 2 || this.charts[i + 2].type === 3)
+                ){
                 this.charts[i + 2].columns = true;
                 data.push(this.charts[i], this.charts[i + 1], this.charts[i + 2])
                 i += 2;
