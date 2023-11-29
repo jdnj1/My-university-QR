@@ -481,6 +481,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   initGraph(){
+
+    if(echarts.getInstanceByDom(this.previewElement.nativeElement) !== undefined){
+      return;
+    }
+
     const graph = echarts.init(this.previewElement.nativeElement);
 
     // Función para que se adapte el tamaño e a grafica si se cambia el tamaño de la pantalla
