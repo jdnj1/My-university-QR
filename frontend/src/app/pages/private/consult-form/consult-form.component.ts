@@ -8,6 +8,8 @@ import { environment } from '../../../../environments/environment';
 import { format } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import * as echarts from 'echarts';
+import { lastValueFrom } from 'rxjs';
+import { QrService } from 'src/app/services/qr.service';
 
 
 @Component({
@@ -99,9 +101,12 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   filterFormSubscription: any;
   operationFormSubscription: any;
 
+  nameQr: string = '';
+
   constructor(
     private fb: FormBuilder,
     private consultService: ConsultService,
+    private qrService: QrService,
     private route: ActivatedRoute,
     private alertService: AlertService,
     private router: Router,
@@ -113,6 +118,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if(!this.create){
       this.getConsult();
+      this.getNameQr();
     }
     else{
       this.initGraph();
@@ -146,6 +152,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   campoValido(campo: string){
     return this.firstForm.get(campo)?.valid || !this.formSubmit;
+  }
+
+  async getNameQr(){
+    let qr: any = await lastValueFrom(this.qrService.getQrbyId(this.idQr));
+    this.nameQr = qr.qr.description;
   }
 
   getConsult(){
