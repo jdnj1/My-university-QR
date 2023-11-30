@@ -22,7 +22,8 @@
       <div class="card">
         <div class="card-body">
           <h5 *ngIf="create" class="card-title">{{'qr.new' | translate}}</h5>
-          <div *ngIf="!create" class="d-flex justify-content-between align-items-center">
+          <h5 *ngIf="duplicate" class="card-title">{{'qr.duplicate' | translate}}</h5>
+          <div *ngIf="!create && !duplicate" class="d-flex justify-content-between align-items-center">
             <h5 class="card-title">{{'qr.conf' | translate}}</h5>
             <p *ngIf="!qrOwner()">{{'qr.table.owner' | translate}} <span class="badge bg-primary">{{usuEmail}}</span></p>
           </div>
@@ -34,7 +35,7 @@
 
                   <div class="d-flex align-items-center justify-content-between">
                     <h5 class="scol-form-label">{{'qr.data' | translate}}</h5>
-                    <div *ngIf="!create" class="d-flex align-items-center">
+                    <div *ngIf="!create && !duplicate" class="d-flex align-items-center">
                       <span *ngIf="this.activateForm.get('activated')?.value" class="badge bg-success" style="margin-right: .5em;">{{'badge.activated' | translate}}</span>
                       <span *ngIf="!this.activateForm.get('activated')?.value" class="badge bg-danger" style="margin-right: .5em;">{{'badge.deactivated' | translate}}</span>
                       <form [formGroup]="activateForm">
@@ -104,7 +105,7 @@
                     </div>
 
                     <!-- IMAGEN DEL QR -->
-                    <div *ngIf="!create" class="col">
+                    <div *ngIf="!create && !duplicate" class="col">
                       <div id="qrCode">
                         <p class="text-center fw-bold m-0">{{dataQrForm.get('tagName')?.value}}</p>
                         <div class="d-flex align-items-center justify-content-center">
@@ -113,7 +114,7 @@
                         <p class="text-center small m-0">{{dataQrForm.get('tagDescription')?.value}}</p>
                       </div>
                       <div class="d-flex justify-content-center m-2">
-                        <button [disabled]="create" type="button" class="btn btn-success" title="{{'qr.download' | translate}}" (click)="generatePDF()"><i class="bi bi-printer"></i> {{'qr.download' | translate}}</button>
+                        <button [disabled]="create || duplicate" type="button" class="btn btn-success" title="{{'qr.download' | translate}}" (click)="generatePDF()"><i class="bi bi-printer"></i> {{'qr.download' | translate}}</button>
                       </div>
                       <hr>
                       <div class="d-flex justify-content-center">
@@ -142,7 +143,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-title">{{'qr.table.title' | translate}}</h5>
             <!-- barra de busqueda de llamadas -->
-            <div class="search-bar">
+            <div *ngIf="!duplicate" class="search-bar">
               <form class="search-form d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="search()">
                 <input #searchField type="text" name="query" placeholder="{{'qr.search' | translate}}..." title="{{'qr.search' | translate}}" formControlName="searchQuery" (input)="checkSearch()">
                 <button type="submit" title="Search"><i class="bi bi-search"></i></button>
@@ -152,7 +153,7 @@
               </form>
             </div>
             <!-- Botón para añadir nuevas llamadas -->
-            <button [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
+            <button [disabled]="create || duplicate" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover">
@@ -161,7 +162,7 @@
                   <th scope="col">{{'qr.table.name' | translate}}</th>
                   <th scope="col">{{'table.onoff' | translate}}</th>
                   <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
-                  <th *ngIf="idUsu === qrUsu" class="text-center" scope="col">{{'qr.table.duplicate' | translate}}</th>
+                  <th class="text-center" scope="col">{{'qr.table.duplicate' | translate}}</th>
                   <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
                   <th class="text-center" scope="col">{{'qr.table.down' | translate}}</th>
                   <th class="text-center" scope="col">{{'qr.table.up' | translate}}</th>

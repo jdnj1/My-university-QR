@@ -171,6 +171,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.route.navigateByUrl(`codeQr/${this.codesQr[index].idQr}`)
   }
 
+  copyQr(index: number){
+    this.route.navigateByUrl(`codeQr/${this.codesQr[index].idQr}*`);
+  }
+
   activateQr(index: number){
     let value;
     let msg: string;

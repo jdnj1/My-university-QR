@@ -13,6 +13,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UserService } from 'src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-qr',
@@ -36,7 +37,11 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   idUsu: number = 0;
   usuEmail: string = '';
 
+  // Booleano para indicar si se va a crear un nuevo qr
   create: boolean = this.idQr === '0'? true : false;
+  // Booleano para indicar si se va a duplicar un qr
+  duplicate: boolean = this.idQr.at(this.idQr.length - 1) === '*' ? true: false;
+
   formSubmit: boolean = false;
 
   // Llamadas del QR
@@ -103,10 +108,12 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.hasChanges = true;
       });
     }
+
+    if(this.duplicate) this.hasChanges = true;
   }
 
   ngAfterViewInit(): void {
-    if(!this.create){
+    if(!this.create && !this.duplicate){
       this.searchClearElement.nativeElement.style.display = 'none';
       this.msgElement.nativeElement.style.display = 'none';
 
@@ -156,7 +163,13 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qr.date = format(date, "yyyy-MM-dd");
 
         // Se rellenan los datos del formulario con los datos del QR
-        this.dataQrForm.get('description')?.setValue(this.qr.description);
+        if(this.duplicate){
+          this.dataQrForm.get('description')?.setValue(`${this.qr.description} (copia)`);
+        }
+        else{
+          this.dataQrForm.get('description')?.setValue(this.qr.description);
+        }
+
 
         this.dataQrForm.get('tagName')?.setValue(this.qr.tagName);
 
@@ -286,8 +299,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dataQrForm.get('share')?.setValue(0);
     }
 
-    // Se comprueba si se esta creando un qr
-    if(this.create){
+    // Se comprueba si se esta creando o duplicando un qr
+    if(this.create || this.duplicate){
 
       this.formSubmit = true;
       // Se crea el qr si el formulario no tiene errores
@@ -299,17 +312,46 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res:any) =>{
           this.idQr = res.qr;
           this.urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
-          this.create = false;
-          this.hasChanges = false;
-          this.qrSubscription.unsubscribe();
-          this.getData();
-          this.router.navigateByUrl(`codeQr/${this.idQr}`);
-          this.alertService.success(this.translateService.instant('alert.qr.create'));
+
+          if(this.create){
+            this.create = false;
+            this.hasChanges = false;
+            this.qrSubscription.unsubscribe();
+            this.getData();
+            this.router.navigateByUrl(`codeQr/${this.idQr}`);
+            this.alertService.success(this.translateService.instant('alert.qr.create'));
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error(this.translateService.instant('alert.qr.create.error'));
         }
       });
+
+      // Se crean tambien las mismas llamadas si se está duplicando
+      if(this.duplicate){
+        for(let i= 0; i < this.consults.length; i++){
+          this.consultService.getConsultbyId(this.consults[i].idConsult).subscribe({
+            next: async (res:any) =>{
+
+              res.consult.qrCode = this.idQr
+              // Se pasa la info de cada llamada al servicio para crearlas
+              await lastValueFrom(this.consultService.createConsult(res.consult));
+
+              if(i === this.consults.length - 1){
+                this.duplicate = false;
+                this.hasChanges = false;
+                this.qrSubscription.unsubscribe();
+                console.log(`codeQr/${this.idQr}`)
+                this.router.navigateByUrl(`codeQr/${this.idQr}`);
+                this.alertService.success(this.translateService.instant('alert.qr.duplicate'));
+              }
+            },
+            error:(err: HttpErrorResponse) =>{
+              this.alertService.error(this.translateService.instant('alert.qr.create.error'))
+            }
+          })
+        }
+      }
 
     }
     else{

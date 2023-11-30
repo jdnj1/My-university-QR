@@ -51,6 +51,7 @@
                     <th class="text-center" scope="col">{{'table.date' | translate}}</th>
                     <th scope="col">{{'table.onoff' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
+                    <th class="text-center" scope="col">{{'qr.table.duplicate' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.print' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.addprint' | translate}}</th>
                     <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
@@ -58,7 +59,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="8" #msg>{{'msg.home' | translate}}</td>
+                    <td colspan="9" #msg>{{'msg.home' | translate}}</td>
                   </tr>
                   <tr *ngFor="let qr of codesQr; let i = index">
                     <td (click)="onMouseQrEnter(i)" [ngClass]="{'': disabledQr[i]}">
@@ -75,6 +76,7 @@
                       </form>
                     </td>
                     <td class="text-center"><button type="button" class="btn btn-primary" title="{{'home.tooltip.edit' | translate}}" (click)="editQr(i)"><i class="bi bi-pencil-square"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-success" title="{{'home.tooltip.duplicate' | translate}}" (click)="copyQr(i)"><i class="ri-file-copy-fill"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-success" title="{{'home.tooltip.download' | translate}}" (click)="generateQR(i)"><i class="bi bi-printer"></i></button></td>
                     <td *ngIf="!isCode(i)" class="text-center"><button type="button" class="btn btn-success" title="{{'home.tooltip.addlist' | translate}}" (click)="addList(i)"><i class="bi bi-patch-plus"></i></button></td>
                     <td *ngIf="isCode(i)" class="text-center"><button type="button" class="btn btn-danger" title="{{'home.tooltip.deletelist' | translate}}" (click)="removeList(i)"><i class="bi bi-patch-minus"></i></button></td>
