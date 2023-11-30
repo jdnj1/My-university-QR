@@ -160,7 +160,7 @@
               <thead>
                 <tr>
                   <th scope="col">{{'qr.table.name' | translate}}</th>
-                  <th scope="col">{{'table.onoff' | translate}}</th>
+                  <th *ngIf="!duplicate" scope="col">{{'table.onoff' | translate}}</th>
                   <th class="text-center" scope="col">{{'table.edit' | translate}}</th>
                   <th class="text-center" scope="col">{{'qr.table.duplicate' | translate}}</th>
                   <th class="text-center" scope="col">{{'table.delete' | translate}}</th>
@@ -174,18 +174,18 @@
                 </tr>
                 <tr *ngFor="let consult of consults; let i = index" >
                   <td [ngClass]="{'disabled': disableConsult[i]}">{{consult.name}}</td>
-                  <td>
+                  <td *ngIf="!duplicate">
                     <form [formGroup]="consultForm[i]">
                       <div class="form-check form-switch">
                         <input class="form-check-input" style="cursor: pointer;" type="checkbox" id="flexSwitchCheckDefault" formControlName="activated" (change)="activateConsult(i)">
                       </div>
                     </form>
                   </td>
-                  <td class="text-center"><button type="button" class="btn btn-primary" title="{{'qr.table.tooltip.edit' | translate}}" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
-                  <td class="text-center"><button type="button" class="btn btn-danger" title="{{'qr.table.tooltip.delete' | translate}}" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
-                  <td class="text-center"><button *ngIf="i!==consults.length - 1" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
-                  <td class="text-center"><button *ngIf="i!==0" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)"><i class="bi bi-arrow-up"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-primary" title="{{'qr.table.tooltip.edit' | translate}}" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-danger" title="{{'qr.table.tooltip.delete' | translate}}" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" *ngIf="i!==consults.length - 1" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" *ngIf="i!==0" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)"><i class="bi bi-arrow-up"></i></button></td>
                 </tr>
               </tbody>
             </table>

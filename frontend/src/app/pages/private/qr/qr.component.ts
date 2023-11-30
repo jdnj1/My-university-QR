@@ -290,7 +290,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  updateQr(){
+  async updateQr(){
     // Se comprueba el valor del campo share para pasar un 1 o un 0
     if(this.dataQrForm.get('share')?.value){
       this.dataQrForm.get('share')?.setValue(1)
@@ -300,7 +300,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Se comprueba si se esta creando o duplicando un qr
-    if(this.create || this.duplicate){
+    if(this.create){
 
       this.formSubmit = true;
       // Se crea el qr si el formulario no tiene errores
@@ -313,46 +313,50 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           this.idQr = res.qr;
           this.urlQr = `${environment.appBaseUrl}/view/${this.idQr}`;
 
-          if(this.create){
-            this.create = false;
-            this.hasChanges = false;
-            this.qrSubscription.unsubscribe();
-            this.getData();
-            this.router.navigateByUrl(`codeQr/${this.idQr}`);
-            this.alertService.success(this.translateService.instant('alert.qr.create'));
-          }
+          this.create = false;
+          this.hasChanges = false;
+          this.qrSubscription.unsubscribe();
+          this.getData();
+          this.router.navigateByUrl(`codeQr/${this.idQr}`);
+          this.alertService.success(this.translateService.instant('alert.qr.create'));
+
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error(this.translateService.instant('alert.qr.create.error'));
         }
       });
 
-      // Se crean tambien las mismas llamadas si se está duplicando
-      if(this.duplicate){
-        for(let i= 0; i < this.consults.length; i++){
-          this.consultService.getConsultbyId(this.consults[i].idConsult).subscribe({
-            next: async (res:any) =>{
+    }
+    else if(this.duplicate){
+      try {
+        // Primero se crea el codigo QR
+        let create: any = await lastValueFrom(this.qrService.createQr(this.dataQrForm.value));
+        this.idQr = create.qr;
 
-              res.consult.qrCode = this.idQr
-              // Se pasa la info de cada llamada al servicio para crearlas
-              await lastValueFrom(this.consultService.createConsult(res.consult));
+        // Luego se crean las llamadas del QR
+        for(let consult of this.consults){
 
-              if(i === this.consults.length - 1){
-                this.duplicate = false;
-                this.hasChanges = false;
-                this.qrSubscription.unsubscribe();
-                console.log(`codeQr/${this.idQr}`)
-                this.router.navigateByUrl(`codeQr/${this.idQr}`);
-                this.alertService.success(this.translateService.instant('alert.qr.duplicate'));
-              }
-            },
-            error:(err: HttpErrorResponse) =>{
-              this.alertService.error(this.translateService.instant('alert.qr.create.error'))
-            }
-          })
+          // Se obtiene la info de la llamada a duplicar
+          let con: any = await lastValueFrom(this.consultService.getConsultbyId(consult.idConsult));
+          let data = con.consult;
+          data.qrCode = this.idQr;
+
+          // Se pasa la info de cada llamada al servicio para crearlas
+          await lastValueFrom(this.consultService.createConsult(data));
         }
-      }
 
+        // Una vez todo se ha creado se dirige a la pagina de conf del Qr duplicado
+        this.duplicate = false;
+        this.hasChanges = false;
+        this.qrSubscription.unsubscribe();
+        this.getData();
+        this.router.navigateByUrl(`codeQr/${this.idQr}`);
+        this.alertService.success(this.translateService.instant('alert.qr.duplicate'));
+
+      } catch (error) {
+        console.log(error)
+        this.alertService.error(this.translateService.instant('alert.qr.create.error'))
+      }
     }
     else{
 
