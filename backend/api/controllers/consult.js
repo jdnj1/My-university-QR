@@ -144,8 +144,8 @@ const createConsult = async( req , res = response ) => {
             return;
         }
 
-        // Solo el propietario del qr puede añadirle llamadas
-        if( req.uid != qr.user ){
+        // Solo el propietario del qr o un admin puede añadirle llamadas
+        if( req.role !== 1 && req.uid != qr.user ){
             res.status(403).json({
                 msg: 'No eres el propietario de este QR'
             });

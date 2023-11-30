@@ -21,8 +21,11 @@
 
       <div class="card">
         <div class="card-body">
-          <h5 *ngIf="!create" class="card-title">{{'qr.conf' | translate}}</h5>
           <h5 *ngIf="create" class="card-title">{{'qr.new' | translate}}</h5>
+          <div *ngIf="!create" class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">{{'qr.conf' | translate}}</h5>
+            <p *ngIf="!qrOwner()">{{'qr.table.owner' | translate}} <span class="badge bg-primary">{{usuEmail}}</span></p>
+          </div>
           <div class="container">
             <form [formGroup]="dataQrForm">
               <div class="row">
@@ -149,8 +152,7 @@
               </form>
             </div>
             <!-- Botón para añadir nuevas llamadas -->
-            <button *ngIf="idUsu === qrUsu" [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
-            <p *ngIf="idUsu !== qrUsu">{{'qr.table.owner' | translate}} <span class="badge bg-primary">{{usuEmail}}</span></p>
+            <button [disabled]="create" type="button" class="btn btn-primary" (click)="createConsult()"><i class="bi bi-plus-lg"></i> {{'qr.table.add' | translate}}</button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover">
@@ -179,7 +181,7 @@
                     </form>
                   </td>
                   <td class="text-center"><button type="button" class="btn btn-primary" title="{{'qr.table.tooltip.edit' | translate}}" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
-                  <td *ngIf="idUsu === qrUsu" class="text-center"><button type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
+                  <td class="text-center"><button type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
                   <td class="text-center"><button type="button" class="btn btn-danger" title="{{'qr.table.tooltip.delete' | translate}}" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
                   <td class="text-center"><button *ngIf="i!==consults.length - 1" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
                   <td class="text-center"><button *ngIf="i!==0" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)"><i class="bi bi-arrow-up"></i></button></td>

@@ -147,6 +147,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qr = res.qr;
         this.qrUsu = res.qr.user;
 
+        this.qrOwner();
+
         this.urlQr = `${environment.appBaseUrl}/view/${this.qr.uid}`;
 
         //Adaptamos el formato de la fecha para poder ponerla en el input
@@ -494,5 +496,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   cancel(){
     this.router.navigateByUrl(`home`)
+  }
+
+  qrOwner(){
+    return this.idUsu === this.qrUsu;
   }
 }
