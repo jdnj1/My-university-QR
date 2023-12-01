@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  version: "v1.1",
   apiBaseUrl: 'http://localhost:3000/api',
   appBaseUrl: 'http://localhost:4200',
   openApi: 'http://openapi.smartua.es',
@@ -45,9 +46,4 @@ export const environment = {
   messEmpty: "El código QR no tiene llamadas.",
 
   defaultDes: "Descripción del código QR",
-
-  //Colores de fondo para las graficas de solo el valor (preferiblemente colores suaves)
-  maxColor: "#FF7878",
-  minColor: "#1AA3F1",
-  lastColor: "#0EB500"
 };

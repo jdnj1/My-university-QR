@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import jwt_decode from 'jwt-decode';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,6 +11,7 @@ import jwt_decode from 'jwt-decode';
 export class SidebarComponent implements OnInit {
 
   role: number = 0;
+  version: string = environment.version;
 
   constructor(
     private userService: UserService,

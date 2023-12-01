@@ -6,3 +6,9 @@
 .share{
   box-shadow: #0000003d 1px 4px 15px;
 }
+
+.version{
+  font-size: 15px;
+  color: #899bbd;
+  font-weight: 600;
+}

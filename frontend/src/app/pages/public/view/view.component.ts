@@ -18,6 +18,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   @ViewChild('container') containerElement!: ElementRef<HTMLElement>;
   @ViewChild('container', {read: ViewContainerRef}) containerRef!: ViewContainerRef;
   @ViewChild('containerDiv', {read: ViewContainerRef, static: false}) divRef!: ElementRef<HTMLElement>;
+  @ViewChild('main', {static: true}) main!: ElementRef<HTMLElement>;
 
   // Variable donde se va a almacenar el titulo del código QR
   qr: string = '';
@@ -51,6 +52,8 @@ export class ViewComponent implements OnInit,AfterViewInit {
   warning: boolean = false;
   message: string = '';
 
+  version: string = environment.version;
+
 
   constructor(
     private qrService: QrService,
@@ -58,7 +61,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   ){}
 
   ngOnInit(): void {
-
+    console.log(this.version)
   }
 
   ngAfterViewInit(): void {

@@ -1,6 +1,6 @@
 
 
-<main class="view" style="margin-top: 0px;">
+<main #main class="view" style="margin-top: 0px;">
 
   <div *ngIf="loading" class="d-flex justify-content-center align-items-center">
     <div class="spinner-border text-primary m-2" role="status">
@@ -25,5 +25,5 @@
 
     <div #container></div>
   </section>
-
+  <span *ngIf="!loading" class="version">{{version}}</span>
 </main>
