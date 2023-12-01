@@ -180,6 +180,17 @@ export class ChartComponent implements AfterViewInit {
                 axisLabel: {
                   fontSize: 10
                 },
+                anchor: {
+                  show: true,
+                  showAbove: true,
+                  offsetCenter: [0, -50],
+                  size: 20,
+                  icon: 'path://M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z',
+                  keepAspect: true,
+                  itemStyle: {
+                    color: '#000'
+                  }
+                },
                 data: [
                   {
                     value: this.decimals(data.values[0], data.decimals),
@@ -201,10 +212,10 @@ export class ChartComponent implements AfterViewInit {
           // Solo el valor
           option = {
             title: {
-              text: `{date|${format(new Date(data.date), "Pp")}}\n${this.operation[data.operation - 2]}: ${this.decimals(data.values[0], data.decimals)} ${data.metric}\n`,
-              subtext: `\n${data.title}: \n\n ${data.description}`,
+              text: `{date|${format(new Date(data.date), "Pp")}} \n {op|${this.operation[data.operation - 2]}:}\n ${this.decimals(data.values[0], data.decimals)} ${data.metric}\n`,
+              subtext: `\n{name|${data.title}} \n\n ${data.description}`,
               left: "center",
-              top: "15%",
+              top: "3%",
               textStyle: {
                 fontSize: 30,
                 width: 300,
@@ -212,15 +223,28 @@ export class ChartComponent implements AfterViewInit {
                 overflow: 'break',
                 rich:{
                   date: {
-                    color: data.colorValue,
-                    padding: 10
+
+                  },
+                  op: {
+                    fontSize: 15
+                  },
+                  foto: {
+                    height: 50,
+                    backgroundColor: {
+                      image: '/assets/img/termometro.png'
+                    }
                   }
                 }
               },
               subtextStyle: {
-                width: 550,
+                width: 400,
                 overflow: 'break',
-                color: data.colorValue
+                color: data.colorValue,
+                rich: {
+                  name: {
+                    fontSize: 20
+                  }
+                }
               }
             },
             backgroundColor: data.colorBackground,
@@ -249,6 +273,7 @@ export class ChartComponent implements AfterViewInit {
                 }
               }
             ]
+
           }
 
           graph.setOption(option);
