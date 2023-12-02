@@ -61,7 +61,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   ){}
 
   ngOnInit(): void {
-    console.log(this.version)
+
   }
 
   ngAfterViewInit(): void {
