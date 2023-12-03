@@ -97,6 +97,11 @@
   "cons.data.tooltip.add":"Añadir filtro",
   "cons.data.tooltip.delete":"Eliminar filtro",
   "cons.data.mag":"Magnitud",
+  "cons.chart.icon":"Icono",
+  "cons.chart.noIcon":"Sin icono",
+  "cons.icon.energy":"Energía",
+  "cons.icon.temperature":"Temperatura",
+  "cons.icon.humidity":"Humedad",
 
   "user.title":"Lista de usuarios",
   "user.search":"Buscar usuarios",

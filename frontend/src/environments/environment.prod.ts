@@ -35,9 +35,9 @@ export const environment = {
     "Administrador"
   ],
   icons: [
-    "Energía",
-    "Temperatura",
-    "Humedad",
+    "cons.icon.energy",
+    "cons.icon.temperature",
+    "cons.icon.humidity",
   ],
   path: [
     "",
