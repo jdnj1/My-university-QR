@@ -36,6 +36,9 @@ export class ChartComponent implements AfterViewInit {
     environment.lastColor
   ];
 
+  // Los path de los svg de los iconos
+  path = environment.path;
+
   ngAfterViewInit(): void {
     this.chart();
   }
@@ -173,10 +176,15 @@ export class ChartComponent implements AfterViewInit {
                   progress: {
                     show: true
                   },
+                  title: {
+                    show: true,
+                    offsetCenter: ["0", "40%"]
+                  },
                   detail: {
                     valueAnimation: true,
                     fontSize: 20,
-                    formatter: '{value}'
+                    formatter: '{value}',
+                    offsetCenter: ["0", "60%"]
                   },
                   axisLabel: {
                     fontSize: 10
@@ -186,12 +194,13 @@ export class ChartComponent implements AfterViewInit {
                     showAbove: true,
                     offsetCenter: [0, -50],
                     size: 20,
-                    icon: 'path://M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z',
+                    icon: `path://${this.path[data.icon]}`,
                     keepAspect: true,
                     itemStyle: {
                       color: '#000'
                     }
                   },
+                  silent: true,
                   data: [
                     {
                       value: this.decimals(data.values[0], data.decimals),
@@ -212,22 +221,23 @@ export class ChartComponent implements AfterViewInit {
       }
       else{
         //Solo el valor, no se hace con echarts para poder personalizar más
-        const card =
+        let card =
         `<div id="chart${this.id + index}" class="card text-center">
             <div class="p-4">
                 <h6>${format(new Date(data.date), "dd/MM/y p")}</h6>
                 <h6>${this.operation[data.operation - 2]}:</h6>
-                <h2>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-battery-charging" viewBox="0 0 16 16">
-                    <path d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"/>
-                  </svg>
+                <h2>`;
 
-                  <span>${this.decimals(data.values[0], data.decimals)} ${data.metric}</span>
-                </h2>
+        if(this.path[data.icon] !== ""){
+          card += `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="${this.path[data.icon]}"/>
+                  </svg>`
+        }
+
+        card += `<span>${this.decimals(data.values[0], data.decimals)} ${data.metric}</span></h2>
                 <h5>${data.title}</h5>
-                <p>${data.description}</p>
-              </div>
-          </div>`;
+                <p>${data.description}</p></div></div>;`
+
 
         let div = document.createElement('div');
         div.classList.add("col-lg-4");

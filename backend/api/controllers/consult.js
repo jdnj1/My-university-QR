@@ -167,6 +167,7 @@ const createConsult = async( req , res = response ) => {
             chart: ( object.chart >= 0 && object.chart <= 3 ? object.chart : 0 ),
             colorVal: ( validateHTMLColorHex(object.colorVal) ? object.colorVal : undefined ),
             colorBack: ( validateHTMLColorHex(object.colorBack) ? object.colorBack : undefined ),
+            icon: ( object.icon >= 0 ? object.icon : undefined ),
             qrCode: object.qrCode
         };
 
@@ -263,6 +264,7 @@ const updateConsult = async( req , res = response ) => {
             colorBack: ( validateHTMLColorHex(object.colorBack) ? object.colorBack : undefined ),
             operation: ( object.operation >= 1 && object.operation <= 4 ? object.operation : undefined ),
             activated: ( object.activated === 0 || object.activated === 1 ? object.activated : undefined ),
+            icon: ( object.icon >= 0 ? object.icon : undefined ),
             orderConsult: object.orderConsult,
             idConsult: uid
         };

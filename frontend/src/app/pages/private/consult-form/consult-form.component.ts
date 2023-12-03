@@ -53,7 +53,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   filters: boolean = true;
 
    // Form de la primera parte
-   firstForm = this.fb.nonNullable.group({
+  firstForm = this.fb.nonNullable.group({
     name: [''],
     token: ['', Validators.required],
     dateFrom: [''],
@@ -64,6 +64,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     chart: [0],
     colorVal: ['#000000'],
     colorBack: ['#ffffff'],
+    icon: [0],
     number: [0],
     unit: [1],
     decimals: [2],
@@ -103,6 +104,13 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   nameQr: string = '';
 
+  // Los nombres de los iconos
+  icons = environment.icons;
+  // Los path de los svg de los iconos
+  path = environment.path;
+
+
+
   constructor(
     private fb: FormBuilder,
     private consultService: ConsultService,
@@ -139,7 +147,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se almacenan las opciones de filtro en el array
     this.options = environment.filters;
 
-    if(this.duplicate) this.hasChanges = true;
+    if(this.duplicate) this.hasChanges = true
 
   }
 
@@ -198,6 +206,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         this.firstForm.get('chart')?.setValue(this.consult.chart);
         this.firstForm.get('colorVal')?.setValue(this.consult.colorVal);
         this.firstForm.get('colorBack')?.setValue(this.consult.colorBack);
+        this.firstForm.get('icon')?.setValue(this.consult.icon);
         this.firstForm.get('number')?.setValue(this.consult.number);
         this.firstForm.get('unit')?.setValue(this.consult.unit);
         this.firstForm.get('decimals')?.setValue(this.consult.decimals);
@@ -515,6 +524,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
     const chart = this.firstForm.value.chart;
 
+    let icon = this.firstForm.value.icon !== undefined ? this.firstForm.value.icon : 0;
+
     let option;
 
     switch(chart){
@@ -566,9 +577,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
           series: [
             {
               type: 'gauge',
+              name: 'form',
               data: [
                 {
-                  value: 50,
+                  value: 70,
                 }
               ],
               splitLine: {
@@ -580,6 +592,17 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
               },
               axisLabel: {
                 distance: 3.5
+              },
+              anchor: {
+                show: true,
+                showAbove: true,
+                offsetCenter: [0, -40],
+                size: 20,
+                icon: `path://${this.path[icon]}`,
+                keepAspect: true,
+                itemStyle: {
+                  color: '#000'
+                }
               }
             }
           ]
@@ -590,18 +613,55 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       //valor
       case 3:
+
         option = {
-          title: {
-            text: 70,
-            left: "center",
-            top: "center",
-            textStyle: {
-              fontSize: 30,
-              color: this.firstForm.value.colorVal
-            },
-          },
           backgroundColor: this.firstForm.value.colorBack,
-        }
+          series: [
+           {
+             type: 'gauge',
+             data: [
+               {
+                 value: 70,
+               }
+             ],
+             detail: {
+               fontSize: 70,
+               formatter: '{value}',
+               offsetCenter: ["0", "0"],
+               color: this.firstForm.value.colorVal
+             },
+             anchor: {
+               show: true,
+               showAbove: true,
+               offsetCenter: [0, -70],
+               size: 30,
+               icon: `path://${this.path[icon]}`,
+               keepAspect: true,
+               itemStyle: {
+                 color: this.firstForm.value.colorVal
+               }
+             },
+             splitLine: {
+               show: false
+             },
+             axisTick: {
+               show: false,
+             },
+             axisLabel: {
+               show: false,
+             },
+             axisLine: {
+               show: false,
+             },
+             pointer: {
+               show: false
+             },
+             progress: {
+               show: false,
+             }
+           }
+         ]
+       }
 
         graph?.setOption(option, true);
         break;

@@ -112,16 +112,29 @@
                     <option value="3">{{'cons.chart.value' | translate}}</option>
                   </select>
 
-                  <div *ngIf="getChart()" class="mt-2">
-                    <label for="inputColor" class="col-form-label">{{'cons.chart.value.colorNumber' | translate}}</label>
-                    <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorVal">
+                  <div *ngIf="!filters" class="mt-2">
+                    <label class="col-form-label">Iconos</label>
+                    <select class="form-select" aria-label="Default select example" formControlName="icon">
+                      <option value="0">
+                        Sin icono
+                      </option>
+                      <option *ngFor="let icon of icons; let i = index" value="{{i+1}}">
+                        {{icon}}
+                      </option>
+                    </select>
                   </div>
 
-                  <div *ngIf="getChart()" class="mt-2">
-                    <label for="inputColor" class="col-form-label">{{'cons.chart.value.color' | translate}}</label>
-                    <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorBack">
-                  </div>
+                  <div class="row">
+                    <div *ngIf="getChart()" class="mt-2 col">
+                      <label for="inputColor" class="col-form-label">{{'cons.chart.value.colorNumber' | translate}}</label>
+                      <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorVal">
+                    </div>
 
+                    <div *ngIf="getChart()" class="mt-2 col">
+                      <label for="inputColor" class="col-form-label">{{'cons.chart.value.color' | translate}}</label>
+                      <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorBack">
+                    </div>
+                  </div>
 
                 </div>
 

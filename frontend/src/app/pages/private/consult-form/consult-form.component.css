@@ -6,3 +6,7 @@
   border: 5px #28FF32 solid;
   border-radius: 10px;
 }
+
+.bi {
+  font-family: bootstrap-icons;
+}

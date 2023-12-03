@@ -415,7 +415,8 @@ const viewQr = async(req, res) => {
                             operation: consult.operation,
                             decimals: consult.decimals,
                             colorValue: consult.colorVal,
-                            colorBackground: consult.colorBack
+                            colorBackground: consult.colorBack,
+                            icon: consult.icon
                         });
     
                     }
