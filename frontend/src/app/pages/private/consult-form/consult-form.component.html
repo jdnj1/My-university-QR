@@ -113,13 +113,13 @@
                   </select>
 
                   <div *ngIf="!filters" class="mt-2">
-                    <label class="col-form-label">Iconos</label>
+                    <label class="col-form-label">{{'cons.chart.icon' | translate}}</label>
                     <select class="form-select" aria-label="Default select example" formControlName="icon">
                       <option value="0">
-                        Sin icono
+                        {{'cons.chart.noIcon' | translate}}
                       </option>
                       <option *ngFor="let icon of icons; let i = index" value="{{i+1}}">
-                        {{icon}}
+                        {{icon | translate}}
                       </option>
                     </select>
                   </div>
