@@ -114,14 +114,12 @@
 
                   <div *ngIf="!filters" class="mt-2">
                     <label class="col-form-label">{{'cons.chart.icon' | translate}}</label>
-                    <select class="form-select" aria-label="Default select example" formControlName="icon">
-                      <option value="0">
-                        {{'cons.chart.noIcon' | translate}}
-                      </option>
-                      <option *ngFor="let icon of icons; let i = index" value="{{i+1}}">
-                        {{icon | translate}}
-                      </option>
-                    </select>
+                    <ng-container>
+                      <select class="form-select bi" aria-label="Default select example" formControlName="icon">
+                        <option *ngFor="let icon of icons; let i = index" value="{{i}}" [innerHtml]="icon.html +' '+ icon.name">
+                        </option>
+                      </select>
+                    </ng-container>
                   </div>
 
                   <div class="row">

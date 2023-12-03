@@ -36,8 +36,8 @@ export class ChartComponent implements AfterViewInit {
     environment.lastColor
   ];
 
-  // Los path de los svg de los iconos
-  path = environment.path;
+  // Estrucutra de los iconos
+  icons = environment.icons;
 
   ngAfterViewInit(): void {
     this.chart();
@@ -194,7 +194,7 @@ export class ChartComponent implements AfterViewInit {
                     showAbove: true,
                     offsetCenter: [0, -50],
                     size: 20,
-                    icon: `path://${this.path[data.icon]}`,
+                    icon: `path://${this.icons[data.icon].path}`,
                     keepAspect: true,
                     itemStyle: {
                       color: '#000'
@@ -228,9 +228,9 @@ export class ChartComponent implements AfterViewInit {
                 <h6>${this.operation[data.operation - 2]}:</h6>
                 <h2>`;
 
-        if(this.path[data.icon] !== ""){
+        if(this.icons[data.icon].path !== ""){
           card += `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="${this.path[data.icon]}"/>
+                      <path d="${this.icons[data.icon].path}"/>
                   </svg>`
         }
 

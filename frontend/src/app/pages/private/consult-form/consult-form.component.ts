@@ -104,10 +104,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
   nameQr: string = '';
 
-  // Los nombres de los iconos
+  // Estructura de los iconos
   icons = environment.icons;
-  // Los path de los svg de los iconos
-  path = environment.path;
 
 
 
@@ -598,7 +596,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
                 showAbove: true,
                 offsetCenter: [0, -40],
                 size: 20,
-                icon: `path://${this.path[icon]}`,
+                icon: `path://${this.icons[icon].path}`,
                 keepAspect: true,
                 itemStyle: {
                   color: '#000'
@@ -635,7 +633,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
                showAbove: true,
                offsetCenter: [0, -70],
                size: 30,
-               icon: `path://${this.path[icon]}`,
+               icon: `path://${this.icons[icon].path}`,
                keepAspect: true,
                itemStyle: {
                  color: this.firstForm.value.colorVal
