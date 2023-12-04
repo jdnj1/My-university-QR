@@ -54,7 +54,7 @@ export class ChartComponent implements AfterViewInit {
       if(data.type !== 3){
         const div = document.createElement('div');
         div.id = `chart${this.id + index}`;
-        div.style.height = '350px';
+        div.style.height = '400px';
         div.classList.add('echart');
 
         const body = document.createElement('div');
@@ -112,7 +112,10 @@ export class ChartComponent implements AfterViewInit {
 
             option = {
               title: {
-                text: data.title
+                text: data.title,
+                textStyle: {
+                  overflow: 'break',
+                }
               },
               tooltip: {
                 trigger: 'axis',
@@ -120,7 +123,6 @@ export class ChartComponent implements AfterViewInit {
               },
               legend: {
                 data: data.ids,
-                top: '10%',
                 type: 'scroll',
                 pageButtonPosition: 'start'
               },
@@ -135,7 +137,6 @@ export class ChartComponent implements AfterViewInit {
                 }
               },
               grid: {
-                top: '20%', // Espacio en la parte superior de la grafica
                 containLabel: true,
               },
               dataZoom: [
@@ -149,7 +150,44 @@ export class ChartComponent implements AfterViewInit {
                   end: 100
                 }
               ],
-              series: data.values
+              series: data.values,
+              media: [{
+                query: {
+                  maxWidth: 360,
+                },
+                option: {
+                  title: {
+                    textStyle: {
+                      width: 250
+                    }
+                  },
+                  grid: {
+                    top: '25%' // Espacio en la parte superior de la grafica
+                  },
+                  legend: {
+                    top: '15%'
+                  }
+                }
+                },
+                {
+                  query: {
+                    minWidth: 361,
+                  },
+                  option: {
+                    title: {
+                      textStyle: {
+                        width: 500
+                      }
+                    },
+                    grid: {
+                      top: '20%' // Espacio en la parte superior de la grafica
+                    },
+                    legend: {
+                      top: '10%'
+                    }
+                  }
+                }
+              ]
             };
 
             graph.setOption(option);
@@ -167,12 +205,16 @@ export class ChartComponent implements AfterViewInit {
                 confine: true
               },
               title: {
-                text: data.title
+                text: data.title,
+                textStyle: {
+                  overflow: 'break',
+                }
               },
               series: [
                 {
                   name: data.description,
                   type: this.type[data.type],
+                  center: ["50%", "60%"],
                   progress: {
                     show: true
                   },
@@ -208,6 +250,31 @@ export class ChartComponent implements AfterViewInit {
                     }
                   ]
                 }
+              ],
+              media: [{
+                query: {
+                  maxWidth: 360,
+                },
+                option: {
+                  title: {
+                    textStyle: {
+                      width: 350
+                    }
+                  }
+                }
+                },
+                {
+                  query: {
+                    minWidth: 361,
+                  },
+                  option: {
+                    title: {
+                      textStyle: {
+                        width: 500
+                      }
+                    }
+                  }
+                }
               ]
             }
 
@@ -236,7 +303,7 @@ export class ChartComponent implements AfterViewInit {
 
         card += `<span>${this.decimals(data.values[0], data.decimals)} ${data.metric}</span></h2>
                 <h5>${data.title}</h5>
-                <p>${data.description}</p></div></div>;`
+                <p>${data.description}</p></div></div>`;
 
 
         let div = document.createElement('div');
