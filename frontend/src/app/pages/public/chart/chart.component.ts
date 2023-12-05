@@ -83,17 +83,6 @@ export class ChartComponent implements AfterViewInit {
           graph.resize();
         });
 
-
-
-
-
-        if(data.dates){
-          for (let i = 0; i < data.dates.length; i++){
-            data.dates[i] = data.dates[i].slice(0, -1);
-            data.dates[i] = format(new Date(data.dates[i]), "dd/MM/y p");
-          }
-        }
-
         let option;
 
         // Comprobar el tipo de gráfica que es
@@ -109,6 +98,7 @@ export class ChartComponent implements AfterViewInit {
                 valueFormatter: (value: any) => value + ` ${data.metric}`
               }
             }
+
 
             option = {
               title: {

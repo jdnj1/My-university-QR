@@ -6,7 +6,7 @@
 
 const { response } = require('express'); // Response de Express
 const axios = require('axios');
-const {format} = require ('date-fns');
+const { zonedTimeToUtc, utcToZonedTime, format } = require('date-fns-tz')
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
 const { consultListAll, consultById } = require('../dao/consult');
 
@@ -366,16 +366,17 @@ const viewQr = async(req, res) => {
                         result = new Date(now.getTime() - num);
 
                         // Se establecen las fechas con el resultado de la resta
-                        consult.dateFrom = format(result, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                        consult.dateFrom = zonedTimeToUtc(result, 'Europe/Madrid').toISOString();
         
-                        consult.dateTo = format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-                    }
+                        //consult.dateTo = format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                        consult.dateTo = zonedTimeToUtc(now, 'Europe/Madrid').toISOString();
+                    }   
                     else{
                         // Si es absoluta no hay que calcular nada
                         // Adaptamos las fechas
-                        consult.dateFrom = format(new Date(consult.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-        
-                        consult.dateTo = format(new Date(consult.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
+                        consult.dateFrom = consult.dateFrom.toISOString();
+
+                        consult.dateTo = consult.dateTo.toISOString();
                     }
 
                    
@@ -395,7 +396,7 @@ const viewQr = async(req, res) => {
                             uid: Object.values(consult.filters)[0],
                             name: Object.values(consult.filters)[1]
                         }
-                        
+
                         // Se realiza la peticion a Smart University
                         data = await getDataOperation(data);
 
@@ -478,9 +479,13 @@ const viewQr = async(req, res) => {
     
                         let seriesData= [];
                         ids.forEach((id) => {
-                            // Se filtran los arrays por cada uid y se obtienen sus valores
+                            // Se filtran los arrays por cada uid y se obtienen sus valores y sus fechas
                             let series = data.values.filter((array) => array[data.columns.indexOf('uid')] === id)
-                                .map((array) => array[data.columns.indexOf('value')]);
+                                .map((array) => [array[data.columns.indexOf('time')], array[data.columns.indexOf('value')]]);
+                            
+                            series.forEach((array) =>{
+                                array[0] = format(new Date(array[0]), "dd/MM/y HH:mm:ss");
+                            });
     
                             seriesData.push({
                                 name: id,
@@ -489,8 +494,10 @@ const viewQr = async(req, res) => {
                             })
                         });
                         
-                        // Se guardan las fechas
-                        let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')]);
+                        // Se guardan las fechas y se ordenan para utilizarlas en el eje x de las gráficas
+                        let dates = data.values.map((subarray) => subarray[data.columns.indexOf('time')])
+                            .sort((a, b) => a - b)
+                            .map((date) => format(new Date(date), "dd/MM/y HH:mm:ss"));
     
                         // Rellenar el objeto con los datos de la llamada
                         charts.push({
