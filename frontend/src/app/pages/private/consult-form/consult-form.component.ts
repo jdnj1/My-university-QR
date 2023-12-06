@@ -94,7 +94,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   create: boolean = this.idCon === '0'? true : false;
 
   // Booleano para indicar si se va a duplicar una llamada
-  duplicate: boolean = this.idQr === '0'? true : false;
+  duplicate: boolean = this.idCon.at(this.idCon.length - 1) === '*' ? true: false;
 
   formSubmit: boolean = false;
 
@@ -122,9 +122,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.getNameQr();
+
     if(!this.create){
       this.getConsult();
-      this.getNameQr();
     }
     else{
       this.initGraph();
@@ -145,7 +147,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     // Se almacenan las opciones de filtro en el array
     this.options = environment.filters;
 
-    if(this.duplicate) this.hasChanges = true
+    if(this.duplicate) this.hasChanges = true;
 
   }
 
@@ -161,6 +163,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   async getNameQr(){
+    let id = this.idQr;
+
+    if(this.duplicate) id = id.slice(0, -1);
+
     let qr: any = await lastValueFrom(this.qrService.getQrbyId(this.idQr));
     this.nameQr = qr.qr.description;
   }
@@ -370,6 +376,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       });
     }
     else{
+      console.log(this.firstForm.value)
       // Se edita
       this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
         next: (res: any) => {

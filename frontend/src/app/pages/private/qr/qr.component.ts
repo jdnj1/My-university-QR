@@ -468,7 +468,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   copyConsult(index: any){
-    this.router.navigateByUrl(`/consult/0/${this.consults[index].idConsult}`);
+    this.router.navigateByUrl(`/consult/${this.idQr}/${this.consults[index].idConsult}*`);
   }
 
   recieveArray(page: any){
