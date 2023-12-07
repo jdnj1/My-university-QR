@@ -365,6 +365,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           this.alertService.success(this.translateService.instant('alert.qr.update'));
           this.hasChanges = false;
+          this.qrSubscription.unsubscribe();
+          this.getData();
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error(this.translateService.instant('alert.qr.update.error'));
@@ -525,9 +527,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   generatePDF(){
-
     const data = document.getElementById('qrCode');
+
     const doc = new jsPDF('p', 'pt', this.qr.sizePrint);
+
 
     html2canvas(data!).then((canvas) => {
       const img = canvas.toDataURL('image/PNG');
@@ -537,6 +540,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       doc.addImage(img, 'PNG', 0, 0, width, height, undefined, 'FAST');
       doc.save(`${this.qr.description}.pdf`);
     })
+
 
   }
 

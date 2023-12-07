@@ -376,7 +376,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       });
     }
     else{
-      console.log(this.firstForm.value)
       // Se edita
       this.consultService.updateConsult(this.firstForm.value ,this.consult.idConsult).subscribe({
         next: (res: any) => {
