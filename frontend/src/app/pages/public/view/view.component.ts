@@ -79,6 +79,9 @@ export class ViewComponent implements OnInit,AfterViewInit {
         this.qr = res.res.titleQr;
         this.showShare = res.res.share;
 
+        // Se pone el nombre del QR como title de la página
+        document.title = this.qr;
+
         // Se itera entre las gráficas devueltas
         for(let i = 0; i < this.charts.length; i++){
           let index = i;

@@ -210,13 +210,13 @@ export class ChartComponent implements AfterViewInit {
                   },
                   title: {
                     show: true,
-                    offsetCenter: ["0", "40%"]
+                    offsetCenter: ["0", "45%"]
                   },
                   detail: {
                     valueAnimation: true,
                     fontSize: 20,
-                    formatter: '{value}',
-                    offsetCenter: ["0", "60%"]
+                    formatter: `{value} ${data.metric}`,
+                    offsetCenter: ["0", "65%"]
                   },
                   axisLabel: {
                     fontSize: 10
@@ -232,11 +232,10 @@ export class ChartComponent implements AfterViewInit {
                       color: '#000'
                     }
                   },
-                  silent: true,
                   data: [
                     {
                       value: this.decimals(data.values[0], data.decimals),
-                      name: data.metric
+                      name: this.operation[data.operation - 2]
                     }
                   ]
                 }

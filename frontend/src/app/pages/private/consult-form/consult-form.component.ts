@@ -335,7 +335,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
     }
 
     json += `}`;
-    // Se añade este campo al primer forumulario que es el que se envia al update
+    // Se añade este campo al primer formulario que es el que se envia al update
     this.firstForm.setControl('filters', this.fb.nonNullable.control(json));
 
     // Se comprueba si se va a crear, duplicar o a editar una llamada
@@ -412,7 +412,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   selectChart(event: any){
-    this.urlChart = environment.charts[event.target.value]
     this.firstForm.get('chart')?.setValue(Number(event.target.value))
   }
 
@@ -521,7 +520,7 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   }
 
   resizeGraph(){
-    let pru = this.previewElement.nativeElement.style.width
+
     this.previewElement.nativeElement.style.width = this.previewElement.nativeElement.style.width;
 
     const graph = echarts.getInstanceByDom(this.previewElement.nativeElement);
