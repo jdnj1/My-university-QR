@@ -172,4 +172,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   }
 
+  cancel(){
+    this.router.navigateByUrl('home');
+  }
+
 }
