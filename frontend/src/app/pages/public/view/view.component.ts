@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { ChartComponent } from '../chart/chart.component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-view',
@@ -28,6 +29,9 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
   // Se obtiene el id del QR a partir de la url
   idQr = this.route.snapshot.params['id'];
+
+  // Variable donde se almacenan los segundos de recarga del panel
+  interval: number = 0;
 
   // Variables para almacenar la informacion de las llamadas
   charts: any = [];
@@ -65,68 +69,39 @@ export class ViewComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
-    this.viewQr();
+    this.getQr();
   }
 
-  viewQr(){
-    let data: any = [];
+  async getQr(){
+    await this.viewQr();
 
-    this.qrService.viewQr(this.idQr).subscribe({
-      next: (res: any) => {
-        this.loading = false;
-        this.charts = res.res.charts;
-        this.qr = res.res.titleQr;
-        this.showShare = res.res.share;
+    if(this.interval !== 0){
+      setInterval(() => {
+        this.containerRef.clear();
+        this.loading = true;
+        this.viewQr();
+      }, this.interval * 1000)
+    }
+  }
 
-        // Se pone el nombre del QR como title de la página
-        document.title = this.qr;
+  async viewQr(){
+    console.log("sepide")
+    try {
+      let qr: any = await lastValueFrom(this.qrService.viewQr(this.idQr));
 
-        // Se itera entre las gráficas devueltas
-        for(let i = 0; i < this.charts.length; i++){
-          let index = i;
-          if(
-            this.charts[i] !== undefined &&
-            (this.charts[i].type === 2 || this.charts[i].type === 3)
-            ){
-            this.charts[i].columns = true;
-            if(
-              this.charts[i + 1] !== undefined &&
-              (this.charts[i + 1].type === 2 || this.charts[i + 1].type === 3)
-              ){
-              this.charts[i + 1].columns = true;
-              if(
-                this.charts[i + 2] !== undefined &&
-                (this.charts[i + 2].type === 2 || this.charts[i + 2].type === 3)
-                ){
-                this.charts[i + 2].columns = true;
-                data.push(this.charts[i], this.charts[i + 1], this.charts[i + 2])
-                i += 2;
-              }
-              else{
-                data.push(this.charts[i], this.charts[i + 1])
-                i += 1;
-              }
-            }
-            else{
-              data.push(this.charts[i]);
-            }
-          }
-          else{
-            this.charts[i].columns = false;
-            data.push(this.charts[i]);
-          }
+      this.loading = false;
+      this.charts = qr.res.charts;
+      this.qr = qr.res.titleQr;
+      this.showShare = qr.res.share;
+      this.interval = qr.res.interval;
 
-          const chartComponent = this.containerRef.createComponent(ChartComponent)
-          chartComponent.instance.data = data;
-          chartComponent.instance.id = index;
+      // Se pone el nombre del QR como title de la página
+      document.title = this.qr;
 
-          data = [];
-        }
+      this.chartsQr();
 
-      },
-      error: (err: HttpErrorResponse) => {
-        this.loading = false;
+    } catch (err: any) {
+      this.loading = false;
         this.warning = true;
 
         if(err.error.titleQr){
@@ -148,8 +123,57 @@ export class ViewComponent implements OnInit,AfterViewInit {
         else if(err.error.msg === 'desactivadas'){
           this.message = environment.mess0Active;
         }
+    }
+
+  }
+
+
+
+  chartsQr(){
+    let data: any = [];
+
+    // Se itera entre las gráficas devueltas
+    for(let i = 0; i < this.charts.length; i++){
+      let index = i;
+      if(
+        this.charts[i] !== undefined &&
+        (this.charts[i].type === 2 || this.charts[i].type === 3)
+        ){
+        this.charts[i].columns = true;
+        if(
+          this.charts[i + 1] !== undefined &&
+          (this.charts[i + 1].type === 2 || this.charts[i + 1].type === 3)
+          ){
+          this.charts[i + 1].columns = true;
+          if(
+            this.charts[i + 2] !== undefined &&
+            (this.charts[i + 2].type === 2 || this.charts[i + 2].type === 3)
+            ){
+            this.charts[i + 2].columns = true;
+            data.push(this.charts[i], this.charts[i + 1], this.charts[i + 2])
+            i += 2;
+          }
+          else{
+            data.push(this.charts[i], this.charts[i + 1])
+            i += 1;
+          }
+        }
+        else{
+          data.push(this.charts[i]);
+        }
       }
-    })
+      else{
+        this.charts[i].columns = false;
+        data.push(this.charts[i]);
+      }
+
+      const chartComponent = this.containerRef.createComponent(ChartComponent);
+      chartComponent.instance.data = data;
+      chartComponent.instance.id = index;
+
+      data = [];
+    }
+
   }
 
   // Funcion que permite compartir las gráficas

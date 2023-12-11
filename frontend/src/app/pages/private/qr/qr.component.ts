@@ -60,7 +60,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     tagDescription: [''],
     date: [''],
     sizePrint: [''],
-    share: new UntypedFormControl(false)
+    share: new UntypedFormControl(false),
+    refresh: [0]
   });
 
   // Form de búsqueda de QR
@@ -100,7 +101,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         tagDescription: [''],
         date: ['', Validators.required],
         sizePrint: ['a4'],
-        share: [false]
+        share: [false],
+        refresh: [0]
       });
 
       // Nos suscribimos a los cambios que pueda tener el fomrmulario
@@ -186,6 +188,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         else{
           this.dataQrForm.get('share')?.setValue(false);
         }
+
+        this.dataQrForm.get('refresh')?.setValue(this.qr.refresh);
 
         // Botón activar
         if(this.qr.activated === 1){

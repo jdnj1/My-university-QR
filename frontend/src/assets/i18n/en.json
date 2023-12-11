@@ -104,6 +104,8 @@
   "cons.icon.energy":"Energy",
   "cons.icon.temperature":"Temperature",
   "cons.icon.humidity":"Humidity",
+  "qr.data.refresh":"Time in seconds to refresh panel",
+  "qr.data.refresh.span":"0 to not refresh",
 
   "user.title":"Users list",
   "user.search":"Search users",

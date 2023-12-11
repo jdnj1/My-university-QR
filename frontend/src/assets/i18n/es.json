@@ -60,6 +60,8 @@
   "qr.msg":"Este código QR no tiene llamadas",
   "qr.modal.delete.text":"Va a eliminar esta llamada del código QR. Esta acción no se puede revertir.",
   "qr.table.owner":"Código QR de:",
+  "qr.data.refresh":"Tiempo en segundos para recargar panel",
+  "qr.data.refresh.span":"0 para no recargar",
 
   "cons.title":"Configuración de la llamada",
   "cons.form":"Formulario de configuración",

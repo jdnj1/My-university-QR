@@ -54,6 +54,16 @@
                     formControlName="date">
                   <div class="text-danger" *ngIf="!campoValido('date')">{{'qr.data.date.error' | translate}}</div>
 
+                  <div class="row align-items-center">
+                    <label for="refresh" class="col-form-label">{{'qr.data.refresh' | translate}}</label>
+                    <div class="col-sm-3">
+                      <input type="number" name="refresh" class="form-control" id="inputName" formControlName="refresh" min="0">
+                    </div>
+                    <div class="col">
+                      <span class="small">{{'qr.data.refresh.span' | translate}}</span>
+                    </div>
+                  </div>
+
                   <div class="form-check form-switch m-2">
                     <input class="form-check-input" type="checkbox" id="shareButton" formControlName="share">
                     <label class="form-check-label" for="sharebutton">{{'qr.data.share' | translate}}</label>

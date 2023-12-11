@@ -49,7 +49,6 @@ export class ChartComponent implements AfterViewInit {
 
   chart(){
     this.data.forEach((data: any, index: number) => {
-      console.log(data)
 
       if(data.type !== 3){
         const div = document.createElement('div');
