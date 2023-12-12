@@ -62,6 +62,7 @@ CREATE TABLE `qrcode` (
   `date` date NOT NULL DEFAULT current_timestamp(),
   `activated` tinyint(4) NOT NULL DEFAULT 0,
   `share` tinyint(4) NOT NULL DEFAULT 0,
+  `refresh` int(11) NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
