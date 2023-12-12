@@ -85,7 +85,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
   }
 
   async viewQr(){
-    console.log("sepide")
+
     try {
       let qr: any = await lastValueFrom(this.qrService.viewQr(this.idQr));
 
