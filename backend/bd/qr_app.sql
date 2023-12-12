@@ -129,8 +129,7 @@ ALTER TABLE `user`
 --
 
 INSERT INTO `user` (`email`, `password`, `role`, `lim_consult`) VALUES
-('userpass@gmail.com', '$2a$10$TpNX4WQ52y9nuAypqmrsqeVqbq5.YhjtEvQpqTwD8Sd1I5lx5nPNi', 1, 0),
-('jvberna@ua.es', '$2a$10$fg6/CIveADkDugAdYBsFdO6XcxYkz7KPrZvOn3ZPxSnx395e9ys8i', 1, 0);
+('userpass@gmail.com', '$2a$10$TpNX4WQ52y9nuAypqmrsqeVqbq5.YhjtEvQpqTwD8Sd1I5lx5nPNi', 1, 0);
 
 
 
