@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2023 a las 19:29:27
+-- Tiempo de generación: 03-12-2023 a las 19:39:04
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -48,7 +48,6 @@ CREATE TABLE `consult` (
   `orderConsult` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `qrcode`
@@ -63,14 +62,8 @@ CREATE TABLE `qrcode` (
   `date` date NOT NULL DEFAULT current_timestamp(),
   `activated` tinyint(4) NOT NULL DEFAULT 0,
   `share` tinyint(4) NOT NULL DEFAULT 0,
-  `refresh` int(11) NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `qrcode`
---
-
 
 -- --------------------------------------------------------
 
@@ -85,17 +78,6 @@ CREATE TABLE `user` (
   `role` tinyint(4) NOT NULL,
   `lim_consult` int(4) NOT NULL DEFAULT 10
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `user`
---
-
-INSERT INTO `user` (`idUser`, `email`, `password`, `role`, `lim_consult`) VALUES
-(39, 'jvberna@ua.es', '$2a$10$fg6/CIveADkDugAdYBsFdO6XcxYkz7KPrZvOn3ZPxSnx395e9ys8i', 1, 0);
-
---
--- Índices para tablas volcadas
---
 
 --
 -- Indices de la tabla `consult`
@@ -118,6 +100,7 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`idUser`),
   ADD UNIQUE KEY `email` (`email`);
 
+
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
@@ -126,19 +109,30 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `consult`
 --
 ALTER TABLE `consult`
-  MODIFY `idConsult` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
+  MODIFY `idConsult` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `qrcode`
 --
 ALTER TABLE `qrcode`
-  MODIFY `idQr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
+  MODIFY `idQr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+--
+-- Volcado de datos para la tabla `user`
+--
+
+INSERT INTO `user` (`email`, `password`, `role`, `lim_consult`) VALUES
+('userpass@gmail.com', '$2a$10$TpNX4WQ52y9nuAypqmrsqeVqbq5.YhjtEvQpqTwD8Sd1I5lx5nPNi', 1, 0),
+('jvberna@ua.es', '$2a$10$fg6/CIveADkDugAdYBsFdO6XcxYkz7KPrZvOn3ZPxSnx395e9ys8i', 1, 0);
+
+
 
 --
 -- Restricciones para tablas volcadas
