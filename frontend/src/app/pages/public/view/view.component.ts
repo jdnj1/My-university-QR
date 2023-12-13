@@ -32,6 +32,7 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
   // Variable donde se almacenan los segundos de recarga del panel
   interval: number = 0;
+  intervalID: any;
 
   // Variables para almacenar la informacion de las llamadas
   charts: any = [];
@@ -69,22 +70,16 @@ export class ViewComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.getQr();
-  }
-
-  async getQr(){
-    await this.viewQr();
-
-    if(this.interval !== 0){
-      setInterval(() => {
-        this.containerRef.clear();
-        this.loading = true;
-        this.viewQr();
-      }, this.interval * 1000)
-    }
+    this.viewQr();
   }
 
   async viewQr(){
+
+    // Si ya hay un timer, se elimina para evitar errores
+    // y que espere a que el panel reciba todos los datos
+    if(this.intervalID){
+      clearInterval(this.intervalID)
+    }
 
     try {
       let qr: any = await lastValueFrom(this.qrService.viewQr(this.idQr));
@@ -99,6 +94,15 @@ export class ViewComponent implements OnInit,AfterViewInit {
       document.title = this.qr;
 
       this.chartsQr();
+
+      // Se crea el timer
+      if(this.interval > 0){
+        this.intervalID = setInterval(() => {
+          this.containerRef.clear();
+          this.loading = true;
+          this.viewQr();
+        }, this.interval * 1000)
+      }
 
     } catch (err: any) {
       this.loading = false;
