@@ -134,7 +134,6 @@ export class UserService {
         return true;
       }),
       catchError(err => {
-        console.warn(err);
         localStorage.removeItem('token');
         return of(false);
       })
