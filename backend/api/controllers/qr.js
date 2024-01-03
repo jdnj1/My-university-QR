@@ -6,7 +6,7 @@
 
 const { response } = require('express'); // Response de Express
 const axios = require('axios');
-const { zonedTimeToUtc, utcToZonedTime, format } = require('date-fns-tz')
+const { zonedTimeToUtc, format } = require('date-fns-tz');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
 const { consultListAll, consultById } = require('../dao/consult');
 
@@ -360,19 +360,19 @@ const viewQr = async(req, res) => {
                     // Si es la relativa se hacen los calculos
                     if(consult.typeDate === 1){
                         let now = new Date();
-                        let result;
+                        let nowUTC = zonedTimeToUtc(now, process.env.TZ);
+                        let dateFrom;
                         let num = consult.number;
 
                         // Se pasa el numero introducido a milisegundos
                         num *= time[consult.unit - 1];
 
-                        result = new Date(now.getTime() - num);
+                        dateFrom = new Date(nowUTC.getTime() - num);
 
                         // Se establecen las fechas con el resultado de la resta
-                        consult.dateFrom = zonedTimeToUtc(result, 'Europe/Madrid').toISOString();
-        
-                        //consult.dateTo = format(now, "yyyy-MM-dd'T'HH:mm:ss.SSS") + 'Z';
-                        consult.dateTo = zonedTimeToUtc(now, 'Europe/Madrid').toISOString();
+                        consult.dateFrom = dateFrom.toISOString()
+                        
+                        consult.dateTo = nowUTC.toISOString();
                     }   
                     else{
                         // Si es absoluta no hay que calcular nada

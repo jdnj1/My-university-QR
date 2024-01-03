@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  version: "v1.3.2",
+  version: "v1.3.3",
   apiBaseUrl: 'http://localhost:3000/api',
   appBaseUrl: 'http://localhost:4200',
   openApi: 'http://openapi.smartua.es',
