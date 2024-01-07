@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { utcToZonedTime, format } from 'date-fns-tz';
+import { formatInTimeZone } from 'date-fns-tz';
 import * as echarts from 'echarts';
 import { environment } from 'src/environments/environment';
 
@@ -38,6 +38,9 @@ export class ChartComponent implements AfterViewInit {
 
   // Estrucutra de los iconos
   icons = environment.icons;
+
+  // Zona horaria
+  timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   ngAfterViewInit(): void {
     this.chart();
@@ -279,8 +282,8 @@ export class ChartComponent implements AfterViewInit {
         let card =
         `<div id="chart${this.id + index}" class="card text-center">
             <div class="p-4">
-                <h6>${format(new Date(data.date), "dd/MM/y p")}</h6>
-                <p style="font-size: .8em; font-weight: bold">UTC: ${format(utcToZonedTime(data.date, "UTC"), "dd/MM/y p", {timeZone: "UTC"})}</p>
+                <h6>${formatInTimeZone(data.date, this.timezone, "dd/MM/y p")}</h6>
+                <p style="font-size: .8em; font-weight: bold">UTC: ${formatInTimeZone(data.date,"utc", "dd/MM/y p")}</p>
                 <h6>${this.operation[data.operation - 2]}:</h6>
                 <h2>`;
 

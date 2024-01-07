@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { TranslateService } from '@ngx-translate/core';
 import * as echarts from 'echarts';
 import { lastValueFrom } from 'rxjs';
@@ -107,6 +107,9 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   // Estructura de los iconos
   icons = environment.icons;
 
+  // Zona horaria
+  timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 
 
   constructor(
@@ -180,10 +183,10 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
         // Se adaptan las fechas
         this.consult.dateFrom = new Date(this.consult.dateFrom);
-        this.consult.dateFrom = format(this.consult.dateFrom, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        this.consult.dateFrom = formatInTimeZone(this.consult.dateFrom, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         this.consult.dateTo = new Date(this.consult.dateTo);
-        this.consult.dateTo = format(this.consult.dateTo, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        this.consult.dateTo = formatInTimeZone(this.consult.dateTo, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         // Se coprueba el tipo de fecha seleccionado Absoluta/Relativa
         if(this.consult.typeDate === 0){
