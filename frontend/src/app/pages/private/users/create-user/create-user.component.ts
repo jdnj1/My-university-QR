@@ -1,11 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-user',

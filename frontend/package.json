@@ -21,7 +21,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "angularx-qrcode": "^16.0.0",
-    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "echarts": "^5.4.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",

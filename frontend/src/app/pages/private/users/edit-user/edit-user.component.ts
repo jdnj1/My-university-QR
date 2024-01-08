@@ -1,11 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
-import Swal from 'sweetalert2';
 import { environment } from '../../../../../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 

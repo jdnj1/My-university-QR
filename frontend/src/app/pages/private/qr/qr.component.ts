@@ -7,13 +7,13 @@ import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UserService } from 'src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-qr',
@@ -77,6 +77,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   // Variables para comprobar si hay cambios el formulario de configuracion
   qrSubscription: any;
   hasChanges: boolean = false;
+
+  // Zona horaria
+  timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   constructor(
     private fb: FormBuilder,
@@ -162,7 +165,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
         //Adaptamos el formato de la fecha para poder ponerla en el input
         let date = new Date(this.qr.date);
-        this.qr.date = format(date, "yyyy-MM-dd");
+        this.qr.date = formatInTimeZone(date, this.timezone, "yyyy-MM-dd");
 
         // Se rellenan los datos del formulario con los datos del QR
         if(this.duplicate){
@@ -345,8 +348,8 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           let data = con.consult;
 
           // Se adaptan las fechas
-          data.dateFrom = format(new Date(data.dateFrom), "yyyy-MM-dd'T'HH:mm:ss.SSS");
-          data.dateTo = format(new Date(data.dateTo), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+          data.dateFrom = formatInTimeZone(new Date(data.dateFrom), this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+          data.dateTo = formatInTimeZone(new Date(data.dateTo), this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
           data.qrCode = this.idQr;
 

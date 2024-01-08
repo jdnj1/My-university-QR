@@ -8,7 +8,7 @@ const { response } = require('express'); // Response de Express
 const axios = require('axios');
 const { zonedTimeToUtc, format } = require('date-fns-tz');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
-const { consultListAll, consultById } = require('../dao/consult');
+const { consultListAll } = require('../dao/consult');
 
 /**
  * Devuelve todos los codigos qr de la BD.

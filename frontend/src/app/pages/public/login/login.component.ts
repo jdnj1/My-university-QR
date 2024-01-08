@@ -1,9 +1,8 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
-import { loginform } from '../../../interfaces/login-form.interface';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 
 @Component({

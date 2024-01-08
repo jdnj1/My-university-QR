@@ -1,11 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewContainerRef, createComponent } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { QrService } from 'src/app/services/qr.service';
-import { UniversityService } from 'src/app/services/university.service';
 import { environment } from '../../../../environments/environment';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { ConsultService } from 'src/app/services/consult.service';
-import { AlertService } from 'src/app/utils/alert/alert.service';
 import { ChartComponent } from '../chart/chart.component';
 import { lastValueFrom } from 'rxjs';
 
