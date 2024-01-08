@@ -347,10 +347,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           let con: any = await lastValueFrom(this.consultService.getConsultbyId(consult.idConsult));
           let data = con.consult;
 
-          // Se adaptan las fechas
-          data.dateFrom = formatInTimeZone(new Date(data.dateFrom), this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
-          data.dateTo = formatInTimeZone(new Date(data.dateTo), this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
-
           data.qrCode = this.idQr;
 
           // Se pasa la info de cada llamada al servicio para crearlas

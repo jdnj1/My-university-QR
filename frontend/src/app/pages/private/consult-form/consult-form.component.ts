@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultService } from 'src/app/services/consult.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
-import { formatInTimeZone, toDate } from 'date-fns-tz';
 import { TranslateService } from '@ngx-translate/core';
 import * as echarts from 'echarts';
 import { lastValueFrom } from 'rxjs';
@@ -107,11 +106,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
   // Estructura de los iconos
   icons = environment.icons;
 
-  // Zona horaria
-  timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-
-
   constructor(
     private fb: FormBuilder,
     private consultService: ConsultService,
@@ -180,22 +174,11 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
       next: (res: any) => {
 
         this.consult =  res.consult;
-        console.log(res.consult)
-
-        console.log(this.timezone)
-        console.log(toDate(this.consult.dateFrom), {timeZone: this.timezone});
-        console.log(toDate(this.consult.dateFrom));
-        let pru = toDate(this.consult.dateFrom, {timeZone: this.timezone});
-        console.log(formatInTimeZone(pru, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS"))
-        console.log(this.consult.dateFrom)
-        console.log(formatInTimeZone(this.consult.dateFrom, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS"))
 
         // Se adaptan las fechas
-        this.consult.dateFrom = toDate(this.consult.dateFrom, {timeZone: this.timezone});
-        this.consult.dateFrom = formatInTimeZone(this.consult.dateFrom, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        this.consult.dateFrom = this.consult.dateFrom.slice(0, -1);
 
-        this.consult.dateTo = toDate(this.consult.dateTo, {timeZone: this.timezone});
-        this.consult.dateTo = formatInTimeZone(this.consult.dateTo, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        this.consult.dateTo = this.consult.dateTo.slice(0, -1);
 
         // Se coprueba el tipo de fecha seleccionado Absoluta/Relativa
         if(this.consult.typeDate === 0){
