@@ -183,7 +183,8 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         console.log(res.consult)
 
         console.log(this.timezone)
-        console.log(toDate(this.consult.dateFrom) , {timeZone: this.timezone});
+        console.log(toDate(this.consult.dateFrom), {timeZone: this.timezone});
+        console.log(toDate(this.consult.dateFrom));
         let pru = toDate(this.consult.dateFrom, {timeZone: this.timezone});
         console.log(formatInTimeZone(pru, this.timezone, "yyyy-MM-dd'T'HH:mm:ss.SSS"))
         console.log(this.consult.dateFrom)
