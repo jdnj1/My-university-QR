@@ -7,7 +7,7 @@ import { QrService } from 'src/app/services/qr.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
-import { formatInTimeZone } from 'date-fns-tz';
+import { format, formatInTimeZone } from 'date-fns-tz';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -346,6 +346,10 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           // Se obtiene la info de la llamada a duplicar
           let con: any = await lastValueFrom(this.consultService.getConsultbyId(consult.idConsult));
           let data = con.consult;
+
+          // Se adaptan las fechas
+          data.dateFrom = data.dateFrom.slice(0, -1);
+          data.dateTo = data.dateTo.slice(0, -1);
 
           data.qrCode = this.idQr;
 
