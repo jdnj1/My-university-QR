@@ -122,9 +122,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.user.delete'));
 
-            this.pagination.numPage = 0;
-
-            this.getUsers(0);
+            this.pagination.getPages();
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error(this.translateService.instant('alert.user.delete.error'));

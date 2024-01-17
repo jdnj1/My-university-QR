@@ -218,9 +218,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.qr.delete.success'));
 
-            this.pagination.numPage = 0;
-
-            this.getQr(0);
+            this.pagination.getPages();
 
           },
           error: (err: HttpErrorResponse) => {

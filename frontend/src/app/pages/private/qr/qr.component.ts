@@ -432,9 +432,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.cons.delete'));
 
-            this.pagination.numPage = 0;
-
-            this.getConsults(0);
+            this.pagination.getPages();
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error(this.translateService.instant('alert.cons.delete.error'));
