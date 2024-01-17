@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { PaginationService } from 'src/app/services/pagination.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,10 +17,12 @@ export class PageComponent implements OnInit, OnChanges{
   page: number = 0;
 
 
-
-  constructor(){}
+  constructor(
+    private paginationService: PaginationService
+  ){}
 
   ngOnInit(): void {
+    this.numPage = this.paginationService.getPos();
     this.getPages();
   }
 
@@ -32,27 +35,27 @@ export class PageComponent implements OnInit, OnChanges{
     // Se calcula el numero de paginas que debe haber
     this.page = Math.ceil(this.pageTotal / this.itemPerPag);
 
-    // Si se elimina el ultimo elemento de una pagina
-    if(this.page !== 0 && this.page === this.numPage){
-      this.numPage -= 1;
-    }
-
     this.pageArray = [];
     for (let i = 0; i < this.page; i++) {
       this.pageArray.push(i+1);
     }
-
-    this.eventArray.emit(this.numPage);
   }
 
   pageQr(page: any){
     if(page !== this.numPage){
-
       this.numPage = page;
-
+      this.paginationService.setPos(this.numPage);
       this.eventArray.emit(page);
-
     }
+  }
+
+  deleteLast(){
+    // Se controla que si se elimina el ultimo elemento de la pagina salte a la anterior
+    if(this.pageTotal != 1 && this.pageTotal === this.itemPerPag * this.numPage + 1){
+      this.numPage -= 1;
+      this.paginationService.setPos(this.numPage);
+    }
+    this.eventArray.emit(this.numPage);
   }
 
 }

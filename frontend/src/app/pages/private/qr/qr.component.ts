@@ -14,6 +14,7 @@ import html2canvas from 'html2canvas';
 import { UserService } from 'src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
   selector: 'app-qr',
@@ -89,10 +90,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
     private alertService: AlertService,
     private router: Router,
     private translateService: TranslateService,
-    private userService: UserService
+    private userService: UserService,
+    private paginationService: PaginationService
   ){}
 
   ngOnInit(): void {
+
+    this.paginationService.setTable(1);
+
     // Si el id de la ruta es 0 es porque se va a crear un nuevo codigo QR
     if(!this.create){
       this.getData();
@@ -145,7 +150,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   getData(){
     this.idUsu = this.userService.getId();
     this.getQr();
-    this.getConsults(0);
+    this.getConsults(this.paginationService.getQr() * 10);
   }
 
   campoValido(campo: string){
@@ -432,7 +437,7 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.cons.delete'));
 
-            this.pagination.getPages();
+            this.pagination.deleteLast();
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error(this.translateService.instant('alert.cons.delete.error'));

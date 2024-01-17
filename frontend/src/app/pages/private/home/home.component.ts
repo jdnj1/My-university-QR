@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 import { PrintService } from 'src/app/services/print.service';
 import { qr } from 'src/app/interfaces/qr.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
   selector: 'app-home',
@@ -63,10 +64,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private route: Router,
     private printService: PrintService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private paginationService: PaginationService
   ){}
 
   ngOnInit(): void{
+
+    this.paginationService.setTable(0);
+
     // Obtenemos los datos del usuario
     this.idUser = this.userService.getId();
     this.userService.getUserById(this.idUser).subscribe({
@@ -79,7 +84,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     //Obtenemos los códigos QR
-    this.getQr(0);
+    this.getQr(this.paginationService.getHome() * 10);
   }
 
   ngAfterViewInit(): void {
@@ -217,8 +222,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.qrService.deleteQr(this.codesQr[index].idQr).subscribe({
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.qr.delete.success'));
-
-            this.pagination.getPages();
+            this.pagination.deleteLast();
 
           },
           error: (err: HttpErrorResponse) => {
@@ -284,6 +288,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 
   recieveArray(page: any){
+    console.log("hola");
     this.getQr(page*10, this.lastSearch);
 
   }

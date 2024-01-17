@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PageComponent } from 'src/app/layouts/pagination/page.component';
+import { PaginationService } from 'src/app/services/pagination.service';
 import { UserService } from 'src/app/services/user.service';
 import { AlertService } from 'src/app/utils/alert/alert.service';
 import Swal from 'sweetalert2';
@@ -45,13 +46,17 @@ export class UsersComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private alertService: AlertService,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private paginationService: PaginationService
   ){
 
   }
 
   async ngOnInit(): Promise<void> {
-    this.getUsers(0);
+
+    this.paginationService.setTable(2);
+
+    this.getUsers(this.paginationService.getUser() * 10);
     await this.userService.getUserData();
     this.appUser = this.userService.email;
   }
@@ -122,7 +127,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
           next: (res: any) => {
             this.alertService.success(this.translateService.instant('alert.user.delete'));
 
-            this.pagination.getPages();
+            this.pagination.deleteLast();
           },
           error: (err: HttpErrorResponse) => {
             this.alertService.error(this.translateService.instant('alert.user.delete.error'));
