@@ -320,6 +320,79 @@ const updateConsult = async( req , res = response ) => {
 }
 
 /**
+ * Intercambia el orden de una consulta con la que tiene justo antes o despues
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const orderConsult = async( req , res = response ) => {
+    const idFirst = req.params.idFirst;
+    const idSecond = req.params.idSecond;
+    
+    try{
+        // Comprueba que haya una llamada con el primer ID.
+        let consultF = await consultById(idFirst);
+
+        if( consultF === null ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Lo mismo con el segundo 
+        let consultS = await consultById(idSecond);
+
+        if( consultS === null ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Se obtiene el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(consultF.qrCode);
+
+        // Se comprueba que el usuario no intente actualizar una llamada que no sea suya si no es admin
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para actualizar la llamada'
+            });
+
+            return;
+        }
+
+        // Se le suma uno al orden de la primera llamada
+        let data = {
+            orderConsult: consultF.orderConsult + 1,
+            idConsult: consultF.idConsult
+        };
+
+        // Se actualiza. 
+        await consultUpdate(data);
+
+        // A la segunda llamada se le resta uno al orden
+        data = {
+            orderConsult: consultS.orderConsult - 1,
+            idConsult: consultS.idConsult
+        };
+
+        // Se actualiza. 
+        await consultUpdate(data);
+
+        
+        res.status( 200 ).json( {msg: 'Llamada actualizada'} );
+
+    } catch(error){
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'ERROR al actualizar llamada'
+        });
+    }
+}
+
+/**
  * Elimina una llamada.
  * 
  * @param {*} req Peticion del cliente.
@@ -365,4 +438,4 @@ const deleteConsult = async(req, res) => {
     
 }
 
-module.exports = {getConsult, getConsultById, createConsult, updateConsult, deleteConsult};
+module.exports = {getConsult, getConsultById, createConsult, updateConsult, orderConsult, deleteConsult};

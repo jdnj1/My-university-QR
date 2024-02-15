@@ -64,6 +64,15 @@ export class ConsultService {
     });
   }
 
+  orderConsult(idFirst: any, idSecond: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.patch(`${environment.apiBaseUrl}/consult/order/${idFirst}/${idSecond}`, null, {
+      headers: {'x-token': token}
+    });
+  }
+
+
   deleteConsult(id: any){
     const token = localStorage.getItem('token') || '';
 

@@ -8,7 +8,7 @@ const { Router } = require('express'); // Router de Express
 const { check } = require('express-validator'); // check de Express Validator
 
 // Propio
-const {getConsult, getConsultById, createConsult, updateConsult, deleteConsult} = require('../controllers/consult')
+const {getConsult, getConsultById, createConsult, updateConsult, orderConsult, deleteConsult} = require('../controllers/consult')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
 const {validateJWT} = require('../middleware/validate-jwt')
@@ -38,7 +38,15 @@ router.put('/:id', [
     validateJWT,
     validateFields,
     validateRole
-], updateConsult);    
+], updateConsult);
+
+router.patch('/order/:idFirst/:idSecond', [
+    check('idFirst', 'El identificador no es válido').isInt(),
+    check('idSecond', 'El identificador no es válido').isInt(),
+    validateJWT,
+    validateFields,
+    validateRole
+], orderConsult);
 
 router.delete('/:id', [
     check('id', 'El identificador no es válido').isInt(),

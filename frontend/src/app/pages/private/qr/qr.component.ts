@@ -495,17 +495,9 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Funciones para ordenar las llamadas del Qr
   down(index: any){
-    // Se le suma +1 en el orden y al de abajo se le resta para asi intercambiar los puestos
 
-    this.consultService.updateConsult({orderConsult: index + 1}, this.consults[index].idConsult).subscribe({
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
-      }
-    });
-
-    this.consultService.updateConsult({orderConsult: index}, this.consults[index + 1].idConsult).subscribe({
-      next: (res: any) => {
+    this.consultService.orderConsult(this.consults[index].idConsult, this.consults[index + 1].idConsult).subscribe({
+      next: () => {
         this.alertService.success((this.translateService.instant('alert.cons.order')));
         // Obtenemos de nuevo la lista de las llamadas
         this.getConsults(0);
@@ -515,22 +507,14 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });
-
   }
 
   up(index: any){
     // Se le resta -1 en el orden y al de arriba se le suma para asi intercambiar los puestos
 
-    this.consultService.updateConsult({orderConsult: index - 1}, this.consults[index].idConsult).subscribe({
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
-      }
-    });
-
-    this.consultService.updateConsult({orderConsult: index}, this.consults[index - 1].idConsult).subscribe({
-      next: (res: any) => {
-        this.alertService.success(this.translateService.instant('alert.cons.order'));
+    this.consultService.orderConsult(this.consults[index - 1].idConsult, this.consults[index].idConsult).subscribe({
+      next: () => {
+        this.alertService.success((this.translateService.instant('alert.cons.order')));
         // Obtenemos de nuevo la lista de las llamadas
         this.getConsults(0);
       },
