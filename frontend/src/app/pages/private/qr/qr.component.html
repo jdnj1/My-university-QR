@@ -197,8 +197,8 @@
                   <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-primary" title="{{'qr.table.tooltip.edit' | translate}}" (click)="goConsult(i)"><i class="bi bi-pencil-square"></i></button></td>
                   <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-success" title="{{'qr.table.tooltip.duplicate' | translate}}" (click)="copyConsult(i)"><i class="ri-file-copy-fill"></i></button></td>
                   <td class="text-center"><button [disabled]="duplicate" type="button" class="btn btn-danger" title="{{'qr.table.tooltip.delete' | translate}}" (click)="deleteConsult(i)"><i class="bi bi-trash"></i></button></td>
-                  <td class="text-center"><button [disabled]="duplicate" *ngIf="i!==consults.length - 1" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
-                  <td class="text-center"><button [disabled]="duplicate" *ngIf="i!==0" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)"><i class="bi bi-arrow-up"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" *ngIf="totalCons!==consults[i].orderConsult + 1" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.down' | translate}}" (click)="down(i)"><i class="bi bi-arrow-down"></i></button></td>
+                  <td class="text-center"><button [disabled]="duplicate" *ngIf="0!==consults[i].orderConsult" type="button" class="btn btn-secondary" title="{{'qr.table.tooltip.up' | translate}}" (click)="up(i)"><i class="bi bi-arrow-up"></i></button></td>
                 </tr>
               </tbody>
             </table>

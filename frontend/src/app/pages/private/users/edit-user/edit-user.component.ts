@@ -77,7 +77,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
         this.alertService.error(this.translateService.instant('alert.user.update.error'))
       }
     });
@@ -97,8 +96,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
     if(!this.userForm.get('email')?.dirty){
       this.userForm.removeControl('email');
     }
-
-    console.log(this.userForm.value)
 
     this.userService.updateUser(this.userForm.value, this.user.idUser).subscribe({
       next: (res: any) => {

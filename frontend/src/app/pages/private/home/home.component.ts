@@ -288,7 +288,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 
   recieveArray(page: any){
-    console.log("hola");
     this.getQr(page*10, this.lastSearch);
 
   }

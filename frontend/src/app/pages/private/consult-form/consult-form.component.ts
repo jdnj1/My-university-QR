@@ -265,7 +265,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
 
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
         this.alertService.error(this.translateService.instant('alert.cons.get'));
       }
     });
@@ -366,7 +365,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error(this.translateService.instant('alert.cons.update.error'));
-          console.log(err);
         }
       });
     }
@@ -379,7 +377,6 @@ export class ConsultFormComponent implements OnInit, OnDestroy {
         },
         error: (err: HttpErrorResponse) => {
           this.alertService.error(this.translateService.instant('alert.cons.update.error'));
-          console.log(err);
         }
       });
     }

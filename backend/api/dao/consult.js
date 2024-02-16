@@ -16,7 +16,7 @@ const consultList = async(data) => {
 
         query += ' ORDER BY orderConsult';
 
-        // Se realiza una busqueda de todos los usuarios para poder hacer la paginación
+        // Se realiza una busqueda de todas las llamadas para poder hacer la paginación
         const [total] = await dbConsult(query, paramsQuery);
 
         query += ` LIMIT ?, ?`;
@@ -49,6 +49,19 @@ const consultById = async(id) => {
         const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE idConsult= ? LIMIT 1`;
 
         const paramsQuery = [id];
+        const [consult] = await dbConsult(query, paramsQuery);
+
+        return consult.length === 0 ? null : consult[0];
+    } catch (error) {
+        throw error;
+    }
+}
+
+const consultByOrder = async(data) => {
+    try {
+        const query = `SELECT * FROM ${process.env.CONSULTTABLE} WHERE orderConsult= ? AND qrCode = ? LIMIT 1`;
+
+        const paramsQuery = [data.order, data.id];
         const [consult] = await dbConsult(query, paramsQuery);
 
         return consult.length === 0 ? null : consult[0];
@@ -100,4 +113,4 @@ const consultDelete = async(id) => {
     }   
 }
 
-module.exports = {consultList, consultListAll, consultById, consutlCreate, consultUpdate, consultDelete}
+module.exports = {consultList, consultListAll, consultById, consultByOrder, consutlCreate, consultUpdate, consultDelete}

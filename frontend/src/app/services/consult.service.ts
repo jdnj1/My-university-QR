@@ -64,10 +64,18 @@ export class ConsultService {
     });
   }
 
-  orderConsult(idFirst: any, idSecond: any){
+  downConsult(id: any){
     const token = localStorage.getItem('token') || '';
 
-    return this.http.patch(`${environment.apiBaseUrl}/consult/order/${idFirst}/${idSecond}`, null, {
+    return this.http.patch(`${environment.apiBaseUrl}/consult/down/${id}`, null, {
+      headers: {'x-token': token}
+    });
+  }
+
+  upConsult(id: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.patch(`${environment.apiBaseUrl}/consult/up/${id}`, null, {
       headers: {'x-token': token}
     });
   }

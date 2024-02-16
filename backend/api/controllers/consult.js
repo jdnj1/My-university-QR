@@ -6,7 +6,7 @@
 const {format} = require ('date-fns');
 // Propio
 const { response } = require('express'); // Response de Express
-const { consultList, consultById, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
+const { consultList, consultById, consultByOrder, consutlCreate, consultUpdate, consultDelete } = require('../dao/consult');
 const { validateJSON } = require('../helpers/verify-json');
 const { qrById } = require('../dao/qr');
 const { validateHTMLColorHex, default: validateColor } = require('validate-color');
@@ -320,18 +320,17 @@ const updateConsult = async( req , res = response ) => {
 }
 
 /**
- * Intercambia el orden de una consulta con la que tiene justo antes o despues
+ * Intercambia el orden de una consulta con la que tiene justo despues
  * 
  * @param {*} req Peticion del cliente.
  * @param {*} res Respuesta a enviar por el servidor.
  */
-const orderConsult = async( req , res = response ) => {
-    const idFirst = req.params.idFirst;
-    const idSecond = req.params.idSecond;
+const downConsult = async( req , res = response ) => {
+    const id = req.params.id;
     
     try{
         // Comprueba que haya una llamada con el primer ID.
-        let consultF = await consultById(idFirst);
+        let consultF = await consultById(id);
 
         if( consultF === null ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -340,8 +339,13 @@ const orderConsult = async( req , res = response ) => {
             return;
         }
 
-        // Lo mismo con el segundo 
-        let consultS = await consultById(idSecond);
+        // Obtenemos la llamada que tiene justo despues
+        let dataC = {
+            order: consultF.orderConsult + 1,
+            id: consultF.qrCode
+        }
+
+        let consultS = await consultByOrder(dataC);
 
         if( consultS === null ){
             // Si no lo hay, responde con not found sin cuerpo.
@@ -374,6 +378,83 @@ const orderConsult = async( req , res = response ) => {
         // A la segunda llamada se le resta uno al orden
         data = {
             orderConsult: consultS.orderConsult - 1,
+            idConsult: consultS.idConsult
+        };
+
+        // Se actualiza. 
+        await consultUpdate(data);
+
+        
+        res.status( 200 ).json( {msg: 'Llamada actualizada'} );
+
+    } catch(error){
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'ERROR al actualizar llamada'
+        });
+    }
+}
+
+/**
+ * Intercambia el orden de una consulta con la que tiene justo antes
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const upConsult = async( req , res = response ) => {
+    const id = req.params.id;
+    
+    try{
+        // Comprueba que haya una llamada con el primer ID.
+        let consultF = await consultById(id);
+
+        if( consultF === null ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Obtenemos la llamada que tiene justo antes
+        let dataC = {
+            order: consultF.orderConsult - 1,
+            id: consultF.qrCode
+        }
+
+        let consultS = await consultByOrder(dataC);
+
+        if( consultS === null ){
+            // Si no lo hay, responde con not found sin cuerpo.
+            res.status(404);
+            res.send();
+            return;
+        }
+
+        // Se obtiene el qr de la llamada para saber a que usuario pertenece
+        let qr = await qrById(consultF.qrCode);
+
+        // Se comprueba que el usuario no intente actualizar una llamada que no sea suya si no es admin
+        if(req.role !== 1 && req.uid !== qr.user ){
+            res.status(403).json({
+                msg: 'No tienes permisos para actualizar la llamada'
+            });
+
+            return;
+        }
+
+        // Se le resta uno al orden de la primera llamada
+        let data = {
+            orderConsult: consultF.orderConsult - 1,
+            idConsult: consultF.idConsult
+        };
+
+        // Se actualiza. 
+        await consultUpdate(data);
+
+        // A la segunda llamada se le suma uno al orden
+        data = {
+            orderConsult: consultS.orderConsult + 1,
             idConsult: consultS.idConsult
         };
 
@@ -438,4 +519,4 @@ const deleteConsult = async(req, res) => {
     
 }
 
-module.exports = {getConsult, getConsultById, createConsult, updateConsult, orderConsult, deleteConsult};
+module.exports = {getConsult, getConsultById, createConsult, updateConsult, downConsult, upConsult, deleteConsult};

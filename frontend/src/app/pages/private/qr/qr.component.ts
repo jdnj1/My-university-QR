@@ -371,7 +371,6 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertService.success(this.translateService.instant('alert.qr.duplicate'));
 
       } catch (error) {
-        console.log(error)
         this.alertService.error(this.translateService.instant('alert.qr.create.error'))
       }
     }
@@ -496,30 +495,27 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
   // Funciones para ordenar las llamadas del Qr
   down(index: any){
 
-    this.consultService.orderConsult(this.consults[index].idConsult, this.consults[index + 1].idConsult).subscribe({
+    this.consultService.downConsult(this.consults[index].idConsult).subscribe({
       next: () => {
         this.alertService.success((this.translateService.instant('alert.cons.order')));
         // Obtenemos de nuevo la lista de las llamadas
-        this.getConsults(0);
+        this.getConsults(this.paginationService.getQr() * 10);
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.alertService.error(this.translateService.instant('alert.cons.order.error'))
+        this.alertService.error(this.translateService.instant('alert.cons.order.error'));
       }
     });
   }
 
   up(index: any){
-    // Se le resta -1 en el orden y al de arriba se le suma para asi intercambiar los puestos
 
-    this.consultService.orderConsult(this.consults[index - 1].idConsult, this.consults[index].idConsult).subscribe({
+    this.consultService.upConsult(this.consults[index].idConsult).subscribe({
       next: () => {
         this.alertService.success((this.translateService.instant('alert.cons.order')));
         // Obtenemos de nuevo la lista de las llamadas
-        this.getConsults(0);
+        this.getConsults(this.paginationService.getQr() * 10);
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
         this.alertService.error(this.translateService.instant('alert.cons.order.error'))
       }
     });

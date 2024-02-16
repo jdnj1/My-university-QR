@@ -97,7 +97,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
+        this.alertService.error(this.translateService.instant('alert.qr.list.error'));
       }
     })
   }
