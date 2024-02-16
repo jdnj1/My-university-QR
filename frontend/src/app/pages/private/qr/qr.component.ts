@@ -343,26 +343,17 @@ export class QrComponent implements OnInit, AfterViewInit, OnDestroy {
       try {
         // Primero se crea el codigo QR
         let create: any = await lastValueFrom(this.qrService.createQr(this.dataQrForm.value));
-        this.idQr = create.qr;
 
         // Luego se crean las llamadas del QR
-        for(let consult of this.consults){
-
-          // Se obtiene la info de la llamada a duplicar
-          let con: any = await lastValueFrom(this.consultService.getConsultbyId(consult.idConsult));
-          let data = con.consult;
-
-          // Se adaptan las fechas
-          data.dateFrom = data.dateFrom.slice(0, -1);
-          data.dateTo = data.dateTo.slice(0, -1);
-
-          data.qrCode = this.idQr;
-
-          // Se pasa la info de cada llamada al servicio para crearlas
-          await lastValueFrom(this.consultService.createConsult(data));
+        let data = {
+          qrCode: create.qr,
+          qrDuplicate: Number(this.idQr.slice(0, -1))
         }
 
+        await lastValueFrom(this.qrService.duplicateQr(data))
+
         // Una vez todo se ha creado se dirige a la pagina de conf del Qr duplicado
+        this.idQr = create.qr;
         this.duplicate = false;
         this.hasChanges = false;
         this.qrSubscription.unsubscribe();

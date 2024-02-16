@@ -8,7 +8,7 @@ const { response } = require('express'); // Response de Express
 const axios = require('axios');
 const { zonedTimeToUtc, format } = require('date-fns-tz');
 const { qrList, qrById, qrCreate, qrUpdate, qrDelete, decrypt } = require('../dao/qr');
-const { consultListAll } = require('../dao/consult');
+const { consultListAll, consutlCreate } = require('../dao/consult');
 
 /**
  * Devuelve todos los codigos qr de la BD.
@@ -148,6 +148,61 @@ const createQr = async( req , res = response ) => {
         
         res.status(500).json({
             msg: 'Error al crear el código QR'
+        });
+    }
+}
+
+
+/**
+ * Duplica todas las llamadas de un QR.
+ * 
+ * @param {*} req Peticion del cliente.
+ * @param {*} res Respuesta a enviar por el servidor.
+ */
+const duplicateQr = async( req , res = response ) => {
+
+    // Por si se introducen los campos por llamada
+    const {qrCode, qrDuplicate} = req.body;
+
+    try {
+
+        // Solo el propietario del qr o un admin puede duplicar
+        // Se obtiene la info de los dos QR
+        let qr1 = await qrById(qrCode);
+        let qr2 = await qrById(qrDuplicate);
+
+        if( req.role !== 1 && (req.uid != qr1.user || req.uid != qr2.user)){
+            res.status(403).json({
+                msg: 'No eres el propietario de los QR'
+            });
+            
+            return;
+        }
+
+        //Obtenemos todas las llamadas del QR a duplicar
+        let list = await consultListAll(qrDuplicate);
+        console.log(list)
+
+        //Se comprueba que tenga llamadas
+        if(list.length !== 0){
+            // Si tiene se van duplicando en el QR nuevo
+            for(let consult of list){
+                consult.qrCode = qrCode
+                delete consult.idConsult;
+
+                await consutlCreate(consult)
+            }
+        }
+
+        res.status(200).json({
+            msg: 'Se han duplicado las llamadas correctamente'
+        });
+        
+    } catch (error) {
+        console.error(error);
+        
+        res.status(500).json({
+            msg: 'Error al duplicar QR'
         });
     }
 }
@@ -588,4 +643,4 @@ const getDataOperation = async( body ) => {
     }
 }
 
-module.exports = {getQr, createQr, getQrById, updateQr, deleteQr, viewQr};
+module.exports = {getQr, createQr, duplicateQr, getQrById, updateQr, deleteQr, viewQr};

@@ -51,6 +51,14 @@ export class QrService {
     });
   }
 
+  duplicateQr(formData: any){
+    const token = localStorage.getItem('token') || '';
+
+    return this.http.post(`${environment.apiBaseUrl}/qr/duplicate`, formData, {
+      headers: {'x-token': token}
+    });
+  }
+
   updateQr(formData: any, id: Number){
     const token = localStorage.getItem('token') || '';
 

@@ -8,7 +8,7 @@ const { Router } = require('express'); // Router de Express
 const { check } = require('express-validator'); // check de Express Validator
 
 // Propio
-const {getQr, createQr, getQrById, updateQr, deleteQr, viewQr} = require('../controllers/qr')
+const {getQr, createQr, duplicateQr, getQrById, updateQr, deleteQr, viewQr} = require('../controllers/qr')
 const {validateFields} = require('../middleware/validate-fields')
 const {validateRole} = require('../middleware/validate-role')
 const {validateJWT} = require('../middleware/validate-jwt')
@@ -29,7 +29,14 @@ router.get('/:id', [
 
 router.post('/', [
     validateJWT
-], createQr);    
+], createQr);
+
+router.post('/duplicate', [
+    check('qrCode', 'El identificador del qr no es válido').isInt(),
+    check('qrDuplicate', 'El identificador del qr no es válido').isInt(),
+    validateJWT,
+    validateFields
+], duplicateQr);
 
 router.put('/:id', [
     check('id', 'El identificador no es válido').isInt(),
