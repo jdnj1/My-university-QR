@@ -32,7 +32,7 @@
               <form class="row g-3 needs-validation" id="loginForm" [formGroup]="passForm" (ngSubmit)="changePass()" novalidate>
 
                 <div class="col-12">
-                  <label for="yourEmail" class="form-label">{{'pass.current' | translate}}</label>
+                  <label for="oldPass" class="form-label">{{'pass.current' | translate}}</label>
                   <input type="password" name="oldPass" class="form-control" formControlName="oldPassword" id="oldPass" >
                   <div class="text-danger" *ngIf="!campoValido('oldPassword')">{{'pass.current.error' | translate}}</div>
                 </div>

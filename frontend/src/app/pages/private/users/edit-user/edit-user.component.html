@@ -56,8 +56,8 @@
                 </div>
 
                 <div class="col-12">
-                  <label class="col-form-label">{{'user.table.role' | translate}}</label>
-                  <select class="form-select" aria-label="Default select example" formControlName="role">
+                  <label for="inputRole" class="col-form-label">{{'user.table.role' | translate}}</label>
+                  <select id="inputRole" class="form-select" formControlName="role">
                     <option *ngFor="let role of roles; let i = index" value="{{i}}" selected>{{role | translate}}</option>
                   </select>
                 </div>

@@ -89,8 +89,8 @@
                           <input type="number" name="relative" class="form-control" id="relative"  min="0" formControlName="number">
                         </div>
                         <div class="col-sm-6">
-                          <label class="col-form-label">{{'cons.form.rel.unit' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
-                          <select class="form-select" aria-label="Default select example" formControlName="unit">
+                          <label for="inputUnit" class="col-form-label">{{'cons.form.rel.unit' | translate}}<span *ngIf="create" class="badge bg-primary" style="margin-left: .5em;">*</span></label>
+                          <select id="inputUnit" class="form-select" formControlName="unit">
                             <option value="1" selected>{{'cons.sec' | translate}}</option>
                             <option value="2">{{'cons.min' | translate}}</option>
                             <option value="3">{{'cons.hour' | translate}}</option>
@@ -104,21 +104,21 @@
 
                 <div class="col-sm-6">
 
-                  <label class="col-form-label">{{'cons.form.img' | translate}}</label>
-                  <select *ngIf="filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
+                  <label for="inputChart" class="col-form-label">{{'cons.form.img' | translate}}</label>
+                  <select *ngIf="filters" id="inputChart" class="form-select" (change)="selectChart($event)" formControlName="chart">
                     <option value="0">{{'cons.chart.line' | translate}}</option>
                     <option value="1">{{'cons.chart.bar' | translate}}</option>
                   </select>
 
-                  <select *ngIf="!filters" class="form-select" aria-label="Default select example" (change)="selectChart($event)" formControlName="chart">
+                  <select *ngIf="!filters" id="inputChart" class="form-select" (change)="selectChart($event)" formControlName="chart">
                     <option value="2">{{'cons.chart.gauge' | translate}}</option>
                     <option value="3">{{'cons.chart.value' | translate}}</option>
                   </select>
 
                   <div *ngIf="!filters" class="mt-2">
-                    <label class="col-form-label">{{'cons.chart.icon' | translate}}</label>
+                    <label for="inputIcon" class="col-form-label">{{'cons.chart.icon' | translate}}</label>
                     <ng-container>
-                      <select class="form-select bi" aria-label="Default select example" formControlName="icon">
+                      <select id="inputIcon" class="form-select bi" formControlName="icon">
                         <option *ngFor="let icon of icons; let i = index" value="{{i}}" [innerHtml]="icon.html +' '+ icon.name">
                         </option>
                       </select>
@@ -127,13 +127,13 @@
 
                   <div class="row">
                     <div *ngIf="getChart()" class="mt-2 col">
-                      <label for="inputColor" class="col-form-label">{{'cons.chart.value.colorNumber' | translate}}</label>
-                      <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorVal">
+                      <label for="inputColorVal" class="col-form-label">{{'cons.chart.value.colorNumber' | translate}}</label>
+                      <input type="color" class="form-control form-control-color" id="inputColorVal" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorVal">
                     </div>
 
                     <div *ngIf="getChart()" class="mt-2 col">
-                      <label for="inputColor" class="col-form-label">{{'cons.chart.value.color' | translate}}</label>
-                      <input type="color" class="form-control form-control-color" id="exampleColorInput" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorBack">
+                      <label for="inputColorBack" class="col-form-label">{{'cons.chart.value.color' | translate}}</label>
+                      <input type="color" class="form-control form-control-color" id="inputColorBack" title="{{'cons.chart.value.colorText' | translate}}" formControlName="colorBack">
                     </div>
                   </div>
 
@@ -151,8 +151,8 @@
             <div class="col-lg-6">
 
               <div>
-                <label class="col-form-label">{{'cons.data' | translate}}</label>
-                <select class="form-select" aria-label="Default select example" formControlName="operation" (change)="selectData()">
+                <label for="inputData" class="col-form-label">{{'cons.data' | translate}}</label>
+                <select id="inputData" class="form-select" formControlName="operation" (change)="selectData()">
                   <option value="1" selected>{{'cons.data.all' | translate}}</option>
                   <option value="2">{{'cons.data.max' | translate}}</option>
                   <option value="3">{{'cons.data.min' | translate}}</option>
