@@ -181,7 +181,6 @@ const duplicateQr = async( req , res = response ) => {
 
         //Obtenemos todas las llamadas del QR a duplicar
         let list = await consultListAll(qrDuplicate);
-        console.log(list)
 
         //Se comprueba que tenga llamadas
         if(list.length !== 0){
