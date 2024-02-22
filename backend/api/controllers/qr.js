@@ -457,6 +457,7 @@ const viewQr = async(req, res) => {
 
                         // Se realiza la peticion a Smart University
                         data = await getDataOperation(data);
+                        data = data.result;
 
                         if(data.columns.length === 0){
                             continue;
@@ -517,6 +518,7 @@ const viewQr = async(req, res) => {
     
                         // Se realiza la peticion a Smart University
                         let data = await getData(body);
+                        data = data.result;
                         
                         if(data.columns.length === 0){
                             continue;

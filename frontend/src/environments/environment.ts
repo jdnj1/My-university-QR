@@ -47,6 +47,8 @@ export const environment = {
   messExpired: "El código QR ha superado la fecha de validez.",
   //Mensaje si el QR no tiene llamadas
   messEmpty: "El código QR no tiene llamadas.",
+  //Mensaje si hay un error en el backend
+  messError: "Ha habido un error inesperado, intentelo de nuevo más tarde",
 
   defaultDes: "Descripción del código QR",
 

@@ -102,27 +102,30 @@ export class ViewComponent implements OnInit,AfterViewInit {
 
     } catch (err: any) {
       this.loading = false;
-        this.warning = true;
+      this.warning = true;
 
-        if(err.error.titleQr){
-          this.qr = err.error.titleQr;
-        }
+      if(err.error.titleQr){
+        this.qr = err.error.titleQr;
+      }
 
-        if(err.error.msg === 'desactivado'){
-          this.message = environment.messNoActive;
-        }
-        else if(err.error.msg === 'No se ha encontrado el código Qr'){
-          this.message = environment.messNoExists;
-        }
-        else if(err.error.msg === 'caducado'){
-          this.message = environment.messExpired;
-        }
-        else if(err.error.msg === 'El qr no tiene llamadas'){
-          this.message = environment.messEmpty;
-        }
-        else if(err.error.msg === 'desactivadas'){
-          this.message = environment.mess0Active;
-        }
+      if(err.error.msg === 'desactivado'){
+        this.message = environment.messNoActive;
+      }
+      else if(err.error.msg === 'No se ha encontrado el código Qr'){
+        this.message = environment.messNoExists;
+      }
+      else if(err.error.msg === 'caducado'){
+        this.message = environment.messExpired;
+      }
+      else if(err.error.msg === 'El qr no tiene llamadas'){
+        this.message = environment.messEmpty;
+      }
+      else if(err.error.msg === 'desactivadas'){
+        this.message = environment.mess0Active;
+      }
+      else if(err.error.msg === 'Error visualizar QR'){
+        this.message = environment.messError;
+      }
     }
 
   }
